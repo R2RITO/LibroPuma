@@ -152,29 +152,43 @@ end
 
 -- touch event listener for background object
 local function onPageSwipe( self, event )
-	local phase = event.phase
-	if phase == "began" then
-		display.getCurrentStage():setFocus( self )
-		self.isFocus = true
-	
-	elseif self.isFocus then
-		if phase == "ended" or phase == "cancelled" then
-			
-			local distance = event.x - event.xStart
-			if distance > swipeThresh then
-				-- SWIPED to right; go back to title page scene
-				composer.gotoScene( "title", "slideRight", 800 )
-				pageText.isVisible=false
-			else
-				-- Touch and release; initiate next animation
-				showNext()
-			end
-			
-			display.getCurrentStage():setFocus( nil )
-			self.isFocus = nil
-		end
-	end
-	return true
+    local phase = event.phase
+    local pag_act = composer.getVariable( "pagina" )
+
+    if phase == "began" then
+        display.getCurrentStage():setFocus( self )
+        self.isFocus = true
+    
+    elseif self.isFocus then
+        if phase == "ended" or phase == "cancelled" then
+            
+            local distance = event.x - event.xStart
+            if math.abs(distance) > swipeThresh then
+
+                pag_sig = pag_act - distance/math.abs(distance)
+                pag = "P" .. pag_sig
+                composer.setVariable( "pagina", pag_sig)
+
+                if distance > swipeThresh then
+                    -- deslizar hacia la derecha, pagina anterior
+                    composer.gotoScene( pag, "slideRight", 800 )
+                    pageText.isVisible=false
+                else
+                    -- deslizar a la izquierda, pagina siguiente
+                    composer.gotoScene( pag, "slideLeft", 800 )
+                    pageText.isVisible=false
+                end
+
+            else
+                -- Touch and release; initiate next animation
+                showNext()
+            end
+            
+            display.getCurrentStage():setFocus( nil )
+            self.isFocus = nil
+        end
+    end
+    return true
 end
 
 function scene:create( event )
@@ -186,10 +200,10 @@ function scene:create( event )
 	-- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
 	
 	-- create background image
-	background = display.newImageRect( sceneGroup, "PumaArbol.jpg", 2000, 1124 )
+	background = display.newImageRect( sceneGroup, "PumaArbol.jpg", display.contentWidth * 2.5, display.contentHeight )
 	background.anchorX = 0
 	background.anchorY = 0
-	background.x, background.y = -750, 0
+	background.x, background.y = -1152, 0
 	background.alpha = 0.5
 
 

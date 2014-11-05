@@ -16,6 +16,7 @@ local background
 local function onBackgroundTouch( self, event )
 	if event.phase == "ended" or event.phase == "cancelled" then
 		-- go to page1.lua scene
+		composer.setVariable( "pagina", 1)
 		composer.gotoScene( "P1", "slideLeft", 800 )
 		
 		return true	-- indicates successful touch
@@ -51,6 +52,9 @@ function scene:create( event )
 	local pageText2 = display.newText( "El Puma Chileno", 0, 0, native.systemFont, 40 )
 	pageText2.x = display.contentWidth * 0.5
 	pageText2.y = display.contentHeight * 0.65	
+
+	-- Establecer el numero de pagina
+	composer.setVariable( "pagina", 0)
 	
 	-- all display objects must be inserted into group
 	sceneGroup:insert( background )
