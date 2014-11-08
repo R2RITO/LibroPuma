@@ -113,13 +113,3 @@ scene:addEventListener( "destroy", scene )
 -----------------------------------------------------------------------------------------
 
 return scene
-
---local function init()
-        -- start and resume from previous state, if any
---        resumeStart()   
-         
---        Runtime:addEventListener( "system", onSystemEvent )     
---end
- 
---start the program
---init()
