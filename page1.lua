@@ -3,31 +3,39 @@
 -- page1.lua
 --
 -----------------------------------------------------------------------------------------
+require "saveit"
 
 local composer = require( "composer" )
 local scene = composer.newScene()
 
+--Manejar internamente la página que está marcada
+--local storyboard = require("storyboard")
+local mydata = require("mydata")
+
+--PaginaMarcador=1
+mydata.PaginaMarcador=1
 
 
 -- forward declarations and other locals
-local background, pageText, pageText2, continueText, pageTween, fadeTween1, fadeTween2, sunObj, moonObj, coronaIcon
+local background, pageText, pageText2, continueText, pageTween, fadeTween1, fadeTween2, sunObj, moonObj, coronaIcon, markerObj
 
 local swipeThresh = 100		-- amount of pixels finger must travel to initiate page swipe
 local tweenTime = 500
 local animStep = 1
 local readyToContinue = false
 
+
 -- function to show next animation
 local function showNext()
 	if readyToContinue then
 		continueText.isVisible = false
 		readyToContinue = false
-		
+
 		local function repositionAndFadeIn()
 			pageText.x = display.contentWidth * 0.5
 			pageText.y = display.contentHeight * 0.20
 			pageText.isVisible = true
-
+			--MarkerHidden()
 					
 			fadeTween1 = transition.to( pageText, { time=tweenTime*0.5, alpha=1.0 } )
 			fadeTween1 = transition.to( pageText2, { time=tweenTime*0.5, alpha=1.0 } )
@@ -41,6 +49,7 @@ local function showNext()
 			continueText.isVisible = true
 		end
 		
+	
 		if animStep == 1 then
 			pageText.alpha = 0
 			local textOption = 
@@ -67,6 +76,7 @@ local function showNext()
 			sunObj.isVisible = true
 			pageTween = transition.to( sunObj, { time=tweenTime, x=display.contentWidth*0.5, transition=easing.outExpo, onComplete=completeTween } )
 			
+
 		elseif animStep == 2 then
 			pageText.alpha = 0 --transparent
 			
@@ -93,7 +103,8 @@ local function showNext()
 			--moonObj.x = display.contentWidth + moonObj.contentWidth
 			moonObj.isVisible = true
 			pageTween = transition.to( moonObj, { time=tweenTime, x=display.contentWidth*0.5, transition=easing.outExpo, onComplete=completeTween } )
-		
+ 			
+
 		elseif animStep == 3 then
 			pageText.alpha = 0
 		    local textOption = 
@@ -117,7 +128,7 @@ local function showNext()
 			ramaObj.isVisible = true
 			ramaObj.alpha = 0
 			pageTween = transition.to( ramaObj, { time=tweenTime*1.5, alpha=1, transition=easing.inOutExpo, onComplete=completeTween } )
-
+			
 		elseif animStep == 4 then
 			pageText.alpha = 0
 			pageText.text = "Reproducción: Las hembras pueden entrar en celo varias veces en el año, y a partir del segundo o tercer año de vida se aparean con el macho, a los 90 o 96 días da a luz a dos o tres cachorros"
@@ -131,7 +142,7 @@ local function showNext()
 			coronaIcon.alpha = 0
 			coronaIcon.x = display.contentWidth * 0.5
 			pageTween = transition.to( coronaIcon, { time=tweenTime*1.5, alpha=1, transition=easing.inOutExpo, onComplete=completeTween } )
-		
+			
 
 		elseif animStep == 5 then
 			pageText.alpha = 0
@@ -149,6 +160,9 @@ local function showNext()
 		end
 	end
 end
+
+
+
 
 -- touch event listener for background object
 local function onPageSwipe( self, event )
@@ -177,6 +191,24 @@ local function onPageSwipe( self, event )
 	return true
 end
 
+local function MarkerAppear(self, event)
+   		if event.phase == "ended" or event.phase == "cancelled" then
+
+			if mydata.PaginaMarcador-0 == 1 then
+			mydata.PaginaMarcador=0
+			--markerObj.isVisible=false
+			markerObj.alpha=0.5
+			elseif mydata.PaginaMarcador-0 == 0 then
+			mydata.PaginaMarcador=1
+			--markerObj.isVisible=true
+			markerObj.alpha=1
+			end
+			
+		end
+		return true
+end	
+--markerObj:addEventListener("touch", MarkerAppear)
+
 function scene:create( event )
 	local sceneGroup = self.view
 
@@ -192,7 +224,6 @@ function scene:create( event )
 	background.x, background.y = -750, 0
 	background.alpha = 0.5
 
-
 	
 	-- create overlay
 	local overlay = display.newImageRect( sceneGroup, "pagebg1.png", display.contentWidth, display.contentHeight )
@@ -205,15 +236,15 @@ function scene:create( event )
 	markerObj.anchorX = 0
 	markerObj.anchorY = 0
 	markerObj.x, markerObj.y = 0, 50
-	markerObj.isVisible = true
-	
-	
+	--markerObj.isVisible = true
+		
 	-- create sun, moon, and corona icon
 	sunObj = display.newImageRect( sceneGroup, "PumaSF.png", 400, 300 )
 	sunObj.x = display.contentWidth * 0.5
 	sunObj.y = display.contentHeight * 0.5
 	sunObj.isVisible = false
 	
+
 	moonObj = display.newImageRect( sceneGroup, "PumaSFG.png", 400, 300 )
 	moonObj.x = display.contentWidth * 0.10
 	moonObj.y = display.contentHeight * 0.55
@@ -266,7 +297,8 @@ function scene:show( event )
 		-- 
 		-- INSERT code here to make the scene come alive
 		-- e.g. start timers, begin animation, play audio, etc.
-		
+			
+	
 		animStep = 1
 		readyToContinue = true
 		showNext()
@@ -274,9 +306,18 @@ function scene:show( event )
 		-- assign touch event to background to monitor page swiping
 		background.touch = onPageSwipe
 		background:addEventListener( "touch", background )
+
+		-- assign touch event to markerObj to marker appear
+		markerObj.touch = MarkerAppear
+		markerObj:addEventListener( "touch", markerObj )
+
+	
+		
 	end	
 
 end
+
+
 
 function scene:exit( event )
 	local sceneGroup = self.view
@@ -293,10 +334,48 @@ function scene:exit( event )
 		moonObj.isVisible = false
 		coronaIcon.isVisible = false
 		pageText.isVisible = false
+		--markerObj.isVisible = false
 	
 		-- remove touch event listener for background
-		background:removeEventListener( "touch", background )
+		background:removeEventListener( "touch", background)
+		
+		-- remove touch event listener for markerObj
+		markerObj:removeEventListener( "touch", markerObj)
+
+		-- cancel page animations (if currently active)
+		if pageTween then transition.cancel( pageTween ); pageTween = nil; end
+		if fadeTween1 then transition.cancel( fadeTween1 ); fadeTween1 = nil; end
+		if fadeTween2 then transition.cancel( fadeTween2 ); fadeTween2 = nil; end
+		
+	elseif phase == "did" then
+		-- Called when the scene is now off screen
+	end		
+
+end
+
+function scene:hide( event )
+	local sceneGroup = self.view
+	local phase = event.phase
 	
+	if event.phase == "will" then
+		-- Called when the scene is on screen and is about to move off screen
+		--
+		-- INSERT code here to pause the scene
+		-- e.g. stop timers, stop animation, unload sounds, etc.)
+		
+		-- hide objects
+		sunObj.isVisible = false
+		moonObj.isVisible = false
+		coronaIcon.isVisible = false
+		pageText.isVisible = false
+		--markerObj.isVisible = false
+	
+		-- remove touch event listener for background
+		background:removeEventListener( "touch", background)
+		
+		-- remove touch event listener for markerObj
+		markerObj:removeEventListener( "touch", markerObj)
+
 		-- cancel page animations (if currently active)
 		if pageTween then transition.cancel( pageTween ); pageTween = nil; end
 		if fadeTween1 then transition.cancel( fadeTween1 ); fadeTween1 = nil; end
@@ -315,6 +394,8 @@ function scene:destroy( event )
 	-- 
 	-- INSERT code here to cleanup the scene
 	-- e.g. remove display objects, remove touch listeners, save state, etc.
+
+
 end
 
 ---------------------------------------------------------------------------------
@@ -328,3 +409,5 @@ scene:addEventListener( "destroy", scene )
 -----------------------------------------------------------------------------------------
 
 return scene
+
+
