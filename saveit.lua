@@ -5,7 +5,7 @@ function save( event )
                 local file = io.open( path, "w+b" )
 				-- Creates the file where we save our data if needed
                 
-				file:write( _G.onelock ..", ".. _G.twolock)          
+				file:write( _G.PaginaMarcador)          
                 io.close( file )
 				-- Saves our data
 
