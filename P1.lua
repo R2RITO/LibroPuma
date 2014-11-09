@@ -171,7 +171,7 @@ function scene:create( event )
     -- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
     
     -- create background image
-    background = display.newImageRect( sceneGroup, "PumaArbol.jpg", display.contentWidth * 2.5, display.contentHeight )
+    background = display.newImageRect( sceneGroup, "PumaArbol.jpg", display.contentWidth * 2.5, display.contentHeight - 120 )
     background.anchorX = 0
     background.anchorY = 0
     background.x, background.y = -750, 0
@@ -180,7 +180,7 @@ function scene:create( event )
 
     
     -- create overlay
-    local overlay = display.newImageRect( sceneGroup, "pagebg1.png", display.contentWidth, display.contentHeight )
+    local overlay = display.newImageRect( sceneGroup, "pagebg1.png", display.contentWidth, display.contentHeight - 120 )
     overlay.anchorX = 0
     overlay.anchorY = 0
     overlay.x, overlay.y = 0, 0
@@ -193,7 +193,7 @@ function scene:create( event )
     markerObj.isVisible = true
     
     
-    -- create sun, moon, and corona icon
+    -- Creacion de iconos 
     siluetaNegra = display.newImageRect( sceneGroup, "PumaSF.png", 400, 300 )
     siluetaNegra.x = display.contentWidth * 0.5
     siluetaNegra.y = display.contentHeight * 0.5
@@ -224,8 +224,9 @@ function scene:create( event )
     -- create text at bottom of screen
     continueText = display.newText( sceneGroup, "[ Toca la pantalla para continuar ]", 0, 0, native.systemFont, 18 )
     continueText.x = display.contentWidth * 0.5
-    continueText.y = display.contentHeight - (display.contentHeight * 0.04 )
+    continueText.y = display.contentHeight - (display.contentHeight * 0.04 ) - 120
     continueText.isVisible = false
+    
 end
 
 function scene:show( event )
@@ -251,7 +252,7 @@ function scene:show( event )
 
 end
 
-function scene:exit( event )
+function scene:hide( event )
     local sceneGroup = self.view
     local phase = event.phase
     

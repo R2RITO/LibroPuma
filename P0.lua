@@ -37,7 +37,7 @@ function scene:create( event )
 	background.anchorY = 0
 	background.x, background.y = -80, 0  --Aquí se setea la ubicación de la imagen
 
-	background2 = display.newImageRect( sceneGroup, "PumaArbol.jpg", display.contentWidth * 2.5, display.contentHeight )
+	background2 = display.newImageRect( sceneGroup, "PumaArbol.jpg", display.contentWidth * 2.5, display.contentHeight - 120 )
 	background2.anchorX = 0
 	background2.anchorY = 0
 	background2.x, background.y = 0, 0
