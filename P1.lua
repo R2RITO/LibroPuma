@@ -6,6 +6,7 @@
 
 local composer = require( "composer" )
 local scene = composer.newScene()
+local json = require("json")
 
 
 
@@ -121,6 +122,54 @@ local function showNext()
     end
 end
 
+-- Funcion para verificar si esta página corresponde al marcador, y hacerlo visible.
+local function verificarMarcador()
+    local pagMarcador = composer.getVariable( "paginaMarcador" )
+    local pag_act = composer.getVariable( "pagina" )
+
+    if pagMarcador == pag_act then
+        markerObj.alpha = 1
+    else
+        markerObj.alpha = 0.2
+    end
+end
+
+-- Funcion para guardar en el archivo los datos del marcador
+local function guardarMarcador()
+    local ruta = system.pathForFile( "data.txt", system.DocumentsDirectory )
+    local pag = composer.getVariable( "paginaMarcador" )
+
+    local archivo = io.open( ruta, "w" )
+
+    if archivo then
+        local tabla = {}
+        tabla.paginaMarcador = pag
+        contenido = json.encode( tabla )
+        archivo:write(contenido)
+
+        io.close( archivo )
+    end
+
+end
+
+-- Funcion que activa el marcador para la página actual.
+local function activarMarcador( event )
+
+    local pagActual = composer.getVariable( "pagina" )
+    local pagMarcador = composer.getVariable( "paginaMarcador" )
+
+    if pagActual == pagMarcador then
+        transition.to( markerObj, { alpha=0.2 } )
+        composer.setVariable( "paginaMarcador", 0 )
+    else
+        -- Hacer visible el marcador y guardar la pagina
+        transition.to( markerObj, { alpha=1 } )
+        composer.setVariable( "paginaMarcador", pagActual )
+    end
+
+    guardarMarcador()
+end
+
 -- touch event listener for background object
 local function onPageSwipe( self, event )
     local phase = event.phase
@@ -184,13 +233,6 @@ function scene:create( event )
     overlay.anchorX = 0
     overlay.anchorY = 0
     overlay.x, overlay.y = 0, 0
-
-    --create marker object
-    markerObj = display.newImageRect( sceneGroup, "Marcador.png", 80, 119 )
-    markerObj.anchorX = 0
-    markerObj.anchorY = 0
-    markerObj.x, markerObj.y = 0, 50
-    markerObj.isVisible = true
     
     
     -- Creacion de iconos 
@@ -226,6 +268,14 @@ function scene:create( event )
     continueText.x = display.contentWidth * 0.5
     continueText.y = display.contentHeight - (display.contentHeight * 0.04 ) - 120
     continueText.isVisible = false
+
+    --create marker object
+    markerObj = display.newImageRect( sceneGroup, "Marcador.png", 80, 119 )
+    markerObj.anchorX = 0
+    markerObj.anchorY = 0
+    markerObj.x, markerObj.y = 0, 50
+    markerObj.isVisible = false
+    markerObj.alpha = 0.2
     
 end
 
@@ -240,6 +290,9 @@ function scene:show( event )
         -- 
         -- INSERT code here to make the scene come alive
         -- e.g. start timers, begin animation, play audio, etc.
+
+        verificarMarcador()
+        markerObj.isVisible = true
         
         animStep = 1
         readyToContinue = true
@@ -248,6 +301,7 @@ function scene:show( event )
         -- assign touch event to background to monitor page swiping
         background.touch = onPageSwipe
         background:addEventListener( "touch", background )
+        markerObj:addEventListener( "touch", activarMarcador )
     end 
 
 end
@@ -266,9 +320,11 @@ function scene:hide( event )
         siluetaNegra.isVisible = false
         siluetaGris.isVisible = false
         pageText.isVisible = false
+        markerObj.isVisible = false
     
         -- remove touch event listener for background
         background:removeEventListener( "touch", background )
+        markerObj:removeEventListener( "touch", activarMarcador )
     
         -- cancel page animations (if currently active)
         if pageTween then transition.cancel( pageTween ); pageTween = nil; end
