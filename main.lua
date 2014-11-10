@@ -45,17 +45,45 @@ local function cargarMarcador()
 
 end
 
-botonIndice = display.newImageRect( "Menu\\bIndice.png", 120, 120 )
-botonIndice.x = 60
-botonIndice.y = display.contentHeight - 60
+--Para animación Sprite de Puma
+seqData ={
+	{name = "puma", start=1, count=4, time = 800, loopCount = 0}
+}
 
-botonInicio = display.newImageRect( "Menu\\bInicio.png", 120, 120 )
-botonInicio.x = 205
-botonInicio.y = display.contentHeight - 60
+data = {
+		frames ={
+		{name=puma1, x = 0, y = 398, width = 725, height = 398, sourceX=0, sourceY=0 , sourceWidth=725, sourceHeight=398},
+		{name=puma2, x = 725, y = 0, width = 725, height = 398, sourceX=0, sourceY=0 , sourceWidth=725, sourceHeight=398},
+		{name=puma3, x = 0, y = 398, width = 725, height = 398, sourceX=0, sourceY=0 , sourceWidth=725, sourceHeight=398},
+		{name=puma4, x = 0, y = 0, width = 725, height = 398, sourceX=0, sourceY=0 , sourceWidth=725, sourceHeight=398},
+	},
+	sheetContentWidth = 1451,
+	sheetContentHeight = 796
+}
 
-botonMarcador = display.newImageRect( "Menu\\bMarcador.png", 120, 120 )
+sheet = graphics.newImageSheet("sprite1.jpg", data)
+sprite = display.newSprite(sheet, seqData)
+sprite.x = display.contentHeight/2
+sprite.y = display.contentWidth/2
+
+sprite:setSequence("puma")
+sprite:play()
+
+--Como loopCount = 0 se reproduce infinitamente
+--Fin animación
+
+
+botonIndice = display.newImageRect( "Menu\\bIndice.png", 160, 160 )
+botonIndice.x = 205
+botonIndice.y = display.contentHeight - 57
+
+botonInicio = display.newImageRect( "Menu\\bInicio.png", 160, 160 )
+botonInicio.x = 70
+botonInicio.y = display.contentHeight - 57
+
+botonMarcador = display.newImageRect( "Menu\\bMarcador.png", 160, 160 )
 botonMarcador.x = 340
-botonMarcador.y = display.contentHeight - 60
+botonMarcador.y = display.contentHeight - 57
 
 -- Cargar la página del marcador.
 cargarMarcador()
