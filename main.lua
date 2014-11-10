@@ -24,6 +24,7 @@ end
 
 local function moverAMarcador( event )
     pag = "P" .. composer.getVariable( "paginaMarcador" )
+    composer.setVariable( pagina, pag )
 	composer.gotoScene( pag, "fade" )
 end
 
@@ -37,7 +38,6 @@ local function cargarMarcador()
 		local tabla = json.decode( data )
 		io.close( archivo )
 
-		print(tabla.paginaMarcador)
 		composer.setVariable( "paginaMarcador", tabla.paginaMarcador )
 	else
 		composer.setVariable( "paginaMarcador", 0 )

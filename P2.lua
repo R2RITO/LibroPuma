@@ -291,8 +291,9 @@ function scene:show( event )
         -- INSERT code here to make the scene come alive
         -- e.g. start timers, begin animation, play audio, etc.
 
-        verificarMarcador()
         markerObj.isVisible = true
+        verificarMarcador()
+
         
         animStep = 1
         readyToContinue = true
@@ -319,6 +320,7 @@ function scene:hide( event )
         -- hide objects
         siluetaNegra.isVisible = false
         siluetaGris.isVisible = false
+        ramaObj.isVisible = false
         pageText.isVisible = false
         markerObj.isVisible = false
     
