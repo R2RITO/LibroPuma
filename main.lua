@@ -15,10 +15,12 @@ local json = require("json")
 local botonInicio, botonIndice
 
 local function moverAIndice( event )
+	composer.setVariable( pagina, 0 )
 	composer.gotoScene( "P0", "fade" )
 end
 
 local function moverAInicio( event )
+	composer.setVariable( pagina, 0 )
 	composer.gotoScene( "P0", "fade" )
 end
 

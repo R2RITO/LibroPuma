@@ -168,6 +168,8 @@ local function activarMarcador( event )
     end
 
     guardarMarcador()
+
+    return true
 end
 
 -- touch event listener for background object
