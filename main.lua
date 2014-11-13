@@ -15,19 +15,27 @@ local json = require("json")
 local botonInicio, botonIndice
 
 local function moverAIndice( event )
-	composer.setVariable( pagina, 0 )
-	composer.gotoScene( "P0", "fade" )
+	if event.phase == "ended" or event.phase == "cancelled" then
+		composer.setVariable( "pagina" , 0 )
+		composer.gotoScene( "P0", "fade" )
+	end
 end
 
 local function moverAInicio( event )
-	composer.setVariable( pagina, 0 )
-	composer.gotoScene( "P0", "fade" )
+	if event.phase == "ended" or event.phase == "cancelled" then
+		composer.setVariable( "pagina" , 0 )
+		composer.gotoScene( "P0", "fade" )
+	end
 end
 
 local function moverAMarcador( event )
-    pag = "P" .. composer.getVariable( "paginaMarcador" )
-    composer.setVariable( pagina, pag )
-	composer.gotoScene( pag, "fade" )
+	if event.phase == "ended" or event.phase == "cancelled" then
+	    pag = "P" .. composer.getVariable( "paginaMarcador" )
+	    pag_sig = composer.getVariable( "paginaMarcador" )
+	    composer.setVariable( "pagina" , pag_sig )
+	    print( composer.getVariable("pagina") )
+		composer.gotoScene( pag, "fade" )
+	end
 end
 
 local function cargarMarcador()
