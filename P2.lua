@@ -90,7 +90,7 @@ local function showNext()
             repositionAndFadeIn()
 
             siluetaGris.alpha = 1
-            --siluetaGris.x = display.contentWidth + siluetaGris.contentWidth
+            siluetaGris.x = display.contentWidth + siluetaGris.contentWidth
             siluetaGris.isVisible = true
             pageTween = transition.to( siluetaGris, { time=tweenTime, x=display.contentWidth*0.5, transition=easing.outExpo, onComplete=completeTween } )
             pageTween = transition.to( siluetaGris, { alpha=0, onComplete=desaparecer } )
@@ -127,11 +127,15 @@ local function verificarMarcador()
     local pagMarcador = composer.getVariable( "paginaMarcador" )
     local pag_act = composer.getVariable( "pagina" )
 
+    print( "PagM" .. pagMarcador .. " Pag" .. pag_act)
+
     if pagMarcador == pag_act then
-        markerObj.alpha = 1
+        print("Marcador activo, alpha 1")
+        transition.to( markerObj, { alpha=1 } )
     else
-        markerObj.alpha = 0.2
+        --transition.to( markerObj, { alpha=0.2 } )
     end
+    return true
 end
 
 -- Funcion para guardar en el archivo los datos del marcador
@@ -149,25 +153,31 @@ local function guardarMarcador()
 
         io.close( archivo )
     end
+    return true
 
 end
 
 -- Funcion que activa el marcador para la página actual.
 local function activarMarcador( event )
 
-    local pagActual = composer.getVariable( "pagina" )
-    local pagMarcador = composer.getVariable( "paginaMarcador" )
+    if event.phase == "ended" or event.phase == "cancelled" then
 
-    if pagActual == pagMarcador then
-        transition.to( markerObj, { alpha=0.2 } )
-        composer.setVariable( "paginaMarcador", 0 )
-    else
-        -- Hacer visible el marcador y guardar la pagina
-        transition.to( markerObj, { alpha=1 } )
-        composer.setVariable( "paginaMarcador", pagActual )
+        local pagActual = composer.getVariable( "pagina" )
+        local pagMarcador = composer.getVariable( "paginaMarcador" )
+
+        if pagActual == pagMarcador then
+            transition.to( markerObj, { alpha=0.2 } )
+            composer.setVariable( "paginaMarcador", 0 )
+        else
+            -- Hacer visible el marcador y guardar la pagina
+            transition.to( markerObj, { alpha=1 } )
+            composer.setVariable( "paginaMarcador", pagActual )
+        end
+
+        guardarMarcador()
     end
 
-    guardarMarcador()
+    return true
 end
 
 -- touch event listener for background object
@@ -225,14 +235,6 @@ function scene:create( event )
     background.anchorY = 0
     background.x, background.y = -1200, 0
     background.alpha = 0.5
-
-
-    
-    -- create overlay
-    local overlay = display.newImageRect( sceneGroup, "pagebg1.png", display.contentWidth, display.contentHeight - 120 )
-    overlay.anchorX = 0
-    overlay.anchorY = 0
-    overlay.x, overlay.y = 0, 0
     
     
     -- Creacion de iconos 
@@ -291,7 +293,10 @@ function scene:show( event )
         -- INSERT code here to make the scene come alive
         -- e.g. start timers, begin animation, play audio, etc.
 
+        markerObj.alpha = 0.2
+        print( "P2MarkerTrueInicio" )
         markerObj.isVisible = true
+        print( "P2MarkerTrueFin" )
         verificarMarcador()
 
         
@@ -322,7 +327,9 @@ function scene:hide( event )
         siluetaGris.isVisible = false
         ramaObj.isVisible = false
         pageText.isVisible = false
+        print( "P2MarkerFalseInicio" )
         markerObj.isVisible = false
+        print( "P2MarkerFalseFin" )
     
         -- remove touch event listener for background
         background:removeEventListener( "touch", background )
