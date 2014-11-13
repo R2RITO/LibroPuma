@@ -128,9 +128,9 @@ local function verificarMarcador()
     local pag_act = composer.getVariable( "pagina" )
 
     if pagMarcador == pag_act then
-        transition.to( markerObj, { alpha=1 } )
+        markerObj.alpha = 1
     else
-        transition.to( markerObj, { alpha=0.2 } )
+        markerObj.alpha = 0.2
     end
 end
 
@@ -168,8 +168,6 @@ local function activarMarcador( event )
     end
 
     guardarMarcador()
-
-    return true
 end
 
 -- touch event listener for background object
