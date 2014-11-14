@@ -49,7 +49,8 @@ function scene:create( event )
 	pageText.y = display.contentHeight * 0.7
 
 	-- Add more text
-	local pageText2 = display.newText( "El Puma Chileno", 0, 0, native.systemFont, 40 )
+	--local pageText2 = display.newText( "El Puma Chileno", 0, 0, native.systemFont, 40 )
+    local pageText2 = display.newText("El Puma Chileno", 0, 0, "Austie Bost Kitten Klub", 80)
 	pageText2.x = display.contentWidth * 0.5
 	pageText2.y = display.contentHeight * 0.65	
 

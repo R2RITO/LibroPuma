@@ -15,17 +15,27 @@ local json = require("json")
 local botonInicio, botonIndice
 
 local function moverAIndice( event )
-	composer.gotoScene( "P0", "fade" )
+	if event.phase == "ended" or event.phase == "cancelled" then
+		composer.setVariable( "pagina" , 0 )
+		composer.gotoScene( "P0", "fade" )
+	end
 end
 
 local function moverAInicio( event )
-	composer.gotoScene( "P0", "fade" )
+	if event.phase == "ended" or event.phase == "cancelled" then
+		composer.setVariable( "pagina" , 0 )
+		composer.gotoScene( "P0", "fade" )
+	end
 end
 
 local function moverAMarcador( event )
-    pag = "P" .. composer.getVariable( "paginaMarcador" )
-    composer.setVariable( pagina, pag )
-	composer.gotoScene( pag, "fade" )
+	if event.phase == "ended" or event.phase == "cancelled" then
+	    pag = "P" .. composer.getVariable( "paginaMarcador" )
+	    pag_sig = composer.getVariable( "paginaMarcador" )
+	    composer.setVariable( "pagina" , pag_sig )
+	    print( composer.getVariable("pagina") )
+		composer.gotoScene( pag, "fade" )
+	end
 end
 
 local function cargarMarcador()
@@ -46,28 +56,28 @@ local function cargarMarcador()
 end
 
 --Para animación Sprite de Puma
-seqData ={
-	{name = "puma", start=1, count=4, time = 800, loopCount = 0}
-}
+-- seqData ={
+-- 	{name = "puma", start=1, count=4, time = 800, loopCount = 0}
+-- }
 
-data = {
-		frames ={
-		{name=puma1, x = 0, y = 398, width = 725, height = 398, sourceX=0, sourceY=0 , sourceWidth=725, sourceHeight=398},
-		{name=puma2, x = 725, y = 0, width = 725, height = 398, sourceX=0, sourceY=0 , sourceWidth=725, sourceHeight=398},
-		{name=puma3, x = 0, y = 398, width = 725, height = 398, sourceX=0, sourceY=0 , sourceWidth=725, sourceHeight=398},
-		{name=puma4, x = 0, y = 0, width = 725, height = 398, sourceX=0, sourceY=0 , sourceWidth=725, sourceHeight=398},
-	},
-	sheetContentWidth = 1451,
-	sheetContentHeight = 796
-}
+-- data = {
+-- 		frames ={
+-- 		{name=puma1, x = 0, y = 398, width = 725, height = 398, sourceX=0, sourceY=0 , sourceWidth=725, sourceHeight=398},
+-- 		{name=puma2, x = 725, y = 0, width = 725, height = 398, sourceX=0, sourceY=0 , sourceWidth=725, sourceHeight=398},
+-- 		{name=puma3, x = 0, y = 398, width = 725, height = 398, sourceX=0, sourceY=0 , sourceWidth=725, sourceHeight=398},
+-- 		{name=puma4, x = 0, y = 0, width = 725, height = 398, sourceX=0, sourceY=0 , sourceWidth=725, sourceHeight=398},
+-- 	},
+-- 	sheetContentWidth = 1451,
+-- 	sheetContentHeight = 796
+-- }
 
-sheet = graphics.newImageSheet("sprite1.jpg", data)
-sprite = display.newSprite(sheet, seqData)
-sprite.x = display.contentHeight/2
-sprite.y = display.contentWidth/2
+-- sheet = graphics.newImageSheet("sprite1.jpg", data)
+-- sprite = display.newSprite(sheet, seqData)
+-- sprite.x = display.contentHeight/2
+-- sprite.y = display.contentWidth/2
 
-sprite:setSequence("puma")
-sprite:play()
+-- sprite:setSequence("puma")
+-- sprite:play()
 
 --Como loopCount = 0 se reproduce infinitamente
 --Fin animación

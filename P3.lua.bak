@@ -18,34 +18,6 @@ local tweenTime = 500
 local animStep = 1
 local readyToContinue = false
 
--- Funcion para colocar la silueta negra en su posición inicial
-local function reiniciarSiluetaNegra()
-
-    siluetaNegra.alpha = 1
-    siluetaNegra.isVisible = true
-    siluetaNegra.x = display.contentWidth * 0.25
-    siluetaNegra.y = display.contentHeight * 0.25
-
-end
-
-local function reiniciarSiluetaGris()
-
-    siluetaGris.alpha = 1
-    siluetaGris.isVisible = true
-    siluetaGris.x = display.contentWidth * 0.25
-    siluetaGris.y = display.contentHeight * 0.65
-
-end
-
-local function reiniciarRamaObj()
-
-    ramaObj.alpha = 1
-    ramaObj.isVisible = true
-    ramaObj.x = display.contentWidth * 0.25
-    ramaObj.y = display.contentHeight * 0.50
-
-end
-
 -- function to show next animation
 local function showNext()
     if readyToContinue then
@@ -54,7 +26,7 @@ local function showNext()
         
         local function repositionAndFadeIn()
             pageText.x = display.contentWidth * 0.5
-            pageText.y = display.contentHeight * 0.4
+            pageText.y = display.contentHeight * 0.20
             pageText.isVisible = true
 
                     
@@ -79,26 +51,24 @@ local function showNext()
             local textOption = 
                 {           
                     --parent = textGroup,
-                    text = "Nombre científico: Felis concolor. Su hábitat: Habita a lo largo de todo el país en zonas boscosas y cordilleranas.",     
+                    text = "Nombre científico: Felis concolor.Hábitat: Habita a\
+                            lo largo de todo el país en zonas boscosas y cordilleranas.",     
                     width = 500,     --required for multi-line and alignment
-                    font = "Austie Bost Kitten Klub",   
-                    fontSize = 40,
+                    font = "Calibri Light",   
+                    fontSize = 22,
                     align = "center"  --new alignment parameter
             
                 }
 
             pageText= display.newText(textOption)
             pageText.isVisible = false
+            repositionAndFadeIn()
 
             siluetaNegra.alpha = 1 --Not transparent
+            siluetaNegra.x = -siluetaNegra.contentWidth
             siluetaNegra.isVisible = true
             pageTween = transition.to( siluetaNegra, { time=tweenTime, x=display.contentWidth*0.75, transition=easing.outExpo, onComplete=completeTween } )
             pageTween = transition.to( siluetaNegra, { alpha=0, onComplete=desaparecer } )
-
-            print(audio.play( rugido ))
-            repositionAndFadeIn()
-
-            reiniciarSiluetaGris()
 
         elseif animStep == 2 then
             pageText.alpha = 0 --transparent
@@ -106,16 +76,17 @@ local function showNext()
             local textOption = 
                 {           
                     --parent = textGroup,
-                    text = "Características: Es el mayor carnívoro terrestre de Chile. Tiene una longitud hasta de 1,90 metros. con una cola de más de 80 cm. y los ejemplares más grandes alcanzan 55 kilos. ",     
+                    text = "Características: Es el mayor carnívoro terrestre de Chile.\
+                            Tiene una longitud hasta de 1,90 metros. con una cola de más\
+                            de 80 cm. y los ejemplares más grandes alcanzan 55 kilos. ",     
                     width = 500,     --required for multi-line and alignment
-                    font = "Austie Bost Kitten Klub",   
-                    fontSize = 40,
+                    font = "Calibri Light",   
+                    fontSize = 22,
                     align = "center"  --new alignment parameter
                             
                 }
 
             pageText= display.newText(textOption)   
-            audio.play( rugido )
             repositionAndFadeIn()
 
             siluetaGris.alpha = 1
@@ -123,32 +94,30 @@ local function showNext()
             siluetaGris.isVisible = true
             pageTween = transition.to( siluetaGris, { time=tweenTime, x=display.contentWidth*0.5, transition=easing.outExpo, onComplete=completeTween } )
             pageTween = transition.to( siluetaGris, { alpha=0, onComplete=desaparecer } )
-
-            reiniciarRamaObj()
         
         elseif animStep == 3 then
             pageText.alpha = 0
             local textOption = 
                 {           
                     --parent = textGroup,
-                    text = "Son cazadores por excelencia, cautos, silenciosos y solitarios. Se alimenta de diversas presas, desde roedores como ratones y tucos tucos, hasta huemules y guanacos pero no ataca al hombre.",     
+                    text = "Son cazadores por excelencia, cautos, silenciosos y\
+                            solitarios. Se alimenta de diversas presas, desde \
+                            roedores como ratones y tucos tucos, hasta huemules\
+                            y guanacos pero no ataca al hombre.",     
                     width = 500,     --required for multi-line and alignment
-                    font = "Austie Bost Kitten Klub",   
-                    fontSize = 40,
+                    font = "Calibri Light",   
+                    fontSize = 22,
                     align = "center"  --new alignment parameter
                     
                 }
 
             pageText= display.newText(textOption)
-            audio.play( rugido )
             repositionAndFadeIn()
             
-            --ramaObj.isVisible = true
-            --ramaObj.alpha = 0
-            pageTween = transition.to( ramaObj, { time=tweenTime*1.5, alpha=0, transition=easing.inOutExpo, onComplete=completeTween } )
-            --pageTween = transition.to( ramaObj, { alpha=0, delay=2500, onComplete=desaparecer } )
-
-            reiniciarSiluetaNegra()
+            ramaObj.isVisible = true
+            ramaObj.alpha = 0
+            pageTween = transition.to( ramaObj, { time=tweenTime*1.5, alpha=1, transition=easing.inOutExpo, onComplete=completeTween } )
+            pageTween = transition.to( ramaObj, { alpha=0, delay=2500, onComplete=desaparecer } )
         end
     end
 end
@@ -159,12 +128,10 @@ local function verificarMarcador()
     local pag_act = composer.getVariable( "pagina" )
 
     if pagMarcador == pag_act then
-        transition.to( markerObj, { alpha=1 } )
-        print("marcador activo")
+        markerObj.alpha = 1
     else
-        transition.to( markerObj, { alpha=0.2 } )
+        markerObj.alpha = 0.2
     end
-    return true
 end
 
 -- Funcion para guardar en el archivo los datos del marcador
@@ -182,34 +149,26 @@ local function guardarMarcador()
 
         io.close( archivo )
     end
-    return true
 
 end
 
 -- Funcion que activa el marcador para la página actual.
 local function activarMarcador( event )
 
-    if event.phase == "ended" or event.phase == "cancelled" then
+    local pagActual = composer.getVariable( "pagina" )
+    local pagMarcador = composer.getVariable( "paginaMarcador" )
 
-        local pagActual = composer.getVariable( "pagina" )
-        local pagMarcador = composer.getVariable( "paginaMarcador" )
-
-        if pagActual == pagMarcador then
-            transition.to( markerObj, { alpha=0.2 } )
-            composer.setVariable( "paginaMarcador", 0 )
-        else
-            -- Hacer visible el marcador y guardar la pagina
-            transition.to( markerObj, { alpha=1 } )
-            composer.setVariable( "paginaMarcador", pagActual )
-        end
-
-        guardarMarcador()
+    if pagActual == pagMarcador then
+        transition.to( markerObj, { alpha=0.2 } )
+        composer.setVariable( "paginaMarcador", 0 )
+    else
+        -- Hacer visible el marcador y guardar la pagina
+        transition.to( markerObj, { alpha=1 } )
+        composer.setVariable( "paginaMarcador", pagActual )
     end
 
-    return true
+    guardarMarcador()
 end
-
-
 
 -- touch event listener for background object
 local function onPageSwipe( self, event )
@@ -264,12 +223,20 @@ function scene:create( event )
     background = display.newImageRect( sceneGroup, "PumaArbol.jpg", display.contentWidth * 2.5, display.contentHeight - 120 )
     background.anchorX = 0
     background.anchorY = 0
-    background.x, background.y = -750, 0
+    background.x, background.y = -1200, 0
     background.alpha = 0.5
+
+
+    
+    -- create overlay
+    local overlay = display.newImageRect( sceneGroup, "pagebg1.png", display.contentWidth, display.contentHeight - 120 )
+    overlay.anchorX = 0
+    overlay.anchorY = 0
+    overlay.x, overlay.y = 0, 0
     
     
     -- Creacion de iconos 
-    siluetaNegra = display.newImageRect( sceneGroup, "PumaSF.png", 200, 150 )
+    siluetaNegra = display.newImageRect( sceneGroup, "PumaSF.png", 400, 300 )
     siluetaNegra.x = display.contentWidth * 0.5
     siluetaNegra.y = display.contentHeight * 0.5
     siluetaNegra.isVisible = false
@@ -318,23 +285,19 @@ function scene:show( event )
     
     if phase == "will" then
         -- Called when the scene is still off screen and is about to move on screen
-        rugido = audio.loadSound( "cougar.wav" )
     elseif phase == "did" then
         -- Called when the scene is now on screen
         -- 
         -- INSERT code here to make the scene come alive
         -- e.g. start timers, begin animation, play audio, etc.
 
-        markerObj.alpha = 0.2
-        print( "P1MarkerTrueInicio" )
         markerObj.isVisible = true
-        print( "P1MarkerTrueFin" )
         verificarMarcador()
 
-        reiniciarSiluetaNegra()
+        
         animStep = 1
         readyToContinue = true
-        --showNext()
+        showNext()
     
         -- assign touch event to background to monitor page swiping
         background.touch = onPageSwipe
@@ -359,10 +322,7 @@ function scene:hide( event )
         siluetaGris.isVisible = false
         ramaObj.isVisible = false
         pageText.isVisible = false
-        print( "P1MarkerFalseInicio" )
         markerObj.isVisible = false
-        print( "P1MarkerFalseFin" )
-        continueText.isVisible = false
     
         -- remove touch event listener for background
         background:removeEventListener( "touch", background )
