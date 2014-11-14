@@ -1,3 +1,5 @@
+
+
 -----------------------------------------------------------------------------------------
 --
 -- page1.lua
@@ -51,9 +53,7 @@ local function showNext()
             local textOption = 
                 {           
                     --parent = textGroup,
-                    text =  "Características: Es el mayor carnívoro terrestre de Chile.\
-                            Tiene una longitud hasta de 1,90 metros. con una cola de más\
-                            de 80 cm. y los ejemplares más grandes alcanzan 55 kilos. ",     
+                    text =  "Características: Es el mayor carnívoro terrestre de Chile. Tiene una longitud hasta de 1,90 metros. con una cola de más de 80 cm. y los ejemplares más grandes alcanzan 55 kilos. ",     
                     width = 500,     --required for multi-line and alignment
                     font = "Austie Bost Kitten Klub",   
                     fontSize = 40,
@@ -229,7 +229,7 @@ function scene:create( event )
     background2 = display.newImageRect( sceneGroup, "PumaArbol.jpg", display.contentWidth * 2.5, display.contentHeight - 120 )
     background2.anchorX = 0
     background2.anchorY = 0
-    background2.x, background2.y = -1200, 0
+    background2.x, background2.y = -750, 0
     background2.alpha = 0.5
     
     
