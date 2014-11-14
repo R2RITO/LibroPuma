@@ -18,6 +18,34 @@ local tweenTime = 500
 local animStep = 1
 local readyToContinue = false
 
+-- Funcion para colocar la silueta negra en su posición inicial
+local function reiniciarSiluetaNegra()
+
+    siluetaNegra.alpha = 1
+    siluetaNegra.isVisible = true
+    siluetaNegra.x = display.contentWidth * 0.25
+    siluetaNegra.y = display.contentHeight * 0.25
+
+end
+
+local function reiniciarSiluetaGris()
+
+    siluetaGris.alpha = 1
+    siluetaGris.isVisible = true
+    siluetaGris.x = display.contentWidth * 0.25
+    siluetaGris.y = display.contentHeight * 0.65
+
+end
+
+local function reiniciarRamaObj()
+
+    ramaObj.alpha = 1
+    ramaObj.isVisible = true
+    ramaObj.x = display.contentWidth * 0.25
+    ramaObj.y = display.contentHeight * 0.50
+
+end
+
 -- function to show next animation
 local function showNext()
     if readyToContinue then
@@ -26,7 +54,7 @@ local function showNext()
         
         local function repositionAndFadeIn()
             pageText.x = display.contentWidth * 0.5
-            pageText.y = display.contentHeight * 0.20
+            pageText.y = display.contentHeight * 0.4
             pageText.isVisible = true
 
                     
@@ -51,8 +79,7 @@ local function showNext()
             local textOption = 
                 {           
                     --parent = textGroup,
-                    text = "Nombre científico: Felis concolor.Hábitat: Habita a\
-                            lo largo de todo el país en zonas boscosas y cordilleranas.",     
+                    text = "Nombre científico: Felis concolor. Su hábitat: Habita a lo largo de todo el país en zonas boscosas y cordilleranas.",     
                     width = 500,     --required for multi-line and alignment
                     font = "Calibri Light",   
                     fontSize = 22,
@@ -62,13 +89,16 @@ local function showNext()
 
             pageText= display.newText(textOption)
             pageText.isVisible = false
-            repositionAndFadeIn()
 
             siluetaNegra.alpha = 1 --Not transparent
-            siluetaNegra.x = -siluetaNegra.contentWidth
             siluetaNegra.isVisible = true
             pageTween = transition.to( siluetaNegra, { time=tweenTime, x=display.contentWidth*0.75, transition=easing.outExpo, onComplete=completeTween } )
             pageTween = transition.to( siluetaNegra, { alpha=0, onComplete=desaparecer } )
+
+            print(audio.play( rugido ))
+            repositionAndFadeIn()
+
+            reiniciarSiluetaGris()
 
         elseif animStep == 2 then
             pageText.alpha = 0 --transparent
@@ -76,9 +106,7 @@ local function showNext()
             local textOption = 
                 {           
                     --parent = textGroup,
-                    text = "Características: Es el mayor carnívoro terrestre de Chile.\
-                            Tiene una longitud hasta de 1,90 metros. con una cola de más\
-                            de 80 cm. y los ejemplares más grandes alcanzan 55 kilos. ",     
+                    text = "Características: Es el mayor carnívoro terrestre de Chile. Tiene una longitud hasta de 1,90 metros. con una cola de más de 80 cm. y los ejemplares más grandes alcanzan 55 kilos. ",     
                     width = 500,     --required for multi-line and alignment
                     font = "Calibri Light",   
                     fontSize = 22,
@@ -87,6 +115,7 @@ local function showNext()
                 }
 
             pageText= display.newText(textOption)   
+            audio.play( rugido )
             repositionAndFadeIn()
 
             siluetaGris.alpha = 1
@@ -94,16 +123,15 @@ local function showNext()
             siluetaGris.isVisible = true
             pageTween = transition.to( siluetaGris, { time=tweenTime, x=display.contentWidth*0.5, transition=easing.outExpo, onComplete=completeTween } )
             pageTween = transition.to( siluetaGris, { alpha=0, onComplete=desaparecer } )
+
+            reiniciarRamaObj()
         
         elseif animStep == 3 then
             pageText.alpha = 0
             local textOption = 
                 {           
                     --parent = textGroup,
-                    text = "Son cazadores por excelencia, cautos, silenciosos y\
-                            solitarios. Se alimenta de diversas presas, desde \
-                            roedores como ratones y tucos tucos, hasta huemules\
-                            y guanacos pero no ataca al hombre.",     
+                    text = "Son cazadores por excelencia, cautos, silenciosos y solitarios. Se alimenta de diversas presas, desde roedores como ratones y tucos tucos, hasta huemules y guanacos pero no ataca al hombre.",     
                     width = 500,     --required for multi-line and alignment
                     font = "Calibri Light",   
                     fontSize = 22,
@@ -112,12 +140,15 @@ local function showNext()
                 }
 
             pageText= display.newText(textOption)
+            audio.play( rugido )
             repositionAndFadeIn()
             
-            ramaObj.isVisible = true
-            ramaObj.alpha = 0
-            pageTween = transition.to( ramaObj, { time=tweenTime*1.5, alpha=1, transition=easing.inOutExpo, onComplete=completeTween } )
-            pageTween = transition.to( ramaObj, { alpha=0, delay=2500, onComplete=desaparecer } )
+            --ramaObj.isVisible = true
+            --ramaObj.alpha = 0
+            pageTween = transition.to( ramaObj, { time=tweenTime*1.5, alpha=0, transition=easing.inOutExpo, onComplete=completeTween } )
+            --pageTween = transition.to( ramaObj, { alpha=0, delay=2500, onComplete=desaparecer } )
+
+            reiniciarSiluetaNegra()
         end
     end
 end
@@ -178,6 +209,8 @@ local function activarMarcador( event )
     return true
 end
 
+
+
 -- touch event listener for background object
 local function onPageSwipe( self, event )
     local phase = event.phase
@@ -236,7 +269,7 @@ function scene:create( event )
     
     
     -- Creacion de iconos 
-    siluetaNegra = display.newImageRect( sceneGroup, "PumaSF.png", 400, 300 )
+    siluetaNegra = display.newImageRect( sceneGroup, "PumaSF.png", 200, 150 )
     siluetaNegra.x = display.contentWidth * 0.5
     siluetaNegra.y = display.contentHeight * 0.5
     siluetaNegra.isVisible = false
@@ -285,6 +318,7 @@ function scene:show( event )
     
     if phase == "will" then
         -- Called when the scene is still off screen and is about to move on screen
+        rugido = audio.loadSound( "cougar.wav" )
     elseif phase == "did" then
         -- Called when the scene is now on screen
         -- 
@@ -297,10 +331,10 @@ function scene:show( event )
         print( "P1MarkerTrueFin" )
         verificarMarcador()
 
-        
+        reiniciarSiluetaNegra()
         animStep = 1
         readyToContinue = true
-        showNext()
+        --showNext()
     
         -- assign touch event to background to monitor page swiping
         background.touch = onPageSwipe
