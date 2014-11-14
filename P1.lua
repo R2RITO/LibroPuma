@@ -54,9 +54,9 @@ local function showNext()
         
         local function repositionAndFadeIn()
             pageText.x = display.contentWidth * 0.5
-            pageText.y = display.contentHeight * 0.4
-            pageText.isVisible = true
+            pageText.y = display.contentHeight * 0.3
 
+            pageText.isVisible = true
                     
             fadeTween1 = transition.to( pageText, { time=tweenTime*0.5, alpha=1.0 } )
         end

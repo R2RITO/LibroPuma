@@ -28,7 +28,7 @@ local function showNext()
         
         local function repositionAndFadeIn()
             pageText2.x = display.contentWidth * 0.5
-            pageText2.y = display.contentHeight * 0.20
+            pageText2.y = display.contentHeight * 0.3
             pageText2.isVisible = true
 
                     

@@ -223,7 +223,7 @@ function scene:create( event )
     background = display.newImageRect( sceneGroup, "PumaArbol.jpg", display.contentWidth * 2.5, display.contentHeight - 120 )
     background.anchorX = 0
     background.anchorY = 0
-    background.x, background.y = -1200, 0
+    background.x, background.y = -750, 0
     background.alpha = 0.5
 
 
