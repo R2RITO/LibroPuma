@@ -88,11 +88,19 @@ local function showNext()
             pageText2= display.newText(textOption)   
             repositionAndFadeIn()
 
+<<<<<<< HEAD
             siluetaGris2.alpha = 1
             siluetaGris2.x = display.contentWidth + siluetaGris2.contentWidth
             siluetaGris2.isVisible = true
             pageTween = transition.to( siluetaGris2, { time=tweenTime, x=display.contentWidth*0.5, transition=easing.outExpo, onComplete=completeTween } )
             pageTween = transition.to( siluetaGris2, { alpha=0, onComplete=desaparecer } )
+=======
+            siluetaGris.alpha = 1
+            siluetaGris.x = display.contentWidth + siluetaGris.contentWidth
+            siluetaGris.isVisible = true
+            pageTween = transition.to( siluetaGris, { time=tweenTime, x=display.contentWidth*0.5, transition=easing.outExpo, onComplete=completeTween } )
+            pageTween = transition.to( siluetaGris, { alpha=0, onComplete=desaparecer } )
+>>>>>>> 076436d05a2257dd5da965c29be1a43ce48bf2ad
         
         elseif animStep == 3 then
             pageText2.alpha = 0
@@ -127,9 +135,15 @@ local function verificarMarcador()
 
     if pagMarcador == pag_act then
         print("Marcador activo, alpha 1")
+<<<<<<< HEAD
         transition.to( markerObj2, { alpha=1 } )
     else
         --transition.to( markerObj2, { alpha=0.2 } )
+=======
+        transition.to( markerObj, { alpha=1 } )
+    else
+        --transition.to( markerObj, { alpha=0.2 } )
+>>>>>>> 076436d05a2257dd5da965c29be1a43ce48bf2ad
     end
     return true
 end
@@ -162,11 +176,19 @@ local function activarMarcador( event )
         local pagMarcador = composer.getVariable( "paginaMarcador" )
 
         if pagActual == pagMarcador then
+<<<<<<< HEAD
             transition.to( markerObj2, { alpha=0.2 } )
             composer.setVariable( "paginaMarcador", 0 )
         else
             -- Hacer visible el marcador y guardar la pagina
             transition.to( markerObj2, { alpha=1 } )
+=======
+            transition.to( markerObj, { alpha=0.2 } )
+            composer.setVariable( "paginaMarcador", 0 )
+        else
+            -- Hacer visible el marcador y guardar la pagina
+            transition.to( markerObj, { alpha=1 } )
+>>>>>>> 076436d05a2257dd5da965c29be1a43ce48bf2ad
             composer.setVariable( "paginaMarcador", pagActual )
         end
 
@@ -225,12 +247,21 @@ function scene:create( event )
     -- INSERT code here to initialize the scene
     -- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
     
+<<<<<<< HEAD
     -- create background2 image
     background2 = display.newImageRect( sceneGroup, "PumaArbol.jpg", display.contentWidth * 2.5, display.contentHeight - 120 )
     background2.anchorX = 0
     background2.anchorY = 0
     background2.x, background2.y = -750, 0
     background2.alpha = 0.5
+=======
+    -- create background image
+    background = display.newImageRect( sceneGroup, "PumaArbol.jpg", display.contentWidth * 2.5, display.contentHeight - 120 )
+    background.anchorX = 0
+    background.anchorY = 0
+    background.x, background.y = -1200, 0
+    background.alpha = 0.5
+>>>>>>> 076436d05a2257dd5da965c29be1a43ce48bf2ad
     
     
     -- Creacion de iconos 
@@ -289,9 +320,15 @@ function scene:show( event )
         -- INSERT code here to make the scene come alive
         -- e.g. start timers, begin animation, play audio, etc.
 
+<<<<<<< HEAD
         markerObj2.alpha = 0.2
         print( "P2MarkerTrueInicio" )
         markerObj2.isVisible = true
+=======
+        markerObj.alpha = 0.2
+        print( "P2MarkerTrueInicio" )
+        markerObj.isVisible = true
+>>>>>>> 076436d05a2257dd5da965c29be1a43ce48bf2ad
         print( "P2MarkerTrueFin" )
         verificarMarcador()
 
@@ -319,12 +356,21 @@ function scene:hide( event )
         -- e.g. stop timers, stop animation, unload sounds, etc.)
         
         -- hide objects
+<<<<<<< HEAD
         siluetaNegra2.isVisible = false
         siluetaGris2.isVisible = false
         ramaObj2.isVisible = false
         pageText2.isVisible = false
         print( "P2MarkerFalseInicio" )
         markerObj2.isVisible = false
+=======
+        siluetaNegra.isVisible = false
+        siluetaGris.isVisible = false
+        ramaObj.isVisible = false
+        pageText.isVisible = false
+        print( "P2MarkerFalseInicio" )
+        markerObj.isVisible = false
+>>>>>>> 076436d05a2257dd5da965c29be1a43ce48bf2ad
         print( "P2MarkerFalseFin" )
     
         -- remove touch event listener for background2
