@@ -80,7 +80,7 @@ local function showNext()
             local textOption = 
                 {           
                     --parent = textGroup,
-                    text = "Nombre científico: Felis concolor. Su hábitat: Habita a lo largo de todo el país en zonas boscosas y cordilleranas.",     
+                    text = "¡Hola! Bienvenido a este cuento, tócame para comenzar.",     
                     width = 500,     --required for multi-line and alignment
                     font = "Austie Bost Kitten Klub",   
                     fontSize = 40,
@@ -93,14 +93,8 @@ local function showNext()
 
             siluetaNegra.alpha = 1 --Not transparent
             siluetaNegra.isVisible = true
-            pageTween = transition.to( siluetaNegra, { time=tweenTime, x=display.contentWidth*0.75, transition=easing.outExpo, onComplete=completeTween } )
-            pageTween = transition.to( siluetaNegra, { alpha=0, onComplete=desaparecer } )
-
-            audio.play( rugido )
-
+            pageTween = transition.to( siluetaNegra, { time=tweenTime, x=display.contentWidth*0.5, transition=easing.outExpo, onComplete=completeTween } )            
             repositionAndFadeIn()
-
-            reiniciarSiluetaGris()
 
         elseif animStep == 2 then
             pageText.alpha = 0 --transparent
@@ -108,7 +102,7 @@ local function showNext()
             local textOption = 
                 {           
                     --parent = textGroup,
-                    text = "Características: Es el mayor carnívoro terrestre de Chile. Tiene una longitud hasta de 1,90 metros. con una cola de más de 80 cm. y los ejemplares más grandes alcanzan 55 kilos. ",     
+                    text = "¡Toca al puma para conocer su nombre científico!",     
                     width = 500,     --required for multi-line and alignment
                     font = "Austie Bost Kitten Klub",   
                     fontSize = 40,
@@ -211,6 +205,17 @@ local function activarMarcador( event )
 end
 
 
+-- Funcion que se activa cuando se toca al puma guia.
+local function continuarAnimacion( event )
+
+    if event.phase == "ended" or event.phase == "cancelled" then
+        showNext()
+    end
+
+    return true
+
+end
+
 
 -- touch event listener for background object
 local function onPageSwipe( self, event )
@@ -241,9 +246,6 @@ local function onPageSwipe( self, event )
                     pageText.isVisible=false
                 end
 
-            else
-                -- Touch and release; initiate next animation
-                showNext()
             end
             
             display.getCurrentStage():setFocus( nil )
@@ -328,19 +330,17 @@ function scene:show( event )
 
         markerObj.alpha = 0.2
         markerObj.x, markerObj.y = 0, 50
-        print( "P1MarkerTrueInicio" )
         markerObj.isVisible = true
-        print( "P1MarkerTrueFin" )
         verificarMarcador()
 
-        reiniciarSiluetaNegra()
         animStep = 1
         readyToContinue = true
-        --showNext()
+        showNext()
     
         -- assign touch event to background to monitor page swiping
         background.touch = onPageSwipe
         background:addEventListener( "touch", background )
+        siluetaNegra:addEventListener( "touch", continuarAnimacion )
         markerObj:addEventListener( "touch", activarMarcador )
     end 
 
