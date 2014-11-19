@@ -11,7 +11,8 @@ local json = require("json")
 
 
 -- forward declarations and other locals
-local background, pageText, continueText, pageTween, fadeTween1, fadeTween2, siluetaNegra, siluetaGris
+local background, pageText, continueText, pageTween, fadeTween1, fadeTween2,
+      siluetaNegra, siluetaGris, markerObj, ramaObj
 
 local swipeThresh = 100     -- amount of pixels finger must travel to initiate page swipe
 local tweenTime = 500
@@ -95,7 +96,8 @@ local function showNext()
             pageTween = transition.to( siluetaNegra, { time=tweenTime, x=display.contentWidth*0.75, transition=easing.outExpo, onComplete=completeTween } )
             pageTween = transition.to( siluetaNegra, { alpha=0, onComplete=desaparecer } )
 
-            print(audio.play( rugido ))
+            audio.play( rugido )
+
             repositionAndFadeIn()
 
             reiniciarSiluetaGris()
@@ -160,7 +162,6 @@ local function verificarMarcador()
 
     if pagMarcador == pag_act then
         transition.to( markerObj, { alpha=1 } )
-        print("marcador activo")
     else
         transition.to( markerObj, { alpha=0.2 } )
     end
@@ -326,6 +327,7 @@ function scene:show( event )
         -- e.g. start timers, begin animation, play audio, etc.
 
         markerObj.alpha = 0.2
+        markerObj.x, markerObj.y = 0, 50
         print( "P1MarkerTrueInicio" )
         markerObj.isVisible = true
         print( "P1MarkerTrueFin" )
