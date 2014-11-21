@@ -11,7 +11,7 @@ local json = require("json")
 
 
 -- forward declarations and other locals
-local background, pageText, continueText, pageTween, fadeTween1, fadeTween2,
+local cielo, pasto, cientifico, pageText, continueText, pageTween, fadeTween1, fadeTween2,
       siluetaNegra, siluetaGris, markerObj, ramaObj
 
 local swipeThresh = 100     -- amount of pixels finger must travel to initiate page swipe
@@ -102,7 +102,7 @@ local function showNext()
             local textOption = 
                 {           
                     --parent = textGroup,
-                    text = "¡Toca al puma para conocer su nombre científico!",     
+                    text = "¡Te presento al puma chileno, tócalo para conocer su nombre científico!",     
                     width = 500,     --required for multi-line and alignment
                     font = "Austie Bost Kitten Klub",   
                     fontSize = 40,
@@ -263,14 +263,23 @@ function scene:create( event )
     -- INSERT code here to initialize the scene
     -- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
     
-    -- create background image
-    background = display.newImageRect( sceneGroup, "PumaArbol.jpg", display.contentWidth * 2.5, display.contentHeight - 120 )
-    background.anchorX = 0
-    background.anchorY = 0
-    background.x, background.y = -750, 0
-    background.alpha = 0.5
-    
-    
+    -- -- create background image
+    -- background = display.newImageRect( sceneGroup, "PumaArbol.jpg", display.contentWidth * 2.5, display.contentHeight - 120 )
+    -- background.anchorX = 0
+    -- background.anchorY = 0
+    -- background.x, background.y = -750, 0
+    -- background.alpha = 0.5
+
+    cielo = display.newImageRect( sceneGroup, "Pagina1\\Sky.jpg", display.contentWidth, display.contentHeight * 0.6 )
+    cielo.x, cielo.y = display.contentWidth*0.5, display.contentHeight * 0.3
+
+    pasto = display.newImageRect( sceneGroup, "Pagina1\\Grass.png", display.contentWidth, display.contentHeight * 2)
+    pasto.x, pasto.y = display.contentWidth*0.5, display.contentHeight * 0.35
+
+    cientifico = display.newImageRect( sceneGroup, "Pagina1\\Scientist.png", display.contentWidth * 0.5, display.contentHeight*0.5)
+    cientifico.x, cientifico.y = display.contentWidth*0.25, display.contentHeight * 0.5
+
+
     -- Creacion de iconos 
     siluetaNegra = display.newImageRect( sceneGroup, "PumaSF.png", 200, 150 )
     siluetaNegra.x = display.contentWidth * 0.5
@@ -338,9 +347,9 @@ function scene:show( event )
         showNext()
     
         -- assign touch event to background to monitor page swiping
-        background.touch = onPageSwipe
-        background:addEventListener( "touch", background )
-        siluetaNegra:addEventListener( "touch", continuarAnimacion )
+        --background.touch = onPageSwipe
+        --background:addEventListener( "touch", background )
+        cientifico:addEventListener( "touch", continuarAnimacion )
         markerObj:addEventListener( "touch", activarMarcador )
     end 
 
@@ -367,7 +376,7 @@ function scene:hide( event )
         continueText.isVisible = false
     
         -- remove touch event listener for background
-        background:removeEventListener( "touch", background )
+        --background:removeEventListener( "touch", background )
         markerObj:removeEventListener( "touch", activarMarcador )
     
         -- cancel page animations (if currently active)
