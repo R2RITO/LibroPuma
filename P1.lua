@@ -11,41 +11,16 @@ local json = require("json")
 
 
 -- forward declarations and other locals
-local cielo, pasto, cientifico, pageText, continueText, pageTween, fadeTween1, fadeTween2,
-      siluetaNegra, siluetaGris, markerObj, ramaObj
+local cielo, pasto, cientifico, nube, hojas, bosque, pageText, continueText,
+      pageTween, fadeTween1, fadeTween2, markerObj
+
+
+local continuarAnimacion
 
 local swipeThresh = 100     -- amount of pixels finger must travel to initiate page swipe
-local tweenTime = 500
+local tweenTime = 900
 local animStep = 1
 local readyToContinue = false
-
--- Funcion para colocar la silueta negra en su posición inicial
-local function reiniciarSiluetaNegra()
-
-    siluetaNegra.alpha = 1
-    siluetaNegra.isVisible = true
-    siluetaNegra.x = display.contentWidth * 0.25
-    siluetaNegra.y = display.contentHeight * 0.25
-
-end
-
-local function reiniciarSiluetaGris()
-
-    siluetaGris.alpha = 1
-    siluetaGris.isVisible = true
-    siluetaGris.x = display.contentWidth * 0.25
-    siluetaGris.y = display.contentHeight * 0.65
-
-end
-
-local function reiniciarRamaObj()
-
-    ramaObj.alpha = 1
-    ramaObj.isVisible = true
-    ramaObj.x = display.contentWidth * 0.25
-    ramaObj.y = display.contentHeight * 0.50
-
-end
 
 -- function to show next animation
 local function showNext()
@@ -75,6 +50,7 @@ local function showNext()
         end
         
         if animStep == 1 then
+
             pageText.alpha = 0
 
             local textOption = 
@@ -91,9 +67,8 @@ local function showNext()
             pageText= display.newText(textOption)
             pageText.isVisible = false
 
-            siluetaNegra.alpha = 1 --Not transparent
-            siluetaNegra.isVisible = true
-            pageTween = transition.to( siluetaNegra, { time=tweenTime, x=display.contentWidth*0.5, transition=easing.outExpo, onComplete=completeTween } )            
+            pageTween = transition.to( cientifico, { time=tweenTime, transition=easing.outExpo, onComplete=completeTween } )
+            cientifico.isVisible = true           
             repositionAndFadeIn()
 
         elseif animStep == 2 then
@@ -110,24 +85,26 @@ local function showNext()
                             
                 }
 
-            pageText= display.newText(textOption)   
-            audio.play( rugido )
+            pageText= display.newText(textOption) 
             repositionAndFadeIn()
 
-            siluetaGris.alpha = 1
-            --siluetaGris.x = display.contentWidth + siluetaGris.contentWidth
-            siluetaGris.isVisible = true
-            pageTween = transition.to( siluetaGris, { time=tweenTime, x=display.contentWidth*0.5, transition=easing.outExpo, onComplete=completeTween } )
-            pageTween = transition.to( siluetaGris, { alpha=0, onComplete=desaparecer } )
+            retratoPuma.isVisible = true
+            hojas.isVisible = true
+            bosque.isVisible = true
 
-            reiniciarRamaObj()
+            transition.to( hojas, { time=tweenTime, x=display.contentWidth*0.2, transition=easing.outExpo} )
+            transition.to( bosque, { time=tweenTime, x=display.contentWidth*0.25, transition=easing.outExpo} )
+            transition.to( retratoPuma, { time=tweenTime, alpha=1, transition=easing.outExpo, onComplete=completeTween } )
+
+            cientifico:removeEventListener( "touch", continuarAnimacion )
+            --retratoPuma:addEventListener( "touch", continuarAnimacion )
         
         elseif animStep == 3 then
             pageText.alpha = 0
             local textOption = 
                 {           
                     --parent = textGroup,
-                    text = "Son cazadores por excelencia, cautos, silenciosos y solitarios. Se alimenta de diversas presas, desde roedores como ratones y tucos tucos, hasta huemules y guanacos pero no ataca al hombre.",     
+                    text = "Felis Concolor.",     
                     width = 500,     --required for multi-line and alignment
                     font = "Austie Bost Kitten Klub",   
                     fontSize = 40,
@@ -136,15 +113,10 @@ local function showNext()
                 }
 
             pageText= display.newText(textOption)
-            audio.play( rugido )
             repositionAndFadeIn()
             
-            --ramaObj.isVisible = true
-            --ramaObj.alpha = 0
             pageTween = transition.to( ramaObj, { time=tweenTime*1.5, alpha=0, transition=easing.inOutExpo, onComplete=completeTween } )
-            --pageTween = transition.to( ramaObj, { alpha=0, delay=2500, onComplete=desaparecer } )
 
-            reiniciarSiluetaNegra()
         end
     end
 end
@@ -206,7 +178,7 @@ end
 
 
 -- Funcion que se activa cuando se toca al puma guia.
-local function continuarAnimacion( event )
+continuarAnimacion = function( event )
 
     if event.phase == "ended" or event.phase == "cancelled" then
         showNext()
@@ -276,32 +248,28 @@ function scene:create( event )
     pasto = display.newImageRect( sceneGroup, "Pagina1\\Grass.png", display.contentWidth, display.contentHeight * 2)
     pasto.x, pasto.y = display.contentWidth*0.5, display.contentHeight * 0.35
 
-    cientifico = display.newImageRect( sceneGroup, "Pagina1\\Scientist.png", display.contentWidth * 0.5, display.contentHeight*0.5)
+
+    hojas = display.newImageRect( sceneGroup, "Pagina1\\Hojas2.png", display.contentWidth * 0.45, display.contentHeight * 0.65 )
+    hojas.x, hojas.y = display.contentWidth * -2, display.contentHeight * 0.7
+    hojas.isVisible = false
+
+    bosque = display.newImageRect( sceneGroup, "Pagina1\\Forest.png", display.contentWidth * 0.6, display.contentHeight * 0.4 )
+    bosque.x, bosque.y = display.contentWidth * -2, display.contentHeight * 0.3
+    bosque.isVisible = false
+
+    cientifico = display.newImageRect( sceneGroup, "Pagina1\\Scientist.png", display.contentWidth * 0.4, display.contentHeight*0.5)
     cientifico.x, cientifico.y = display.contentWidth*0.25, display.contentHeight * 0.5
+    cientifico.isVisible = false
+
+    nube = display.newImageRect( sceneGroup, "Pagina1\\Cloud.png", 256, 256 )
+    nube.x, nube.y = display.contentWidth * 0.8, display.contentHeight * 0.2
+
+    retratoPuma = display.newImageRect( sceneGroup, "Pagina1\\retratoPuma.png", display.contentWidth * 0.5, display.contentHeight * 0.7 )
+    retratoPuma.x, retratoPuma.y = display.contentWidth * 0.85, display.contentHeight * 0.7
+    retratoPuma.alpha = 0
+    retratoPuma.isVisible = false
 
 
-    -- Creacion de iconos 
-    siluetaNegra = display.newImageRect( sceneGroup, "PumaSF.png", 200, 150 )
-    siluetaNegra.x = display.contentWidth * 0.5
-    siluetaNegra.y = display.contentHeight * 0.5
-    siluetaNegra.isVisible = false
-    
-    siluetaGris = display.newImageRect( sceneGroup, "PumaSFG.png", 400, 300 )
-    siluetaGris.x = display.contentWidth * 0.10
-    siluetaGris.y = display.contentHeight * 0.55
-    siluetaGris.isVisible = false
-
-    fallingObj = display.newImageRect( sceneGroup, "PumaCayendo.png", 400, 300 )
-    fallingObj.x = display.contentWidth * 0.44
-    fallingObj.y = display.contentHeight * 0.55
-    fallingObj.isVisible = false
-
-    ramaObj = display.newImageRect( sceneGroup, "PumaRama.png", 600, 300 )
-    ramaObj.anchorX = 0
-    ramaObj.anchorY = 0
-    ramaObj.x , ramaObj.y = display.contentWidth * 0.3, display.contentHeight * 0.60
-    ramaObj.isVisible = false
-    
     -- create pageText
     pageText = display.newText( sceneGroup, "", 0, 0, native.systemFontBold, 18 )
     pageText.x = display.contentWidth * 0.5
@@ -315,10 +283,8 @@ function scene:create( event )
     continueText.isVisible = false
 
     --create marker object
-    markerObj = display.newImageRect( sceneGroup, "Marcador.png", 80, 119 )
-    markerObj.anchorX = 0
-    markerObj.anchorY = 0
-    markerObj.x, markerObj.y = 0, 50
+    markerObj = display.newImageRect( sceneGroup, "Marcador.png", 80, 120 )
+    markerObj.x, markerObj.y = 40, 60
     markerObj.isVisible = false
     markerObj.alpha = 0.2
     
@@ -338,7 +304,6 @@ function scene:show( event )
         -- e.g. start timers, begin animation, play audio, etc.
 
         markerObj.alpha = 0.2
-        markerObj.x, markerObj.y = 0, 50
         markerObj.isVisible = true
         verificarMarcador()
 
@@ -366,13 +331,8 @@ function scene:hide( event )
         -- e.g. stop timers, stop animation, unload sounds, etc.)
         
         -- hide objects
-        siluetaNegra.isVisible = false
-        siluetaGris.isVisible = false
-        ramaObj.isVisible = false
         pageText.isVisible = false
-        print( "P1MarkerFalseInicio" )
         markerObj.isVisible = false
-        print( "P1MarkerFalseFin" )
         continueText.isVisible = false
     
         -- remove touch event listener for background
