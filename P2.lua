@@ -1,5 +1,3 @@
-
-
 -----------------------------------------------------------------------------------------
 --
 -- page1.lua
@@ -13,25 +11,27 @@ local json = require("json")
 
 
 -- forward declarations and other locals
-local background, pageText, continueText, pageTween, fadeTween1, fadeTween2,
-      siluetaNegra, siluetaGris, markerObj, ramaObj
+local cielo, pasto, cientifico, nube, hojas, bosque, pageText,
+        pageTween, fadeTween1, fadeTween2, markerObj
+
+
+local continuarAnimacion, onPageSwipe
 
 local swipeThresh = 100     -- amount of pixels finger must travel to initiate page swipe
-local tweenTime = 500
+local tweenTime = 900
 local animStep = 1
 local readyToContinue = false
 
 -- function to show next animation
 local function showNext()
     if readyToContinue then
-        continueText.isVisible = false
         readyToContinue = false
         
-        local function repositionAndFadeIn()
-            pageText.x = display.contentWidth * 0.5
-            pageText.y = display.contentHeight * 0.3
-            pageText.isVisible = true
+        local function repositionAndFadeIn( factorX, factorY )
+            pageText.x = display.contentWidth * factorX
+            pageText.y = display.contentHeight * factorY
 
+            pageText.isVisible = true
                     
             fadeTween1 = transition.to( pageText, { time=tweenTime*0.5, alpha=1.0 } )
         end
@@ -41,7 +41,6 @@ local function showNext()
             if animStep > 3 then animStep = 1; end
             
             readyToContinue = true
-            continueText.isVisible = true
         end
 
         local function desaparecer( self )
@@ -49,28 +48,27 @@ local function showNext()
         end
         
         if animStep == 1 then
+
             pageText.alpha = 0
 
             local textOption = 
                 {           
                     --parent = textGroup,
-                    text =  "Características: Es el mayor carnívoro terrestre de Chile. Tiene una longitud hasta de 1,90 metros. con una cola de más de 80 cm. y los ejemplares más grandes alcanzan 55 kilos. ",     
+                    text = "¡Hola!, tócame para comenzar.",     
                     width = 500,     --required for multi-line and alignment
                     font = "Austie Bost Kitten Klub",   
-                    fontSize = 40,
+                    fontSize = 70,
                     align = "center"  --new alignment parameter
             
                 }
 
             pageText= display.newText(textOption)
             pageText.isVisible = false
-            repositionAndFadeIn()
 
-            siluetaNegra.alpha = 1 --Not transparent
-            siluetaNegra.x = -siluetaNegra.contentWidth
-            siluetaNegra.isVisible = true
-            pageTween = transition.to( siluetaNegra, { time=tweenTime, x=display.contentWidth*0.75, transition=easing.outExpo, onComplete=completeTween } )
-            pageTween = transition.to( siluetaNegra, { alpha=0, onComplete=desaparecer } )
+            pageTween = transition.to( cientifico, { time=tweenTime, transition=easing.outExpo, onComplete=completeTween } )
+            cientifico.isVisible = true  
+            ninos.isVisible = true         
+            repositionAndFadeIn(0.50,0.25)
 
         elseif animStep == 2 then
             pageText.alpha = 0 --transparent
@@ -78,7 +76,7 @@ local function showNext()
             local textOption = 
                 {           
                     --parent = textGroup,
-                    text = "Características: Es el mayor carnívoro terrestre de Chile. Tiene una longitud hasta de 1,90 metros. con una cola de más de 80 cm. y los ejemplares más grandes alcanzan 55 kilos. ",     
+                    text = "¡Te presento al puma chileno, tócalo para conocer su nombre científico!",     
                     width = 500,     --required for multi-line and alignment
                     font = "Austie Bost Kitten Klub",   
                     fontSize = 40,
@@ -86,35 +84,44 @@ local function showNext()
                             
                 }
 
-            pageText= display.newText(textOption)   
-            repositionAndFadeIn()
+            pageText = display.newText(textOption) 
+            pageText.isVisible = false
+            audio.play( start, { onComplete=repositionAndFadeIn(0.5,0.2) } )
 
-            siluetaGris.alpha = 1
-            siluetaGris.x = display.contentWidth + siluetaGris.contentWidth
-            siluetaGris.isVisible = true
-            pageTween = transition.to( siluetaGris, { time=tweenTime, x=display.contentWidth*0.5, transition=easing.outExpo, onComplete=completeTween } )
-            pageTween = transition.to( siluetaGris, { alpha=0, onComplete=desaparecer } )
+            retratoPuma.isVisible = true
+            hojas.isVisible = true
+            bosque.isVisible = true
+            ninos.isVisible = false
+
+            transition.to( hojas, { time=tweenTime, x=display.contentWidth*0.2, transition=easing.outExpo} )
+            transition.to( bosque, { time=tweenTime, x=display.contentWidth*0.25, transition=easing.outExpo} )
+            transition.to( retratoPuma, { time=tweenTime, alpha=1, transition=easing.outExpo, onComplete=completeTween } )
+
+            cientifico:removeEventListener( "touch", continuarAnimacion )
+            retratoPuma:addEventListener( "touch", continuarAnimacion )
         
         elseif animStep == 3 then
+
             pageText.alpha = 0
             local textOption = 
                 {           
                     --parent = textGroup,
-                    text = "Son cazadores por excelencia, cautos, silenciosos y solitarios. Se alimenta de diversas presas, desde roedores como ratones y tucos tucos, hasta huemules y guanacos pero no ataca al hombre.",     
+                    text = "Felis Concolor.",     
                     width = 500,     --required for multi-line and alignment
                     font = "Austie Bost Kitten Klub",   
-                    fontSize = 40,
+                    fontSize = 80,
                     align = "center"  --new alignment parameter
                     
                 }
 
             pageText= display.newText(textOption)
-            repositionAndFadeIn()
+            repositionAndFadeIn(0.55,0.85)
             
-            ramaObj.isVisible = true
-            ramaObj.alpha = 0
-            pageTween = transition.to( ramaObj, { time=tweenTime*1.5, alpha=1, transition=easing.inOutExpo, onComplete=completeTween } )
-            pageTween = transition.to( ramaObj, { alpha=0, delay=2500, onComplete=desaparecer } )
+            pasto.touch = onPageSwipe
+            pasto:addEventListener( "touch", pasto )
+            -- Linea para reiniciar la animacion
+            --pageTween = transition.to( ramaObj, { time=tweenTime*1.5, alpha=0, transition=easing.inOutExpo, onComplete=completeTween } )
+
         end
     end
 end
@@ -124,13 +131,10 @@ local function verificarMarcador()
     local pagMarcador = composer.getVariable( "paginaMarcador" )
     local pag_act = composer.getVariable( "pagina" )
 
-    print( "PagM" .. pagMarcador .. " Pag" .. pag_act)
-
     if pagMarcador == pag_act then
-        print("Marcador activo, alpha 1")
         transition.to( markerObj, { alpha=1 } )
     else
-        --transition.to( markerObj, { alpha=0.2 } )
+        transition.to( markerObj, { alpha=0.2 } )
     end
     return true
 end
@@ -177,8 +181,21 @@ local function activarMarcador( event )
     return true
 end
 
+
+-- Funcion que se activa cuando se toca al puma guia.
+continuarAnimacion = function( event )
+
+    if event.phase == "ended" or event.phase == "cancelled" then
+        showNext()
+    end
+
+    return true
+
+end
+
+
 -- touch event listener for background object
-local function onPageSwipe( self, event )
+onPageSwipe = function( self, event )
     local phase = event.phase
     local pag_act = composer.getVariable( "pagina" )
 
@@ -193,9 +210,6 @@ local function onPageSwipe( self, event )
             if math.abs(distance) > swipeThresh then
 
                 pag_sig = pag_act - distance/math.abs(distance)
-                if pag_sig == 3 then
-                    return true
-                end
                 pag = "P" .. pag_sig
                 composer.setVariable( "pagina", pag_sig)
 
@@ -209,9 +223,6 @@ local function onPageSwipe( self, event )
                     pageText.isVisible=false
                 end
 
-            else
-                -- Touch and release; initiate next animation
-                showNext()
             end
             
             display.getCurrentStage():setFocus( nil )
@@ -229,50 +240,52 @@ function scene:create( event )
     -- INSERT code here to initialize the scene
     -- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
     
-    -- create background image
-    background = display.newImageRect( sceneGroup, "PumaArbol.jpg", display.contentWidth * 2.5, display.contentHeight - 120 )
-    background.anchorX = 0
-    background.anchorY = 0
-    background.x, background.y = -750, 0
-    background.alpha = 0.5
-    
-    
-    -- Creacion de iconos 
-    siluetaNegra = display.newImageRect( sceneGroup, "PumaSF.png", 400, 300 )
-    siluetaNegra.x = display.contentWidth * 0.5
-    siluetaNegra.y = display.contentHeight * 0.5
-    siluetaNegra.isVisible = false
-    
-    siluetaGris = display.newImageRect( sceneGroup, "PumaSFG.png", 400, 300 )
-    siluetaGris.x = display.contentWidth * 0.10
-    siluetaGris.y = display.contentHeight * 0.55
-    siluetaGris.isVisible = false
+    -- -- create background image
 
-    ramaObj = display.newImageRect( sceneGroup, "PumaRama.png", 600, 300 )
-    ramaObj.anchorX = 0
-    ramaObj.anchorY = 0
-    ramaObj.x , ramaObj.y = display.contentWidth * 0.3, display.contentHeight * 0.60
-    ramaObj.isVisible = false
-    
+    cielo = display.newImageRect( sceneGroup, "Pagina1\\Sky.jpg", display.contentWidth, display.contentHeight * 0.6 )
+    cielo.x, cielo.y = display.contentWidth*0.5, display.contentHeight * 0.3
+
+    pasto = display.newImageRect( sceneGroup, "Pagina1\\Grass.png", display.contentWidth, display.contentHeight * 2)
+    pasto.x, pasto.y = display.contentWidth*0.5, display.contentHeight * 0.35
+
+
+    hojas = display.newImageRect( sceneGroup, "Pagina1\\Hojas2.png", display.contentWidth * 0.45, display.contentHeight * 0.65 )
+    hojas.x, hojas.y = display.contentWidth * -2, display.contentHeight * 0.7
+    hojas.isVisible = false
+
+    bosque = display.newImageRect( sceneGroup, "Pagina1\\Forest.png", display.contentWidth * 0.6, display.contentHeight * 0.4 )
+    bosque.x, bosque.y = display.contentWidth * -2, display.contentHeight * 0.3
+    bosque.isVisible = false
+
+    cientifico = display.newImageRect( sceneGroup, "Pagina1\\Scientist.png", display.contentWidth * 0.4, display.contentHeight*0.5)
+    cientifico.x, cientifico.y = display.contentWidth*0.25, display.contentHeight * 0.6
+    cientifico.isVisible = false
+
+    nube = display.newImageRect( sceneGroup, "Pagina1\\Cloud.png", 256, 256 )
+    nube.x, nube.y = display.contentWidth * 0.8, display.contentHeight * 0.2
+
+    retratoPuma = display.newImageRect( sceneGroup, "Pagina1\\retratoPuma.png", display.contentWidth * 0.5, display.contentHeight * 0.7 )
+    retratoPuma.x, retratoPuma.y = display.contentWidth * 0.85, display.contentHeight * 0.7
+    retratoPuma.alpha = 0
+    retratoPuma.isVisible = false
+
+    ninos = display.newImageRect( sceneGroup, "Pagina1\\ninos.png", display.contentWidth * 0.5, display.contentHeight * 0.5 )
+    ninos.x, ninos.y = display.contentWidth * 0.7, display.contentHeight * 0.7
+    ninos.isVisible = false
+
     -- create pageText
     pageText = display.newText( sceneGroup, "", 0, 0, native.systemFontBold, 18 )
     pageText.x = display.contentWidth * 0.5
     pageText.y = display.contentHeight * 0.5
     pageText.isVisible = false
-    
-    -- create text at bottom of screen
-    continueText = display.newText( sceneGroup, "[ Toca la pantalla para continuar ]", 0, 0, native.systemFont, 18 )
-    continueText.x = display.contentWidth * 0.5
-    continueText.y = display.contentHeight - (display.contentHeight * 0.04 ) - 120
-    continueText.isVisible = false
 
     --create marker object
-    markerObj = display.newImageRect( sceneGroup, "Marcador.png", 80, 119 )
-    markerObj.anchorX = 0
-    markerObj.anchorY = 0
-    markerObj.x, markerObj.y = 0, 50
+    markerObj = display.newImageRect( sceneGroup, "Marcador.png", 80, 120 )
+    markerObj.x, markerObj.y = 40, 60
     markerObj.isVisible = false
     markerObj.alpha = 0.2
+
+    start = audio.loadSound( "start.wav" )
     
 end
 
@@ -282,6 +295,7 @@ function scene:show( event )
     
     if phase == "will" then
         -- Called when the scene is still off screen and is about to move on screen
+        rugido = audio.loadSound( "cougar.wav" )
     elseif phase == "did" then
         -- Called when the scene is now on screen
         -- 
@@ -289,19 +303,16 @@ function scene:show( event )
         -- e.g. start timers, begin animation, play audio, etc.
 
         markerObj.alpha = 0.2
-        print( "P2MarkerTrueInicio" )
         markerObj.isVisible = true
-        print( "P2MarkerTrueFin" )
         verificarMarcador()
 
-        
         animStep = 1
         readyToContinue = true
+
         showNext()
     
         -- assign touch event to background to monitor page swiping
-        background.touch = onPageSwipe
-        background:addEventListener( "touch", background )
+        cientifico:addEventListener( "touch", continuarAnimacion )
         markerObj:addEventListener( "touch", activarMarcador )
     end 
 
@@ -318,16 +329,16 @@ function scene:hide( event )
         -- e.g. stop timers, stop animation, unload sounds, etc.)
         
         -- hide objects
-        siluetaNegra.isVisible = false
-        siluetaGris.isVisible = false
-        ramaObj.isVisible = false
         pageText.isVisible = false
-        print( "P2MarkerFalseInicio" )
         markerObj.isVisible = false
-        print( "P2MarkerFalseFin" )
+        hojas.isVisible = false
+        bosque.isVisible = false
+        cientifico.isVisible = false
+        retratoPuma.isVisible = false
+        ninos.isVisible = false
     
         -- remove touch event listener for background
-        background:removeEventListener( "touch", background )
+        pasto:removeEventListener( "touch", background )
         markerObj:removeEventListener( "touch", activarMarcador )
     
         -- cancel page animations (if currently active)
@@ -336,6 +347,11 @@ function scene:hide( event )
         if fadeTween2 then transition.cancel( fadeTween2 ); fadeTween2 = nil; end
         
     elseif phase == "did" then
+
+        hojas.x, hojas.y = display.contentWidth * -2, display.contentHeight * 0.7
+        bosque.x, bosque.y = display.contentWidth * -2, display.contentHeight * 0.3
+        retratoPuma.alpha = 0
+
         -- Called when the scene is now off screen
     end     
 

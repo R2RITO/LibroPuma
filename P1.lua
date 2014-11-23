@@ -11,11 +11,11 @@ local json = require("json")
 
 
 -- forward declarations and other locals
-local cielo, pasto, cientifico, nube, hojas, bosque, pageText, continueText,
-      pageTween, fadeTween1, fadeTween2, markerObj
+local cielo, pasto, cientifico, nube, hojas, bosque, pageText,
+        pageTween, fadeTween1, fadeTween2, markerObj
 
 
-local continuarAnimacion
+local continuarAnimacion, onPageSwipe
 
 local swipeThresh = 100     -- amount of pixels finger must travel to initiate page swipe
 local tweenTime = 900
@@ -25,12 +25,11 @@ local readyToContinue = false
 -- function to show next animation
 local function showNext()
     if readyToContinue then
-        continueText.isVisible = false
         readyToContinue = false
         
-        local function repositionAndFadeIn()
-            pageText.x = display.contentWidth * 0.5
-            pageText.y = display.contentHeight * 0.3
+        local function repositionAndFadeIn( factorX, factorY )
+            pageText.x = display.contentWidth * factorX
+            pageText.y = display.contentHeight * factorY
 
             pageText.isVisible = true
                     
@@ -42,7 +41,6 @@ local function showNext()
             if animStep > 3 then animStep = 1; end
             
             readyToContinue = true
-            continueText.isVisible = true
         end
 
         local function desaparecer( self )
@@ -56,10 +54,10 @@ local function showNext()
             local textOption = 
                 {           
                     --parent = textGroup,
-                    text = "¡Hola! Bienvenido a este cuento, tócame para comenzar.",     
+                    text = "¡Hola!, tócame para comenzar.",     
                     width = 500,     --required for multi-line and alignment
                     font = "Austie Bost Kitten Klub",   
-                    fontSize = 40,
+                    fontSize = 70,
                     align = "center"  --new alignment parameter
             
                 }
@@ -68,8 +66,9 @@ local function showNext()
             pageText.isVisible = false
 
             pageTween = transition.to( cientifico, { time=tweenTime, transition=easing.outExpo, onComplete=completeTween } )
-            cientifico.isVisible = true           
-            repositionAndFadeIn()
+            cientifico.isVisible = true  
+            ninos.isVisible = true         
+            repositionAndFadeIn(0.50,0.25)
 
         elseif animStep == 2 then
             pageText.alpha = 0 --transparent
@@ -85,21 +84,24 @@ local function showNext()
                             
                 }
 
-            pageText= display.newText(textOption) 
-            repositionAndFadeIn()
+            pageText = display.newText(textOption) 
+            pageText.isVisible = false
+            audio.play( start, { onComplete=repositionAndFadeIn(0.5,0.2) } )
 
             retratoPuma.isVisible = true
             hojas.isVisible = true
             bosque.isVisible = true
+            ninos.isVisible = false
 
             transition.to( hojas, { time=tweenTime, x=display.contentWidth*0.2, transition=easing.outExpo} )
             transition.to( bosque, { time=tweenTime, x=display.contentWidth*0.25, transition=easing.outExpo} )
             transition.to( retratoPuma, { time=tweenTime, alpha=1, transition=easing.outExpo, onComplete=completeTween } )
 
             cientifico:removeEventListener( "touch", continuarAnimacion )
-            --retratoPuma:addEventListener( "touch", continuarAnimacion )
+            retratoPuma:addEventListener( "touch", continuarAnimacion )
         
         elseif animStep == 3 then
+
             pageText.alpha = 0
             local textOption = 
                 {           
@@ -107,15 +109,18 @@ local function showNext()
                     text = "Felis Concolor.",     
                     width = 500,     --required for multi-line and alignment
                     font = "Austie Bost Kitten Klub",   
-                    fontSize = 40,
+                    fontSize = 80,
                     align = "center"  --new alignment parameter
                     
                 }
 
             pageText= display.newText(textOption)
-            repositionAndFadeIn()
+            repositionAndFadeIn(0.55,0.85)
             
-            pageTween = transition.to( ramaObj, { time=tweenTime*1.5, alpha=0, transition=easing.inOutExpo, onComplete=completeTween } )
+            pasto.touch = onPageSwipe
+            pasto:addEventListener( "touch", pasto )
+            -- Linea para reiniciar la animacion
+            --pageTween = transition.to( ramaObj, { time=tweenTime*1.5, alpha=0, transition=easing.inOutExpo, onComplete=completeTween } )
 
         end
     end
@@ -190,7 +195,7 @@ end
 
 
 -- touch event listener for background object
-local function onPageSwipe( self, event )
+onPageSwipe = function( self, event )
     local phase = event.phase
     local pag_act = composer.getVariable( "pagina" )
 
@@ -236,11 +241,6 @@ function scene:create( event )
     -- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
     
     -- -- create background image
-    -- background = display.newImageRect( sceneGroup, "PumaArbol.jpg", display.contentWidth * 2.5, display.contentHeight - 120 )
-    -- background.anchorX = 0
-    -- background.anchorY = 0
-    -- background.x, background.y = -750, 0
-    -- background.alpha = 0.5
 
     cielo = display.newImageRect( sceneGroup, "Pagina1\\Sky.jpg", display.contentWidth, display.contentHeight * 0.6 )
     cielo.x, cielo.y = display.contentWidth*0.5, display.contentHeight * 0.3
@@ -258,7 +258,7 @@ function scene:create( event )
     bosque.isVisible = false
 
     cientifico = display.newImageRect( sceneGroup, "Pagina1\\Scientist.png", display.contentWidth * 0.4, display.contentHeight*0.5)
-    cientifico.x, cientifico.y = display.contentWidth*0.25, display.contentHeight * 0.5
+    cientifico.x, cientifico.y = display.contentWidth*0.25, display.contentHeight * 0.6
     cientifico.isVisible = false
 
     nube = display.newImageRect( sceneGroup, "Pagina1\\Cloud.png", 256, 256 )
@@ -269,24 +269,23 @@ function scene:create( event )
     retratoPuma.alpha = 0
     retratoPuma.isVisible = false
 
+    ninos = display.newImageRect( sceneGroup, "Pagina1\\ninos.png", display.contentWidth * 0.5, display.contentHeight * 0.5 )
+    ninos.x, ninos.y = display.contentWidth * 0.7, display.contentHeight * 0.7
+    ninos.isVisible = false
 
     -- create pageText
     pageText = display.newText( sceneGroup, "", 0, 0, native.systemFontBold, 18 )
     pageText.x = display.contentWidth * 0.5
     pageText.y = display.contentHeight * 0.5
     pageText.isVisible = false
-    
-    -- create text at bottom of screen
-    continueText = display.newText( sceneGroup, "[ Toca la pantalla para continuar ]", 0, 0, native.systemFont, 18 )
-    continueText.x = display.contentWidth * 0.5
-    continueText.y = display.contentHeight - (display.contentHeight * 0.04 ) - 120
-    continueText.isVisible = false
 
     --create marker object
     markerObj = display.newImageRect( sceneGroup, "Marcador.png", 80, 120 )
     markerObj.x, markerObj.y = 40, 60
     markerObj.isVisible = false
     markerObj.alpha = 0.2
+
+    start = audio.loadSound( "start.wav" )
     
 end
 
@@ -309,11 +308,10 @@ function scene:show( event )
 
         animStep = 1
         readyToContinue = true
+
         showNext()
     
         -- assign touch event to background to monitor page swiping
-        --background.touch = onPageSwipe
-        --background:addEventListener( "touch", background )
         cientifico:addEventListener( "touch", continuarAnimacion )
         markerObj:addEventListener( "touch", activarMarcador )
     end 
@@ -333,10 +331,14 @@ function scene:hide( event )
         -- hide objects
         pageText.isVisible = false
         markerObj.isVisible = false
-        continueText.isVisible = false
+        hojas.isVisible = false
+        bosque.isVisible = false
+        cientifico.isVisible = false
+        retratoPuma.isVisible = false
+        ninos.isVisible = false
     
         -- remove touch event listener for background
-        --background:removeEventListener( "touch", background )
+        pasto:removeEventListener( "touch", background )
         markerObj:removeEventListener( "touch", activarMarcador )
     
         -- cancel page animations (if currently active)
@@ -345,6 +347,11 @@ function scene:hide( event )
         if fadeTween2 then transition.cancel( fadeTween2 ); fadeTween2 = nil; end
         
     elseif phase == "did" then
+
+        hojas.x, hojas.y = display.contentWidth * -2, display.contentHeight * 0.7
+        bosque.x, bosque.y = display.contentWidth * -2, display.contentHeight * 0.3
+        retratoPuma.alpha = 0
+
         -- Called when the scene is now off screen
     end     
 
