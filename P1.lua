@@ -12,7 +12,8 @@ local json = require("json")
 
 -- forward declarations and other locals
 local cielo, pasto, cientifico, nube, hojas, bosque, pageText,
-        pageTween, fadeTween1, fadeTween2, markerObj
+        pageTween, fadeTween1, fadeTween2, markerObj, retratoPuma,
+        ninos
 
 
 local continuarAnimacion, onPageSwipe
@@ -247,7 +248,6 @@ function scene:create( event )
 
     pasto = display.newImageRect( sceneGroup, "Pagina1\\Grass.png", display.contentWidth, display.contentHeight * 2)
     pasto.x, pasto.y = display.contentWidth*0.5, display.contentHeight * 0.35
-
 
     hojas = display.newImageRect( sceneGroup, "Pagina1\\Hojas2.png", display.contentWidth * 0.45, display.contentHeight * 0.65 )
     hojas.x, hojas.y = display.contentWidth * -2, display.contentHeight * 0.7

@@ -11,8 +11,8 @@ local json = require("json")
 
 
 -- forward declarations and other locals
-local cielo, pasto, cientifico, nube, hojas, bosque, pageText,
-        pageTween, fadeTween1, fadeTween2, markerObj
+local cientifico, pageText, pageTween, fadeTween1, fadeTween2, markerObj,
+      fondoPreguntas, marcoJungla, puma, ave, caballo
 
 
 local continuarAnimacion, onPageSwipe
@@ -54,10 +54,10 @@ local function showNext()
             local textOption = 
                 {           
                     --parent = textGroup,
-                    text = "¡Hola!, tócame para comenzar.",     
-                    width = 500,     --required for multi-line and alignment
+                    text = "¡Toca al puma para conocer su hábitat!.",     
+                    width = 500,     --required for multi-line andT alignment
                     font = "Austie Bost Kitten Klub",   
-                    fontSize = 70,
+                    fontSize = 60,
                     align = "center"  --new alignment parameter
             
                 }
@@ -66,9 +66,8 @@ local function showNext()
             pageText.isVisible = false
 
             pageTween = transition.to( cientifico, { time=tweenTime, transition=easing.outExpo, onComplete=completeTween } )
-            cientifico.isVisible = true  
-            ninos.isVisible = true         
-            repositionAndFadeIn(0.50,0.25)
+            cientifico.isVisible = true          
+            repositionAndFadeIn(0.3,0.25)
 
         elseif animStep == 2 then
             pageText.alpha = 0 --transparent
@@ -242,36 +241,24 @@ function scene:create( event )
     
     -- -- create background image
 
-    cielo = display.newImageRect( sceneGroup, "Pagina1\\Sky.jpg", display.contentWidth, display.contentHeight * 0.6 )
-    cielo.x, cielo.y = display.contentWidth*0.5, display.contentHeight * 0.3
+    fondoPreguntas = display.newImageRect( sceneGroup, "Pagina2\\fondoPregNegro.jpg", display.contentWidth, display.contentHeight )
+    fondoPreguntas.x, fondoPreguntas.y = display.contentWidth * 0.5, display.contentHeight * 0.5
 
-    pasto = display.newImageRect( sceneGroup, "Pagina1\\Grass.png", display.contentWidth, display.contentHeight * 2)
-    pasto.x, pasto.y = display.contentWidth*0.5, display.contentHeight * 0.35
+    marcoJungla = display.newImageRect( sceneGroup, "Pagina2\\JungleFrame.png", display.contentWidth * 1.3, display.contentHeight * 1.3 )
+    marcoJungla.x, marcoJungla.y = display.contentWidth * 0.5, display.contentHeight * 0.5
 
-
-    hojas = display.newImageRect( sceneGroup, "Pagina1\\Hojas2.png", display.contentWidth * 0.45, display.contentHeight * 0.65 )
-    hojas.x, hojas.y = display.contentWidth * -2, display.contentHeight * 0.7
-    hojas.isVisible = false
-
-    bosque = display.newImageRect( sceneGroup, "Pagina1\\Forest.png", display.contentWidth * 0.6, display.contentHeight * 0.4 )
-    bosque.x, bosque.y = display.contentWidth * -2, display.contentHeight * 0.3
-    bosque.isVisible = false
-
-    cientifico = display.newImageRect( sceneGroup, "Pagina1\\Scientist.png", display.contentWidth * 0.4, display.contentHeight*0.5)
+    cientifico = display.newImageRect( sceneGroup, "Pagina2\\Scientist.png", display.contentWidth * 0.4, display.contentHeight*0.5)
     cientifico.x, cientifico.y = display.contentWidth*0.25, display.contentHeight * 0.6
     cientifico.isVisible = false
 
-    nube = display.newImageRect( sceneGroup, "Pagina1\\Cloud.png", 256, 256 )
-    nube.x, nube.y = display.contentWidth * 0.8, display.contentHeight * 0.2
+    puma = display.newImageRect( sceneGroup, "Pagina2\\puma.png", display.contentWidth * 0.25, display.contentHeight * 0.35 )
+    puma.x, puma.y = display.contentWidth * 0.5, display.contentHeight * 0.5
 
-    retratoPuma = display.newImageRect( sceneGroup, "Pagina1\\retratoPuma.png", display.contentWidth * 0.5, display.contentHeight * 0.7 )
-    retratoPuma.x, retratoPuma.y = display.contentWidth * 0.85, display.contentHeight * 0.7
-    retratoPuma.alpha = 0
-    retratoPuma.isVisible = false
+    ave = display.newImageRect( sceneGroup, "Pagina2\\ave.png", display.contentWidth * 0.15, display.contentHeight * 0.15 )
+    ave.x, ave.y = display.contentWidth * 0.2, display.contentHeight * 0.7
 
-    ninos = display.newImageRect( sceneGroup, "Pagina1\\ninos.png", display.contentWidth * 0.5, display.contentHeight * 0.5 )
-    ninos.x, ninos.y = display.contentWidth * 0.7, display.contentHeight * 0.7
-    ninos.isVisible = false
+    caballo = display.newImageRect( sceneGroup, "Pagina2\\caballo.png", display.contentWidth * 0.3, display.contentHeight * 0.4 )
+    caballo.x, caballo.y = display.contentWidth * 0.7, display.contentHeight * 0.7
 
     -- create pageText
     pageText = display.newText( sceneGroup, "", 0, 0, native.systemFontBold, 18 )
