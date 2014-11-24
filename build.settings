@@ -3,10 +3,12 @@
 
 settings = {
 	
-	orientation = {
-		default = "landscapeRight",
-		supported = { "landscapeRight", }
-	},
+
+    orientation =
+    {
+        default = "landscapeRight",
+        supported = { "landscapeLeft", "landscapeRight" },
+    },
 	
 	iphone = {
 		plist = {
