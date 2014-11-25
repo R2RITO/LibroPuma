@@ -12,8 +12,8 @@ local json = require("json")
 
 -- forward declarations and other locals
 local cientifico, pageText, pageTween, fadeTween1, fadeTween2, markerObj,
-      fondoPreguntas, marcoJungla, puma, ave, caballo
-
+      fondoPreguntas, marcoJungla, puma, ave, caballo, sonidoAve,
+      sonidoPuma, sonidoCaballo
 
 local continuarAnimacion, onPageSwipe
 
@@ -21,6 +21,16 @@ local swipeThresh = 100     -- amount of pixels finger must travel to initiate p
 local tweenTime = 900
 local animStep = 1
 local readyToContinue = false
+
+local function reproducirSonido( self, event )
+
+    if event.phase == "ended" or event.phase == "cancelled" then
+        audio.play( self.sonido )
+    end
+
+    return true
+
+end
 
 -- function to show next animation
 local function showNext()
@@ -69,6 +79,11 @@ local function showNext()
             cientifico.isVisible = true          
             repositionAndFadeIn(0.3,0.25)
 
+            puma:addEventListener( "touch", puma )
+            ave:addEventListener( "touch", ave )
+            caballo:addEventListener( "touch", caballo )
+
+
         elseif animStep == 2 then
             pageText.alpha = 0 --transparent
             
@@ -85,7 +100,6 @@ local function showNext()
 
             pageText = display.newText(textOption) 
             pageText.isVisible = false
-            audio.play( start, { onComplete=repositionAndFadeIn(0.5,0.2) } )
 
             retratoPuma.isVisible = true
             hojas.isVisible = true
@@ -251,14 +265,20 @@ function scene:create( event )
     cientifico.x, cientifico.y = display.contentWidth*0.25, display.contentHeight * 0.6
     cientifico.isVisible = false
 
-    puma = display.newImageRect( sceneGroup, "Pagina2\\puma.png", display.contentWidth * 0.25, display.contentHeight * 0.35 )
-    puma.x, puma.y = display.contentWidth * 0.5, display.contentHeight * 0.5
+    puma = display.newImageRect( sceneGroup, "Pagina2\\puma.png", display.contentWidth * 0.35, display.contentHeight * 0.35 )
+    puma.x, puma.y = display.contentWidth * 0.65, display.contentHeight * 0.7
+    puma.sonido = audio.loadSound( "Pagina2\\puma.wav" )
+    puma.touch = reproducirSonido
 
     ave = display.newImageRect( sceneGroup, "Pagina2\\ave.png", display.contentWidth * 0.15, display.contentHeight * 0.15 )
-    ave.x, ave.y = display.contentWidth * 0.2, display.contentHeight * 0.7
+    ave.x, ave.y = display.contentWidth * 0.5, display.contentHeight * 0.55
+    ave.sonido = audio.loadSound( "Pagina2\\ave.mp3" )
+    ave.touch = reproducirSonido
 
     caballo = display.newImageRect( sceneGroup, "Pagina2\\caballo.png", display.contentWidth * 0.3, display.contentHeight * 0.4 )
-    caballo.x, caballo.y = display.contentWidth * 0.7, display.contentHeight * 0.7
+    caballo.x, caballo.y = display.contentWidth * 0.75, display.contentHeight * 0.35
+    caballo.sonido = audio.loadSound( "Pagina2\\caballo.mp3" )
+    caballo.touch = reproducirSonido
 
     -- create pageText
     pageText = display.newText( sceneGroup, "", 0, 0, native.systemFontBold, 18 )
@@ -272,7 +292,9 @@ function scene:create( event )
     markerObj.isVisible = false
     markerObj.alpha = 0.2
 
-    start = audio.loadSound( "start.wav" )
+
+
+
     
 end
 

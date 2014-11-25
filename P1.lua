@@ -120,6 +120,7 @@ local function showNext()
             
             pasto.touch = onPageSwipe
             pasto:addEventListener( "touch", pasto )
+            retratoPuma:removeEventListener( "touch", continuarAnimacion )
             -- Linea para reiniciar la animacion
             --pageTween = transition.to( ramaObj, { time=tweenTime*1.5, alpha=0, transition=easing.inOutExpo, onComplete=completeTween } )
 
@@ -285,7 +286,7 @@ function scene:create( event )
     markerObj.isVisible = false
     markerObj.alpha = 0.2
 
-    start = audio.loadSound( "start.wav" )
+    start = audio.loadSound( "Pagina1\\start.wav" )
     
 end
 
@@ -295,7 +296,6 @@ function scene:show( event )
     
     if phase == "will" then
         -- Called when the scene is still off screen and is about to move on screen
-        rugido = audio.loadSound( "cougar.wav" )
     elseif phase == "did" then
         -- Called when the scene is now on screen
         -- 
