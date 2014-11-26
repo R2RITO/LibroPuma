@@ -83,17 +83,17 @@ end
 --Fin animación
 
 
-botonIndice = display.newImageRect( "Menu\\bIndice.png", 160, 160 )
+botonIndice = display.newImageRect( "Menu/bIndice.png", 160, 160 )
 botonIndice.x = 205
 botonIndice.y = display.contentHeight - 57
 botonIndice.isVisible = false
 
-botonInicio = display.newImageRect( "Menu\\bInicio.png", 160, 160 )
+botonInicio = display.newImageRect( "Menu/bInicio.png", 160, 160 )
 botonInicio.x = 70
 botonInicio.y = display.contentHeight - 57
 botonInicio.isVisible = false
 
-botonMarcador = display.newImageRect( "Menu\\bMarcador.png", 160, 160 )
+botonMarcador = display.newImageRect( "Menu/bMarcador.png", 160, 160 )
 botonMarcador.x = 340
 botonMarcador.y = display.contentHeight - 57
 botonMarcador.isVisible = false

@@ -244,33 +244,33 @@ function scene:create( event )
     
     -- -- create background image
 
-    cielo = display.newImageRect( sceneGroup, "Pagina1\\Sky.jpg", display.contentWidth, display.contentHeight * 0.6 )
+    cielo = display.newImageRect( sceneGroup, "Pagina1/Sky.jpg", display.contentWidth, display.contentHeight * 0.6 )
     cielo.x, cielo.y = display.contentWidth*0.5, display.contentHeight * 0.3
 
-    pasto = display.newImageRect( sceneGroup, "Pagina1\\Grass.png", display.contentWidth, display.contentHeight * 2)
+    pasto = display.newImageRect( sceneGroup, "Pagina1/Grass.png", display.contentWidth, display.contentHeight * 2)
     pasto.x, pasto.y = display.contentWidth*0.5, display.contentHeight * 0.35
 
-    hojas = display.newImageRect( sceneGroup, "Pagina1\\Hojas2.png", display.contentWidth * 0.45, display.contentHeight * 0.65 )
+    hojas = display.newImageRect( sceneGroup, "Pagina1/Hojas2.png", display.contentWidth * 0.45, display.contentHeight * 0.65 )
     hojas.x, hojas.y = display.contentWidth * -2, display.contentHeight * 0.7
     hojas.isVisible = false
 
-    bosque = display.newImageRect( sceneGroup, "Pagina1\\Forest.png", display.contentWidth * 0.6, display.contentHeight * 0.4 )
+    bosque = display.newImageRect( sceneGroup, "Pagina1/Forest.png", display.contentWidth * 0.6, display.contentHeight * 0.4 )
     bosque.x, bosque.y = display.contentWidth * -2, display.contentHeight * 0.3
     bosque.isVisible = false
 
-    cientifico = display.newImageRect( sceneGroup, "Pagina1\\Scientist.png", display.contentWidth * 0.4, display.contentHeight*0.5)
+    cientifico = display.newImageRect( sceneGroup, "Pagina1/Scientist.png", display.contentWidth * 0.4, display.contentHeight*0.5)
     cientifico.x, cientifico.y = display.contentWidth*0.25, display.contentHeight * 0.6
     cientifico.isVisible = false
 
-    nube = display.newImageRect( sceneGroup, "Pagina1\\Cloud.png", 256, 256 )
+    nube = display.newImageRect( sceneGroup, "Pagina1/Cloud.png", 256, 256 )
     nube.x, nube.y = display.contentWidth * 0.8, display.contentHeight * 0.2
 
-    retratoPuma = display.newImageRect( sceneGroup, "Pagina1\\retratoPuma.png", display.contentWidth * 0.5, display.contentHeight * 0.7 )
+    retratoPuma = display.newImageRect( sceneGroup, "Pagina1/retratoPuma.png", display.contentWidth * 0.5, display.contentHeight * 0.7 )
     retratoPuma.x, retratoPuma.y = display.contentWidth * 0.85, display.contentHeight * 0.7
     retratoPuma.alpha = 0
     retratoPuma.isVisible = false
 
-    ninos = display.newImageRect( sceneGroup, "Pagina1\\ninos.png", display.contentWidth * 0.5, display.contentHeight * 0.5 )
+    ninos = display.newImageRect( sceneGroup, "Pagina1/ninos.png", display.contentWidth * 0.5, display.contentHeight * 0.5 )
     ninos.x, ninos.y = display.contentWidth * 0.7, display.contentHeight * 0.7
     ninos.isVisible = false
 
@@ -286,7 +286,7 @@ function scene:create( event )
     markerObj.isVisible = false
     markerObj.alpha = 0.2
 
-    start = audio.loadSound( "Pagina1\\start.wav" )
+    start = audio.loadSound( "Pagina1/start.wav" )
     
 end
 

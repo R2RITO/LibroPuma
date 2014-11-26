@@ -32,24 +32,24 @@ function scene:create( event )
 	-- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
 
 	-- display a background image
-	background = display.newImageRect( sceneGroup, "Portada\\fondoJungla.jpg", display.contentWidth, display.contentHeight )
+	background = display.newImageRect( sceneGroup, "Portada/fondoJungla.jpg", display.contentWidth, display.contentHeight )
 	background.x, background.y = display.contentWidth * 0.5, display.contentHeight * 0.5
 	background.isVisible = false
 
-	patita = display.newImageRect( sceneGroup, "Portada\\PataPumita.png", display.contentWidth * 0.4, display.contentHeight * 0.6 )
+	patita = display.newImageRect( sceneGroup, "Portada/PataPumita.png", display.contentWidth * 0.4, display.contentHeight * 0.6 )
 	patita.x, patita.y = display.contentWidth * 0.75, display.contentHeight * 0.6
 	patita.isVisible = false
 
-	puma = display.newImageRect( sceneGroup, "Portada\\Puma.png", display.contentWidth * 1.5, display.contentHeight * 1.5 )
+	puma = display.newImageRect( sceneGroup, "Portada/Puma.png", display.contentWidth * 1.5, display.contentHeight * 1.5 )
 	puma.x, puma.y = display.contentWidth * -0.2, display.contentHeight * 0.4
 	puma.rotation = -10
 	puma.isVisible = false
 
-	logoPUC = display.newImageRect( sceneGroup, "Portada\\logoPUC.png", display.contentWidth * 0.15, display.contentHeight * 0.25 ) 
+	logoPUC = display.newImageRect( sceneGroup, "Portada/logoPUC.png", display.contentWidth * 0.15, display.contentHeight * 0.25 ) 
 	logoPUC.x, logoPUC.y = display.contentWidth * 0.1, display.contentHeight * 0.9
 	logoPUC.isVisible = false
 
-	--logoCRA = display.newImageRect( sceneGroup, "Portada\\logoCRA.jpg", display.contentWidth * 0.15, display.contentHeight * 0.25 ) 
+	--logoCRA = display.newImageRect( sceneGroup, "Portada/logoCRA.jpg", display.contentWidth * 0.15, display.contentHeight * 0.25 ) 
 	--logoCRA.x, logoCRA.y = display.contentWidth * 0.4, display.contentHeight * 0.8
 	--logoCRA.isVisible = false
 

@@ -255,29 +255,29 @@ function scene:create( event )
     
     -- -- create background image
 
-    fondoPreguntas = display.newImageRect( sceneGroup, "Pagina2\\fondoPregNegro.jpg", display.contentWidth, display.contentHeight )
+    fondoPreguntas = display.newImageRect( sceneGroup, "Pagina2/fondoPregNegro.jpg", display.contentWidth, display.contentHeight )
     fondoPreguntas.x, fondoPreguntas.y = display.contentWidth * 0.5, display.contentHeight * 0.5
 
-    marcoJungla = display.newImageRect( sceneGroup, "Pagina2\\JungleFrame.png", display.contentWidth * 1.3, display.contentHeight * 1.3 )
+    marcoJungla = display.newImageRect( sceneGroup, "Pagina2/JungleFrame.png", display.contentWidth * 1.3, display.contentHeight * 1.3 )
     marcoJungla.x, marcoJungla.y = display.contentWidth * 0.5, display.contentHeight * 0.5
 
-    cientifico = display.newImageRect( sceneGroup, "Pagina2\\Scientist.png", display.contentWidth * 0.4, display.contentHeight*0.5)
+    cientifico = display.newImageRect( sceneGroup, "Pagina2/Scientist.png", display.contentWidth * 0.4, display.contentHeight*0.5)
     cientifico.x, cientifico.y = display.contentWidth*0.25, display.contentHeight * 0.6
     cientifico.isVisible = false
 
-    puma = display.newImageRect( sceneGroup, "Pagina2\\puma.png", display.contentWidth * 0.35, display.contentHeight * 0.35 )
+    puma = display.newImageRect( sceneGroup, "Pagina2/puma.png", display.contentWidth * 0.35, display.contentHeight * 0.35 )
     puma.x, puma.y = display.contentWidth * 0.65, display.contentHeight * 0.7
-    puma.sonido = audio.loadSound( "Pagina2\\puma.wav" )
+    puma.sonido = audio.loadSound( "Pagina2/puma.wav" )
     puma.touch = reproducirSonido
 
-    ave = display.newImageRect( sceneGroup, "Pagina2\\ave.png", display.contentWidth * 0.15, display.contentHeight * 0.15 )
+    ave = display.newImageRect( sceneGroup, "Pagina2/ave.png", display.contentWidth * 0.15, display.contentHeight * 0.15 )
     ave.x, ave.y = display.contentWidth * 0.5, display.contentHeight * 0.55
-    ave.sonido = audio.loadSound( "Pagina2\\ave.mp3" )
+    ave.sonido = audio.loadSound( "Pagina2/ave.mp3" )
     ave.touch = reproducirSonido
 
-    caballo = display.newImageRect( sceneGroup, "Pagina2\\caballo.png", display.contentWidth * 0.3, display.contentHeight * 0.4 )
+    caballo = display.newImageRect( sceneGroup, "Pagina2/caballo.png", display.contentWidth * 0.3, display.contentHeight * 0.4 )
     caballo.x, caballo.y = display.contentWidth * 0.75, display.contentHeight * 0.35
-    caballo.sonido = audio.loadSound( "Pagina2\\caballo.mp3" )
+    caballo.sonido = audio.loadSound( "Pagina2/caballo.mp3" )
     caballo.touch = reproducirSonido
 
     -- create pageText
