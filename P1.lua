@@ -55,10 +55,10 @@ local function showNext()
             local textOption = 
                 {           
                     --parent = textGroup,
-                    text = "¡Hola!, tócame para comenzar.",     
-                    width = 500,     --required for multi-line and alignment
+                    text = "Érase una vez, un grupo de niños que fueron de expedición a la Cordillera de los Andes.",     
+                    width = 900,     --required for multi-line and alignment
                     font = "Austie Bost Kitten Klub",   
-                    fontSize = 70,
+                    fontSize = 40,
                     align = "center"  --new alignment parameter
             
                 }
@@ -66,7 +66,7 @@ local function showNext()
             pageText= display.newText(textOption)
             pageText.isVisible = false
 
-            pageTween = transition.to( cientifico, { time=tweenTime, transition=easing.outExpo, onComplete=completeTween } )
+            pageTween = transition.to( cientifico, { time=tweenTime, x=display.contentWidth*0.25 ,transition=easing.outExpo } )
             cientifico.isVisible = true  
             ninos.isVisible = true         
             repositionAndFadeIn(0.50,0.25)
@@ -259,7 +259,7 @@ function scene:create( event )
     bosque.isVisible = false
 
     cientifico = display.newImageRect( sceneGroup, "Pagina1/Scientist.png", display.contentWidth * 0.4, display.contentHeight*0.5)
-    cientifico.x, cientifico.y = display.contentWidth*0.25, display.contentHeight * 0.6
+    cientifico.x, cientifico.y = display.contentWidth*-0.25, display.contentHeight * 0.6
     cientifico.isVisible = false
 
     nube = display.newImageRect( sceneGroup, "Pagina1/Cloud.png", 256, 256 )

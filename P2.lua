@@ -267,7 +267,7 @@ function scene:create( event )
 
     puma = display.newImageRect( sceneGroup, "Pagina2/puma.png", display.contentWidth * 0.35, display.contentHeight * 0.35 )
     puma.x, puma.y = display.contentWidth * 0.65, display.contentHeight * 0.7
-    puma.sonido = audio.loadSound( "Pagina2/puma.wav" )
+    puma.sonido = audio.loadSound( "Pagina2/puma.mp3" )
     puma.touch = reproducirSonido
 
     ave = display.newImageRect( sceneGroup, "Pagina2/ave.png", display.contentWidth * 0.15, display.contentHeight * 0.15 )
@@ -304,7 +304,6 @@ function scene:show( event )
     
     if phase == "will" then
         -- Called when the scene is still off screen and is about to move on screen
-        rugido = audio.loadSound( "cougar.wav" )
     elseif phase == "did" then
         -- Called when the scene is now on screen
         -- 

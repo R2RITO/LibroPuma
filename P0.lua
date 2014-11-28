@@ -45,11 +45,11 @@ function scene:create( event )
 	puma.rotation = -10
 	puma.isVisible = false
 
-	logoPUC = display.newImageRect( sceneGroup, "Portada/logoPUC.png", display.contentWidth * 0.15, display.contentHeight * 0.25 ) 
+	logoPUC = display.newImageRect( sceneGroup, "Portada/LogoPUC.png", display.contentWidth * 0.15, display.contentHeight * 0.25 ) 
 	logoPUC.x, logoPUC.y = display.contentWidth * 0.1, display.contentHeight * 0.9
 	logoPUC.isVisible = false
 
-	--logoCRA = display.newImageRect( sceneGroup, "Portada/logoCRA.jpg", display.contentWidth * 0.15, display.contentHeight * 0.25 ) 
+	--logoCRA = display.newImageRect( sceneGroup, "Portada/LogoCRA.jpg", display.contentWidth * 0.15, display.contentHeight * 0.25 ) 
 	--logoCRA.x, logoCRA.y = display.contentWidth * 0.4, display.contentHeight * 0.8
 	--logoCRA.isVisible = false
 
@@ -104,7 +104,7 @@ function scene:hide( event )
 		
 	elseif phase == "did" then
 		-- Called when the scene is now off screen
-		--background.isVisible = false
+		background.isVisible = false
 		patita.isVisible = false
 		puma.isVisible = false
 		logoPUC.isVisible = false

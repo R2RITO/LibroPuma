@@ -12,7 +12,7 @@ local composer = require "composer"
 
 local json = require("json")
 
-local botonInicio, botonIndice
+local botonInicio, botonIndice, botonMarcador
 
 local function moverAIndice( event )
 	if event.phase == "ended" or event.phase == "cancelled" then
