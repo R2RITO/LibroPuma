@@ -13,7 +13,8 @@ local json = require("json")
 -- forward declarations and other locals
 local cielo, pasto, cientifico, nube, hojas, bosque, pageText,
         pageTween, fadeTween1, fadeTween2, markerObj, retratoPuma,
-        ninos
+        ninos, pumaReal, marcoJungla, botonVolver, finger_left,
+        handsTimer
 
 
 local continuarAnimacion, onPageSwipe
@@ -22,6 +23,7 @@ local swipeThresh = 100     -- amount of pixels finger must travel to initiate p
 local tweenTime = 900
 local animStep = 1
 local readyToContinue = false
+
 
 -- function to show next animation
 local function showNext()
@@ -39,13 +41,24 @@ local function showNext()
         
         local function completeTween()
             animStep = animStep + 1
-            if animStep > 3 then animStep = 1; end
+            if animStep > 5 then animStep = 1; end
             
             readyToContinue = true
         end
 
         local function desaparecer( self )
             self.isVisible = false
+        end
+
+
+        local move = function()
+            local function back()
+                transition.to( finger_left, { alpha = 0 } )
+                finger_left.x=display.contentWidth * 0.9
+            end
+            transition.to( finger_left, { alpha = 1 } )
+            transition.to( finger_left, { x=display.contentWidth * 0.7, time=900, onComplete=back})
+            
         end
         
         if animStep == 1 then
@@ -65,13 +78,111 @@ local function showNext()
 
             pageText= display.newText(textOption)
             pageText.isVisible = false
-
-            pageTween = transition.to( cientifico, { time=tweenTime, x=display.contentWidth*0.25 ,transition=easing.outExpo } )
-            cientifico.isVisible = true  
-            ninos.isVisible = true         
             repositionAndFadeIn(0.50,0.25)
 
+            ninos.isVisible = true  
+            ninos:addEventListener( "touch", continuarAnimacion )
+            completeTween()
+
+
         elseif animStep == 2 then
+
+            pageText.alpha = 0
+
+            -- Eliminar funciones anteriores
+            ninos:removeEventListener( "touch", continuarAnimacion )
+
+            cientifico.isVisible = true  
+            ninos.isVisible = false
+            transition.to( cientifico, { time=tweenTime, x=display.contentWidth*0.25 ,transition=easing.outExpo } )
+
+            local textOption = 
+                {           
+                    --parent = textGroup,
+                    text = "¡Hola! Hoy podrás acompañarnos en esta aventura. Recorreremos el bosque y es muy posible que nos encontremos con un puma ",     
+                    width = 500,     --required for multi-line and alignment
+                    font = "Austie Bost Kitten Klub",   
+                    fontSize = 40,
+                    align = "center"  --new alignment parameter
+            
+                }
+
+            pageText= display.newText(textOption)
+            pageText.isVisible = false
+            repositionAndFadeIn(0.50,0.25)
+
+            cientifico:addEventListener( "touch", continuarAnimacion )
+            completeTween()
+
+        elseif animStep == 3 then
+
+            pageText.alpha = 0
+
+            local textOption = 
+                {           
+                    --parent = textGroup,
+                    text = "Por si no lo conoces, aquí te muestro una foto",     
+                    width = 500,     --required for multi-line and alignment
+                    font = "Austie Bost Kitten Klub",   
+                    fontSize = 40,
+                    align = "center"  --new alignment parameter
+            
+                }
+
+            pageText= display.newText(textOption)
+            pageText.isVisible = false
+            repositionAndFadeIn(0.50,0.25)
+
+            cientifico:removeEventListener( "touch", continuarAnimacion )
+
+            pumaReal.isVisible = true
+            pumaReal:toFront( )
+            marcoJungla.isVisible = true
+            marcoJungla:toFront( )
+            botonVolver.isVisible = true
+            botonVolver:toFront( )
+
+            transition.to( pumaReal, { time=tweenTime, x=display.contentCenterX, transition=easing.outExpo } )
+            transition.to( marcoJungla, { time=tweenTime, x=display.contentCenterX, transition=easing.outExpo } )
+            transition.to( botonVolver, { time=tweenTime, x=display.contentWidth * 0.9, transition=easing.outExpo } )
+
+            botonVolver:addEventListener( "touch", continuarAnimacion )
+            completeTween()
+
+        elseif animStep == 4 then
+
+            pageText.alpha = 0
+
+            transition.to( pumaReal, { time=tweenTime, x=-display.contentCenterX, transition=easing.outExpo } )
+            transition.to( marcoJungla, { time=tweenTime, x=display.contentCenterX*4, transition=easing.outExpo } )
+            transition.to( botonVolver, { time=tweenTime, x=display.contentWidth * -0.9, transition=easing.outExpo } )
+
+            local textOption = 
+                {           
+                    --parent = textGroup,
+                    text = "¡Continuemos nuestro viaje!",     
+                    width = 500,     --required for multi-line and alignment
+                    font = "Austie Bost Kitten Klub",   
+                    fontSize = 40,
+                    align = "center"  --new alignment parameter
+            
+                }
+
+            pageText= display.newText(textOption)
+            pageText.isVisible = false
+            repositionAndFadeIn(0.50,0.25)
+
+            botonVolver:removeEventListener( "touch", continuarAnimacion )
+            
+            pasto.touch = onPageSwipe
+            pasto:addEventListener( "touch", pasto )
+
+            finger_left.isVisible = true
+
+            handsTimer = timer.performWithDelay( 1000, move, -1 )
+
+
+        elseif animStep == 4 then
             pageText.alpha = 0 --transparent
             
             local textOption = 
@@ -101,7 +212,7 @@ local function showNext()
             cientifico:removeEventListener( "touch", continuarAnimacion )
             retratoPuma:addEventListener( "touch", continuarAnimacion )
         
-        elseif animStep == 3 then
+        elseif animStep == 5 then
 
             pageText.alpha = 0
             local textOption = 
@@ -182,7 +293,6 @@ local function activarMarcador( event )
 
     return true
 end
-
 
 -- Funcion que se activa cuando se toca al puma guia.
 continuarAnimacion = function( event )
@@ -270,9 +380,25 @@ function scene:create( event )
     retratoPuma.alpha = 0
     retratoPuma.isVisible = false
 
+    pumaReal = display.newImageRect( sceneGroup, "Pagina1/pumaReal.jpg", display.contentWidth, display.contentHeight )
+    pumaReal.x, pumaReal.y = -display.contentCenterX, display.contentCenterY
+    pumaReal.isVisible = false
+
+    marcoJungla = display.newImageRect( sceneGroup, "Pagina1/JungleFrame.png", display.contentWidth * 1.3, display.contentHeight * 1.3 )
+    marcoJungla.x, marcoJungla.y = display.contentCenterX * 4, display.contentCenterY
+    marcoJungla.isVisible = false
+
+    botonVolver = display.newImageRect( sceneGroup, "Pagina1/botonVolver.png", display.contentWidth * 0.15, display.contentHeight * 0.15 )
+    botonVolver.x, botonVolver.y = display.contentWidth * -0.9, display.contentHeight * 0.9
+    botonVolver.isVisible = false
+
     ninos = display.newImageRect( sceneGroup, "Pagina1/ninos.png", display.contentWidth * 0.5, display.contentHeight * 0.5 )
     ninos.x, ninos.y = display.contentWidth * 0.7, display.contentHeight * 0.7
     ninos.isVisible = false
+
+    finger_left = display.newImageRect( sceneGroup, "swipeIzq.png", 150, 150 )
+    finger_left.x, finger_left.y = display.contentWidth * 0.9, display.contentHeight * 0.5
+    finger_left.isVisible = false
 
     -- create pageText
     pageText = display.newText( sceneGroup, "", 0, 0, native.systemFontBold, 18 )
@@ -312,7 +438,6 @@ function scene:show( event )
         showNext()
     
         -- assign touch event to background to monitor page swiping
-        cientifico:addEventListener( "touch", continuarAnimacion )
         markerObj:addEventListener( "touch", activarMarcador )
     end 
 
@@ -345,6 +470,7 @@ function scene:hide( event )
         if pageTween then transition.cancel( pageTween ); pageTween = nil; end
         if fadeTween1 then transition.cancel( fadeTween1 ); fadeTween1 = nil; end
         if fadeTween2 then transition.cancel( fadeTween2 ); fadeTween2 = nil; end
+        timer.cancel( handsTimer ); handsTimer = nil;
         
     elseif phase == "did" then
 
