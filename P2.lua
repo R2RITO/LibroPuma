@@ -13,16 +13,14 @@ local json = require("json")
 -- forward declarations and other locals
 local cientifico, pageText, pageTween, fadeTween1, fadeTween2, markerObj,
       fondoPreguntas, marcoJungla, puma, ave, caballo, sonidoAve,
-      sonidoPuma, sonidoCaballo
+      sonidoPuma, sonidoCaballo, juegoCompletado
 
 local continuarAnimacion, onPageSwipe
 
 local swipeThresh = 100     -- amount of pixels finger must travel to initiate page swipe
 local tweenTime = 900
-local animStep = 1
-local readyToContinue = false
 
-local function reproducirSonido( self, event )
+local function seleccionIncorrecta( self, event )
 
     if event.phase == "ended" or event.phase == "cancelled" then
         audio.play( self.sonido )
@@ -32,111 +30,62 @@ local function reproducirSonido( self, event )
 
 end
 
--- function to show next animation
-local function showNext()
-    if readyToContinue then
-        readyToContinue = false
-        
-        local function repositionAndFadeIn( factorX, factorY )
-            pageText.x = display.contentWidth * factorX
-            pageText.y = display.contentHeight * factorY
+local function seleccionCorrecta( self, event )
 
-            pageText.isVisible = true
-                    
-            fadeTween1 = transition.to( pageText, { time=tweenTime*0.5, alpha=1.0 } )
-        end
-        
-        local function completeTween()
-            animStep = animStep + 1
-            if animStep > 3 then animStep = 1; end
-            
-            readyToContinue = true
-        end
+    if event.phase == "ended" or event.phase == "cancelled" then
+        audio.play( self.sonido )
 
-        local function desaparecer( self )
-            self.isVisible = false
-        end
-        
-        if animStep == 1 then
+        if not juegoCompletado then
+            juegoCompletado = true
+            fondoPreguntas.touch = onPageSwipe
+            fondoPreguntas:addEventListener( "touch", fondoPreguntas )
 
-            pageText.alpha = 0
+            -- Iniciar animacion de swipe.
 
-            local textOption = 
-                {           
-                    --parent = textGroup,
-                    text = "¡Toca al puma para conocer su hábitat!.",     
-                    width = 500,     --required for multi-line andT alignment
-                    font = "Austie Bost Kitten Klub",   
-                    fontSize = 60,
-                    align = "center"  --new alignment parameter
-            
-                }
-
-            pageText= display.newText(textOption)
-            pageText.isVisible = false
-
-            pageTween = transition.to( cientifico, { time=tweenTime, transition=easing.outExpo, onComplete=completeTween } )
-            cientifico.isVisible = true          
-            repositionAndFadeIn(0.3,0.25)
-
-            puma:addEventListener( "touch", puma )
-            ave:addEventListener( "touch", ave )
-            caballo:addEventListener( "touch", caballo )
-
-
-        elseif animStep == 2 then
-            pageText.alpha = 0 --transparent
-            
-            local textOption = 
-                {           
-                    --parent = textGroup,
-                    text = "¡Te presento al puma chileno, tócalo para conocer su nombre científico!",     
-                    width = 500,     --required for multi-line and alignment
-                    font = "Austie Bost Kitten Klub",   
-                    fontSize = 40,
-                    align = "center"  --new alignment parameter
-                            
-                }
-
-            pageText = display.newText(textOption) 
-            pageText.isVisible = false
-
-            retratoPuma.isVisible = true
-            hojas.isVisible = true
-            bosque.isVisible = true
-            ninos.isVisible = false
-
-            transition.to( hojas, { time=tweenTime, x=display.contentWidth*0.2, transition=easing.outExpo} )
-            transition.to( bosque, { time=tweenTime, x=display.contentWidth*0.25, transition=easing.outExpo} )
-            transition.to( retratoPuma, { time=tweenTime, alpha=1, transition=easing.outExpo, onComplete=completeTween } )
-
-            cientifico:removeEventListener( "touch", continuarAnimacion )
-            retratoPuma:addEventListener( "touch", continuarAnimacion )
-        
-        elseif animStep == 3 then
-
-            pageText.alpha = 0
-            local textOption = 
-                {           
-                    --parent = textGroup,
-                    text = "Felis Concolor.",     
-                    width = 500,     --required for multi-line and alignment
-                    font = "Austie Bost Kitten Klub",   
-                    fontSize = 80,
-                    align = "center"  --new alignment parameter
-                    
-                }
-
-            pageText= display.newText(textOption)
-            repositionAndFadeIn(0.55,0.85)
-            
-            pasto.touch = onPageSwipe
-            pasto:addEventListener( "touch", pasto )
-            -- Linea para reiniciar la animacion
-            --pageTween = transition.to( ramaObj, { time=tweenTime*1.5, alpha=0, transition=easing.inOutExpo, onComplete=completeTween } )
+            -- Iniciar animacion de exito
 
         end
+
     end
+
+    return true
+
+end
+
+local function iniciarJuego()
+        
+    local function repositionAndFadeIn( factorX, factorY )
+        pageText.x = display.contentWidth * factorX
+        pageText.y = display.contentHeight * factorY
+
+        pageText.isVisible = true
+                
+        fadeTween1 = transition.to( pageText, { time=tweenTime*0.5, alpha=1.0 } )
+    end
+
+    pageText.alpha = 0
+
+    local textOption = 
+        {           
+            --parent = textGroup,
+            text = "¡Toca al puma para conocer su hábitat!.",     
+            width = 500,     --required for multi-line andT alignment
+            font = "Austie Bost Kitten Klub",   
+            fontSize = 60,
+            align = "center"  --new alignment parameter
+    
+        }
+
+    pageText= display.newText(textOption)
+    pageText.isVisible = false
+
+    cientifico.isVisible = true          
+    repositionAndFadeIn(0.3,0.25)
+
+    puma:addEventListener( "touch", puma )
+    ave:addEventListener( "touch", ave )
+    caballo:addEventListener( "touch", caballo )
+
 end
 
 -- Funcion para verificar si esta página corresponde al marcador, y hacerlo visible.
@@ -268,17 +217,17 @@ function scene:create( event )
     puma = display.newImageRect( sceneGroup, "Pagina2/puma.png", display.contentWidth * 0.35, display.contentHeight * 0.35 )
     puma.x, puma.y = display.contentWidth * 0.65, display.contentHeight * 0.7
     puma.sonido = audio.loadSound( "Pagina2/puma.mp3" )
-    puma.touch = reproducirSonido
+    puma.touch = seleccionCorrecta
 
     ave = display.newImageRect( sceneGroup, "Pagina2/ave.png", display.contentWidth * 0.15, display.contentHeight * 0.15 )
     ave.x, ave.y = display.contentWidth * 0.5, display.contentHeight * 0.55
     ave.sonido = audio.loadSound( "Pagina2/ave.mp3" )
-    ave.touch = reproducirSonido
+    ave.touch = seleccionIncorrecta
 
     caballo = display.newImageRect( sceneGroup, "Pagina2/caballo.png", display.contentWidth * 0.3, display.contentHeight * 0.4 )
     caballo.x, caballo.y = display.contentWidth * 0.75, display.contentHeight * 0.35
     caballo.sonido = audio.loadSound( "Pagina2/caballo.mp3" )
-    caballo.touch = reproducirSonido
+    caballo.touch = seleccionIncorrecta
 
     -- create pageText
     pageText = display.newText( sceneGroup, "", 0, 0, native.systemFontBold, 18 )
@@ -314,10 +263,8 @@ function scene:show( event )
         markerObj.isVisible = true
         verificarMarcador()
 
-        animStep = 1
-        readyToContinue = true
-
-        showNext()
+        juegoCompletado = false
+        iniciarJuego()
     
         -- assign touch event to background to monitor page swiping
         cientifico:addEventListener( "touch", continuarAnimacion )
@@ -348,6 +295,7 @@ function scene:hide( event )
         -- remove touch event listener for background
         pasto:removeEventListener( "touch", background )
         markerObj:removeEventListener( "touch", activarMarcador )
+        composer.setVariable( "pagAnterior", "P2" )
     
         -- cancel page animations (if currently active)
         if pageTween then transition.cancel( pageTween ); pageTween = nil; end

@@ -15,8 +15,7 @@ local background, pageText, patita, puma, logoPUC, logoCRA
 -- Touch listener function for background object
 local function onBackgroundTouch( self, event )
 	if event.phase == "ended" or event.phase == "cancelled" then
-		-- go to page1.lua scene
-		composer.setVariable( "pagina", 1)
+		composer.setVariable( "pagina", 1 )
 		composer.gotoScene( "P1", "slideLeft", 800 )
 		
 		return true	-- indicates successful touch
@@ -60,7 +59,7 @@ function scene:create( event )
 	pageText.isVisible = false
 
 	-- Establecer el numero de pagina
-	composer.setVariable( "pagina", 0)
+	composer.setVariable( "pagina", 0 )
 	
 end
 
@@ -83,7 +82,11 @@ function scene:show( event )
 		-- 
 		-- INSERT code here to make the scene come alive
 		-- e.g. start timers, begin animation, play audio, etc.
-		
+		local pag = composer.getVariable( "pagAnterior" )
+		if pag then
+			composer.removeScene( pag )
+		end
+		pag = nil
 		background.touch = onBackgroundTouch
 		background:addEventListener( "touch", background )
 	end
@@ -101,6 +104,7 @@ function scene:hide( event )
 
 		-- remove event listener from background
 		background:removeEventListener( "touch", background )
+		composer.setVariable( "pagAnterior", "P0" )
 		
 	elseif phase == "did" then
 		-- Called when the scene is now off screen

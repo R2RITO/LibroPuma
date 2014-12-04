@@ -101,6 +101,7 @@ botonMarcador.isVisible = false
 -- Cargar la página del marcador.
 cargarMarcador()
 
+composer.setVariable( "paginaAnterior", nil )
 
 local stage = display.getCurrentStage()
 stage:insert( composer.stage )

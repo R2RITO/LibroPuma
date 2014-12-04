@@ -41,7 +41,7 @@ local function showNext()
         
         local function completeTween()
             animStep = animStep + 1
-            if animStep > 5 then animStep = 1; end
+            if animStep > 4 then animStep = 1; end
             
             readyToContinue = true
         end
@@ -181,61 +181,8 @@ local function showNext()
 
             handsTimer = timer.performWithDelay( 1000, move, -1 )
 
-
-        elseif animStep == 4 then
-            pageText.alpha = 0 --transparent
-            
-            local textOption = 
-                {           
-                    --parent = textGroup,
-                    text = "¡Te presento al puma chileno, tócalo para conocer su nombre científico!",     
-                    width = 500,     --required for multi-line and alignment
-                    font = "Austie Bost Kitten Klub",   
-                    fontSize = 40,
-                    align = "center"  --new alignment parameter
-                            
-                }
-
-            pageText = display.newText(textOption) 
-            pageText.isVisible = false
-            audio.play( start, { onComplete=repositionAndFadeIn(0.5,0.2) } )
-
-            retratoPuma.isVisible = true
-            hojas.isVisible = true
-            bosque.isVisible = true
-            ninos.isVisible = false
-
-            transition.to( hojas, { time=tweenTime, x=display.contentWidth*0.2, transition=easing.outExpo} )
-            transition.to( bosque, { time=tweenTime, x=display.contentWidth*0.25, transition=easing.outExpo} )
-            transition.to( retratoPuma, { time=tweenTime, alpha=1, transition=easing.outExpo, onComplete=completeTween } )
-
-            cientifico:removeEventListener( "touch", continuarAnimacion )
-            retratoPuma:addEventListener( "touch", continuarAnimacion )
-        
-        elseif animStep == 5 then
-
-            pageText.alpha = 0
-            local textOption = 
-                {           
-                    --parent = textGroup,
-                    text = "Felis Concolor.",     
-                    width = 500,     --required for multi-line and alignment
-                    font = "Austie Bost Kitten Klub",   
-                    fontSize = 80,
-                    align = "center"  --new alignment parameter
-                    
-                }
-
-            pageText= display.newText(textOption)
-            repositionAndFadeIn(0.55,0.85)
-            
-            pasto.touch = onPageSwipe
-            pasto:addEventListener( "touch", pasto )
-            retratoPuma:removeEventListener( "touch", continuarAnimacion )
-            -- Linea para reiniciar la animacion
-            --pageTween = transition.to( ramaObj, { time=tweenTime*1.5, alpha=0, transition=easing.inOutExpo, onComplete=completeTween } )
-
         end
+
     end
 end
 
@@ -436,9 +383,8 @@ function scene:show( event )
         readyToContinue = true
 
         showNext()
-    
-        -- assign touch event to background to monitor page swiping
         markerObj:addEventListener( "touch", activarMarcador )
+        
     end 
 
 end
@@ -470,6 +416,8 @@ function scene:hide( event )
         if pageTween then transition.cancel( pageTween ); pageTween = nil; end
         if fadeTween1 then transition.cancel( fadeTween1 ); fadeTween1 = nil; end
         if fadeTween2 then transition.cancel( fadeTween2 ); fadeTween2 = nil; end
+
+        composer.setVariable( "paginaAnterior", "P1" )
         timer.cancel( handsTimer ); handsTimer = nil;
         
     elseif phase == "did" then
