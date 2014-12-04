@@ -20,10 +20,23 @@ local continuarAnimacion, onPageSwipe
 local swipeThresh = 100     -- amount of pixels finger must travel to initiate page swipe
 local tweenTime = 900
 
+local function desaparecerGlobo( globo )
+    transition.to( globo, { alpha=0 })
+    globo.isVisible = false
+end
+
 local function seleccionIncorrecta( self, event )
 
     if event.phase == "ended" or event.phase == "cancelled" then
         audio.play( self.sonido )
+
+        globoFallo.x, globoFallo.y = self.x - 50, self.y - 50
+        globoFallo.alpha = 1
+        globoFallo.isVisible = true
+        fadeTween1 = transition.to( globoFallo, { y = globoFallo.y - 150, onComplete=desaparecerGlobo } )
+
+
+
     end
 
     return true
@@ -44,6 +57,9 @@ local function seleccionCorrecta( self, event )
 
             -- Iniciar animacion de exito
 
+            globoExito.x, globoExito.y = self.x - 50, self.y - 50
+            globoExito.isVisible = true
+            fadeTween1 = transition.to( globoExito, { y = globoExito.y - 250, onComplete=desaparecerGlobo } )
 
         end
 
@@ -144,19 +160,6 @@ local function activarMarcador( event )
     return true
 end
 
-
--- Funcion que se activa cuando se toca al puma guia.
-continuarAnimacion = function( event )
-
-    if event.phase == "ended" or event.phase == "cancelled" then
-        showNext()
-    end
-
-    return true
-
-end
-
-
 -- touch event listener for background object
 onPageSwipe = function( self, event )
     local phase = event.phase
@@ -231,10 +234,10 @@ function scene:create( event )
     caballo.touch = seleccionIncorrecta
 
     globoExito = display.newImageRect( sceneGroup, "Pagina2/globoExito.png", display.contentWidth* 0.15, display.contentHeight * 0.15 )
-    --globoExito.x, globoExito.y = 
+    globoExito.isVisible = false
 
     globoFallo = display.newImageRect( sceneGroup, "Pagina2/globoFallo.png", display.contentWidth* 0.15, display.contentHeight * 0.15 )
-    --globoFallo.x, globoFallo.y =
+    globoFallo.isVisible = false
 
     -- create pageText
     pageText = display.newText( sceneGroup, "", 0, 0, native.systemFontBold, 18 )
@@ -274,7 +277,6 @@ function scene:show( event )
         iniciarJuego()
     
         -- assign touch event to background to monitor page swiping
-        cientifico:addEventListener( "touch", continuarAnimacion )
         markerObj:addEventListener( "touch", activarMarcador )
     end 
 

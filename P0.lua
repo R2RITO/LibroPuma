@@ -98,7 +98,6 @@ function scene:show( event )
 	
 	if phase == "will" then
 		-- Called when the scene is still off screen and is about to move on screen
-	print( "P0: show event, phase will" )
 
 		background.isVisible = true
 		patita.isVisible = true
