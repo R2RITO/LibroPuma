@@ -27,7 +27,9 @@ local swipeThresh = 100
 
 onPageSwipe = function( self, event )
     local phase = event.phase
+    composer.setVariable( "pagina", 0)
     local pag_act = composer.getVariable( "pagina" )
+
 
     if phase == "began" then
         display.getCurrentStage():setFocus( self )
@@ -107,7 +109,7 @@ function scene:show( event )
 	
 	if phase == "will" then
 		-- Called when the scene is still off screen and is about to move on screen
-	print( "PO: show event, phase will" )
+	print( "P0: show event, phase will" )
 
 		background.isVisible = true
 		patita.isVisible = true
