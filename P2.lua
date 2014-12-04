@@ -13,7 +13,7 @@ local json = require("json")
 -- forward declarations and other locals
 local cientifico, pageText, pageTween, fadeTween1, fadeTween2, markerObj,
       fondoPreguntas, marcoJungla, puma, ave, caballo, sonidoAve,
-      sonidoPuma, sonidoCaballo, juegoCompletado
+      sonidoPuma, sonidoCaballo, juegoCompletado, globoExito, globoFallo
 
 local continuarAnimacion, onPageSwipe
 
@@ -43,6 +43,7 @@ local function seleccionCorrecta( self, event )
             -- Iniciar animacion de swipe.
 
             -- Iniciar animacion de exito
+
 
         end
 
@@ -229,6 +230,12 @@ function scene:create( event )
     caballo.sonido = audio.loadSound( "Pagina2/caballo.mp3" )
     caballo.touch = seleccionIncorrecta
 
+    globoExito = display.newImageRect( sceneGroup, "Pagina2/globoExito.png", display.contentWidth* 0.15, display.contentHeight * 0.15 )
+    --globoExito.x, globoExito.y = 
+
+    globoFallo = display.newImageRect( sceneGroup, "Pagina2/globoFallo.png", display.contentWidth* 0.15, display.contentHeight * 0.15 )
+    --globoFallo.x, globoFallo.y =
+
     -- create pageText
     pageText = display.newText( sceneGroup, "", 0, 0, native.systemFontBold, 18 )
     pageText.x = display.contentWidth * 0.5
@@ -286,14 +293,9 @@ function scene:hide( event )
         -- hide objects
         pageText.isVisible = false
         markerObj.isVisible = false
-        hojas.isVisible = false
-        bosque.isVisible = false
         cientifico.isVisible = false
-        retratoPuma.isVisible = false
-        ninos.isVisible = false
     
         -- remove touch event listener for background
-        pasto:removeEventListener( "touch", background )
         markerObj:removeEventListener( "touch", activarMarcador )
         composer.setVariable( "pagAnterior", "P2" )
     
@@ -303,11 +305,6 @@ function scene:hide( event )
         if fadeTween2 then transition.cancel( fadeTween2 ); fadeTween2 = nil; end
         
     elseif phase == "did" then
-
-        hojas.x, hojas.y = display.contentWidth * -2, display.contentHeight * 0.7
-        bosque.x, bosque.y = display.contentWidth * -2, display.contentHeight * 0.3
-        retratoPuma.alpha = 0
-
         -- Called when the scene is now off screen
     end     
 
