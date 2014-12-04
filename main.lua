@@ -14,21 +14,21 @@ local json = require("json")
 
 local botonInicio, botonIndice, botonMarcador
 
-local function moverAIndice( event )
+function moverAIndice( event )
 	if event.phase == "ended" or event.phase == "cancelled" then
 		composer.setVariable( "pagina" , 0 )
 		composer.gotoScene( "P0", "fade" )
 	end
 end
 
-local function moverAInicio( event )
+function moverAInicio( event )
 	if event.phase == "ended" or event.phase == "cancelled" then
 		composer.setVariable( "pagina" , 0 )
 		composer.gotoScene( "P0", "fade" )
 	end
 end
 
-local function moverAMarcador( event )
+function moverAMarcador( event )
 	if event.phase == "ended" or event.phase == "cancelled" then
 	    pag = "P" .. composer.getVariable( "paginaMarcador" )
 	    pag_sig = composer.getVariable( "paginaMarcador" )

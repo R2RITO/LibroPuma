@@ -11,17 +11,53 @@ local scene = composer.newScene()
 
 -- forward declaration
 local background, pageText, patita, puma, logoPUC, logoCRA
+local swipeThresh = 100 
 
 -- Touch listener function for background object
-local function onBackgroundTouch( self, event )
-	if event.phase == "ended" or event.phase == "cancelled" then
-		-- go to page1.lua scene
-		composer.setVariable( "pagina", 1)
-		composer.gotoScene( "P1", "slideLeft", 800 )
+-- local function onBackgroundTouch( self, event )
+-- 	if event.phase == "ended" or event.phase == "cancelled" then
+-- 		-- go to page1.lua scene
+-- 		composer.setVariable( "pagina", 1)
+-- 		composer.gotoScene( "P1", "slideLeft", 800 )
 		
-		return true	-- indicates successful touch
-	end
+-- 		return true	-- indicates successful touch
+-- 	end
+-- end
+
+
+onPageSwipe = function( self, event )
+    local phase = event.phase
+    local pag_act = composer.getVariable( "pagina" )
+
+    if phase == "began" then
+        display.getCurrentStage():setFocus( self )
+        self.isFocus = true
+    
+    elseif self.isFocus then
+        if phase == "ended" or phase == "cancelled" then
+            
+            local distance = event.x - event.xStart
+            if math.abs(distance) > swipeThresh then
+
+                pag_sig = 1
+                pag = "P" .. pag_sig
+                composer.setVariable( "pagina", pag_sig)
+
+                if distance < swipeThresh then
+                    -- deslizar hacia la derecha, pagina anterior
+                    composer.gotoScene( pag, "slideLeft", 800 )
+                    pageText.isVisible=false
+                end 
+
+            end
+            
+            display.getCurrentStage():setFocus( nil )
+            self.isFocus = nil
+        end
+    end
+    return true
 end
+
 
 function scene:create( event )
 	local sceneGroup = self.view
@@ -67,9 +103,11 @@ end
 function scene:show( event )
 	local sceneGroup = self.view
 	local phase = event.phase
+
 	
 	if phase == "will" then
 		-- Called when the scene is still off screen and is about to move on screen
+	print( "PO: show event, phase will" )
 
 		background.isVisible = true
 		patita.isVisible = true
@@ -79,12 +117,14 @@ function scene:show( event )
 		pageText.isVisible = true
 
 	elseif phase == "did" then
+
+	print( "P0: show event, phase did" )
 		-- Called when the scene is now on screen
 		-- 
 		-- INSERT code here to make the scene come alive
 		-- e.g. start timers, begin animation, play audio, etc.
 		
-		background.touch = onBackgroundTouch
+		background.touch = onPageSwipe
 		background:addEventListener( "touch", background )
 	end
 end
