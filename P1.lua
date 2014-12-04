@@ -25,6 +25,26 @@ local animStep = 1
 local readyToContinue = false
 
 
+
+
+local function inflate(self,event)
+    if (self.inflate) then
+        self.rate = self.rate + 0.005
+    else 
+        self.rate = self.rate - 0.005
+    end 
+
+    if (self.rate >= 1 + self.inf ) then
+        self.inflate = false
+    elseif (self.rate <= 1 - self.inf) then
+        self.inflate =  true
+    end 
+
+self.xScale = self.rate 
+self.yScale = self.rate 
+
+end 
+
 -- function to show next animation
 local function showNext()
     if readyToContinue then
@@ -81,6 +101,10 @@ local function showNext()
             repositionAndFadeIn(0.50,0.25)
 
             ninos.isVisible = true  
+           
+            ninos.enterFrame = inflate
+            Runtime:addEventListener("enterFrame", ninos)
+
             ninos:addEventListener( "touch", continuarAnimacion )
             completeTween()
 
@@ -91,7 +115,8 @@ local function showNext()
 
             -- Eliminar funciones anteriores
             ninos:removeEventListener( "touch", continuarAnimacion )
-
+            Runtime:removeEventListener("enterFrame",ninos)
+            
             cientifico.isVisible = true  
             ninos.isVisible = false
             transition.to( cientifico, { time=tweenTime, x=display.contentWidth*0.25 ,transition=easing.outExpo } )
@@ -111,10 +136,19 @@ local function showNext()
             pageText.isVisible = false
             repositionAndFadeIn(0.50,0.25)
 
+           
+            cientifico.enterFrame = inflate
+            Runtime:addEventListener("enterFrame", cientifico)
             cientifico:addEventListener( "touch", continuarAnimacion )
             completeTween()
+            
 
         elseif animStep == 3 then
+            
+
+            -- Eliminar funciones anteriores
+            cientifico:removeEventListener( "touch", continuarAnimacion )
+            Runtime:removeEventListener("enterFrame",cientifico)
 
             pageText.alpha = 0
 
@@ -133,7 +167,6 @@ local function showNext()
             pageText.isVisible = false
             repositionAndFadeIn(0.50,0.25)
 
-            cientifico:removeEventListener( "touch", continuarAnimacion )
 
             pumaReal.isVisible = true
             pumaReal:toFront( )
@@ -146,6 +179,9 @@ local function showNext()
             transition.to( marcoJungla, { time=tweenTime, x=display.contentCenterX, transition=easing.outExpo } )
             transition.to( botonVolver, { time=tweenTime, x=display.contentWidth * 0.9, transition=easing.outExpo } )
 
+
+            botonVolver.enterFrame = inflate
+            Runtime:addEventListener("enterFrame", botonVolver)
             botonVolver:addEventListener( "touch", continuarAnimacion )
             completeTween()
 
@@ -291,6 +327,10 @@ onPageSwipe = function( self, event )
     return true
 end
 
+
+
+
+
 function scene:create( event )
     local sceneGroup = self.view
 
@@ -317,7 +357,7 @@ function scene:create( event )
 
     cientifico = display.newImageRect( sceneGroup, "Pagina1/Scientist.png", display.contentWidth * 0.4, display.contentHeight*0.5)
     cientifico.x, cientifico.y = display.contentWidth*-0.25, display.contentHeight * 0.6
-    cientifico.isVisible = false
+    cientifico.isVisible, cientifico.inf, cientifico.inflate, cientifico.rate = false, 0.05, true, 1
 
     nube = display.newImageRect( sceneGroup, "Pagina1/Cloud.png", 256, 256 )
     nube.x, nube.y = display.contentWidth * 0.8, display.contentHeight * 0.2
@@ -338,14 +378,16 @@ function scene:create( event )
     botonVolver = display.newImageRect( sceneGroup, "Pagina1/botonVolver.png", display.contentWidth * 0.15, display.contentHeight * 0.15 )
     botonVolver.x, botonVolver.y = display.contentWidth * -0.9, display.contentHeight * 0.9
     botonVolver.isVisible = false
+    botonVolver.isVisible, botonVolver.inf, botonVolver.inflate, botonVolver.rate = false, 0.05, true, 1
 
     ninos = display.newImageRect( sceneGroup, "Pagina1/ninos.png", display.contentWidth * 0.5, display.contentHeight * 0.5 )
     ninos.x, ninos.y = display.contentWidth * 0.7, display.contentHeight * 0.7
-    ninos.isVisible = false
+    ninos.isVisible, ninos.inf, ninos.inflate, ninos.rate = false, 0.05, true, 1
 
     finger_left = display.newImageRect( sceneGroup, "swipeIzq.png", 150, 150 )
     finger_left.x, finger_left.y = display.contentWidth * 0.9, display.contentHeight * 0.5
     finger_left.isVisible = false
+
 
     -- create pageText
     pageText = display.newText( sceneGroup, "", 0, 0, native.systemFontBold, 18 )
