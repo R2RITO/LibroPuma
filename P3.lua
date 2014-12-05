@@ -14,58 +14,59 @@ local json = require("json")
 local cielo, pasto, cientifico, nube, hojas, bosque, pageText,
         pageTween, fadeTween1, fadeTween2, markerObj, retratoPuma,
         ninos, pumaReal, marcoJungla, botonVolver, finger_left,
-        handsTimer
+        grass, grass1, forest1, forest2, forest3, forest4, forest5, mountain1, mountain2, mountain3, Puma, cientifico
+
 
 
 local continuarAnimacion, onPageSwipe
 
 local swipeThresh = 100     -- amount of pixels finger must travel to initiate page swipe
-local tweenTime = 900
+local tweenTime = 4000  --ms
 local animStep = 1
 local readyToContinue = false
 
 
 
 
-local function animPuma()
+-- local function animPuma()
 
-   --Para animación Sprite de Puma
-    seqData ={
-        {name = "puma", start=1, count=4, time = 700, loopCount = 0}
-    }
+--    --Para animación Sprite de Puma
+--     seqData ={
+--         {name = "puma", start=1, count=4, time = 700, loopCount = 0}
+--     }
 
-    data = {
+--     data = {
 
-            frames ={
-            {name=puma1, x = 0, y = 398, width = 725, height = 398, sourceX=0, sourceY=0 },
-            {name=puma2, x = 725, y = 0, width = 725, height = 398, sourceX=0, sourceY=0 },
-            {name=puma3, x = 0, y = 398, width = 725, height = 398, sourceX=0, sourceY=0 },
-            {name=puma4, x = 0, y = 0, width = 725, height = 398, sourceX=0, sourceY=0 },
-        },
-        sheetContentWidth = 1451,
-        sheetContentHeight = 796,
-        width=64, height=64,
-    }
+--             frames ={
+--             {name=puma1, x = 0, y = 398, width = 725, height = 398, sourceX=0, sourceY=0 },
+--             {name=puma2, x = 725, y = 0, width = 725, height = 398, sourceX=0, sourceY=0 },
+--             {name=puma3, x = 0, y = 398, width = 725, height = 398, sourceX=0, sourceY=0 },
+--             {name=puma4, x = 0, y = 0, width = 725, height = 398, sourceX=0, sourceY=0 },
+--         },
+--         sheetContentWidth = 1451,
+--         sheetContentHeight = 796,
+--         width=64, height=64,
+--     }
 
-    sheet = graphics.newImageSheet("sprite1.png", data)
-    sprite = display.newSprite(sheet, seqData)
-    sprite.x = 244
-    sprite.y = 400
-    --sprite.x = display.contentHeight/2
-    --sprite.y = display.contentWidth/2
-    sprite.alpha=1
+--     sheet = graphics.newImageSheet("sprite1.png", data)
+--     sprite = display.newSprite(sheet, seqData)
+--     sprite.x = 244
+--     sprite.y = 400
+--     --sprite.x = display.contentHeight/2
+--     --sprite.y = display.contentWidth/2
+--     sprite.alpha=1
 
-    sprite:setSequence("puma")
-    sprite:play()
+--     sprite:setSequence("puma")
+--     sprite:play()
 
-    --Como loopCount = 0 se reproduce infinitamente
-    --Fin animación
+--     --Como loopCount = 0 se reproduce infinitamente
+--     --Fin animación
 
-    sprite.xScale = .5
-    sprite.yScale = .5 
-end
+--     sprite.xScale = .5
+--     sprite.yScale = .5 
+-- end
 
-function scrollBackground(self, event)
+local function scrollBackground(self, event)
     
 --Para la montaña
     if(self.type==1) then
@@ -85,21 +86,52 @@ function scrollBackground(self, event)
     end
 
     if(self.type==3) then
-        if (self.x<-495) then
-            self.x  = 1260
+        if (self.x<-511) then
+            self.x  = 1530
         else    
             self.x = self.x-self.speed
         end
     end
 end
 
+local function startScrollBackground()
+        --Animación pasto
+    grass.enterFrame = scrollBackground
+    Runtime:addEventListener("enterFrame",grass)
+    grass1.enterFrame = scrollBackground
+    Runtime:addEventListener("enterFrame",grass1)
+
+    --Animación bosque
+    forest1.enterFrame = scrollBackground
+    Runtime:addEventListener("enterFrame",forest1)
+    forest2.enterFrame = scrollBackground
+    Runtime:addEventListener("enterFrame",forest2)
+    forest3.enterFrame = scrollBackground
+    Runtime:addEventListener("enterFrame",forest3)
+    forest4.enterFrame = scrollBackground
+    Runtime:addEventListener("enterFrame",forest4)
+    forest5.enterFrame = scrollBackground
+    Runtime:addEventListener("enterFrame",forest5)
+
+    --Animación Montaña
+
+    mountain1.enterFrame = scrollBackground
+    Runtime:addEventListener("enterFrame",mountain1)
+    mountain2.enterFrame = scrollBackground
+    Runtime:addEventListener("enterFrame",mountain2)
+    mountain3.enterFrame = scrollBackground
+    Runtime:addEventListener("enterFrame",mountain3)
+end
+
+
+
 
 
 local function inflate(self,event)
         if (self.inflate) then
-            self.rate = self.rate + 0.005
+            self.rate = self.rate + self.drate
         else 
-            self.rate = self.rate - 0.005
+            self.rate = self.rate - self.drate
         end 
 
         if (self.rate >= 1 + self.inf ) then
@@ -112,6 +144,67 @@ local function inflate(self,event)
     self.yScale = self.rate 
 
 end 
+
+local function stopScrollBackground()
+
+    --Animación pasto
+    
+    Runtime:removeEventListener("enterFrame",grass)
+    Runtime:removeEventListener("enterFrame",grass1)         
+
+    --Animación bosque
+
+    Runtime:removeEventListener("enterFrame",forest1)
+    Runtime:removeEventListener("enterFrame",forest2)
+    Runtime:removeEventListener("enterFrame",forest3)
+    Runtime:removeEventListener("enterFrame",forest4)
+    Runtime:removeEventListener("enterFrame",forest5)
+
+    --Animación Montaña
+
+   Runtime:removeEventListener("enterFrame",mountain1)
+   Runtime:removeEventListener("enterFrame",mountain2)
+   Runtime:removeEventListener("enterFrame",mountain3)
+
+end
+
+local function startInflate()
+--- Inflado Puma
+   Puma.enterFrame = inflate
+   Runtime:addEventListener("enterFrame", Puma)
+
+ end
+
+ local function pumaReady()
+    stopScrollBackground()
+    startInflate()
+
+    --transition.to( cientifico, { time=tweenTime, x=display.contentWidth*0.2, y=display.contentHeight*0.4 ,transition=easing.outExpo } )
+    transition.fadeIn( cientifico, { time=300 } )
+
+  
+
+            local textOption = 
+                {           
+                    --parent = textGroup,
+                    text = "¡Observa, es un Felis Concolor!",     
+                    width = 500,     --required for multi-line and alignment
+                    font = "Austie Bost Kitten Klub",   
+                    fontSize = 40,
+                    align = "center"  --new alignment parameter
+            
+                }
+    pageText= display.newText(textOption)
+    pageText.isVisible=true
+    --transition.to( pageText, { time=tweenTime*0.5, x=display.contentWidth * 0.35, y = display.contentHeight * 0.2} )
+    
+           
+    pageText.x = display.contentWidth * 0.35
+    pageText.y = display.contentHeight * 0.2
+
+                              
+
+  end
 
 -- function to show next animation
 local function showNext()
@@ -150,14 +243,54 @@ local function showNext()
         end
         
         if animStep == 1 then
+            --animacion de inflado para boton
+            boton.enterFrame = inflate
+            Runtime:addEventListener("enterFrame", boton)
+            --boton queda disponible para ser clickeado
+            boton:addEventListener( "touch", continuarAnimacion )
+            --Se avanza en animStep
+            completeTween()
 
             
         elseif animStep == 2 then
-
-           
+            --desaparece texto y boton al apretar este ultimo
+            pageText.isVisible=false
+            boton:removeEventListener( "touch", continuarAnimacion )
+            boton.isVisible = false 
             
+            --entra el puma y luego se infla
+            transition.to( Puma, { time=tweenTime, x=display.contentWidth*0.75, onComplete=pumaReady} )
+        
+            --aparece el científico y habla
+            --cientifico.x, cientifico.y=display.contentWidth*0.15,display.contentHeight*0.5 
+            
+            --Puma queda disponible para ser clickeado
+            Puma:addEventListener( "touch", continuarAnimacion )
+
+            --Se avanza en animStep
+            completeTween()
 
         elseif animStep == 3 then
+
+            --Se quita la funcionalidad del puma y su inflado
+            Puma.rate, Puma.drate=1,0
+            Puma:removeEventListener( "touch", continuarAnimacion )
+            pageText.isVisible=false
+
+            local textOption = 
+                {           
+                    --parent = textGroup,
+                    text = "¡Perdona! Este es un puma y su nombre científico es Felis Concolor",     
+                    width = 500,     --required for multi-line and alignment
+                    font = "Austie Bost Kitten Klub",   
+                    fontSize = 40,
+                    align = "center"  --new alignment parameter
+            
+                }
+
+            pageText= display.newText(textOption)
+            pageText.isVisible = true
+            repositionAndFadeIn(0.50,0.25)
             
 
         elseif animStep == 4 then
@@ -288,107 +421,108 @@ function scene:create( event )
     
     -- -- create background image
 
-    local sky = display.newImageRect( "Sky.jpg", 1021, 365 )
+    sky = display.newImageRect( "Pagina3/Sky.jpg", 1021, 365 )
     sky.x = 511
     sky.y = 182
 
 
-    local mountain1 = display.newImageRect( "BrownMontain1.png", 640, 480 )
+    mountain1 = display.newImageRect( "Pagina3/BrownMontain1.png", 640, 480 )
     mountain1.type = 1
     mountain1.x = 1440
     mountain1.y = 150
     mountain1.speed = 2
 
-    local mountain2 = display.newImageRect( "BrownMontain1.png", 640, 480 )
+    mountain2 = display.newImageRect( "Pagina3/BrownMontain1.png", 640, 480 )
     mountain2.type = 1
     mountain2.x = 320
     mountain2.y = 150
     mountain2.speed = 2
 
-    local mountain3 = display.newImageRect( "BrownMontain1.png", 640, 480 )
+    mountain3 = display.newImageRect( "Pagina3/BrownMontain1.png", 640, 480 )
     mountain3.type = 1
     mountain3.x = 900
     mountain3.y = 150
     mountain3.speed = 2
 
 
-    local grass = display.newImageRect( "Grass.png", 1024, 768 )
+    grass = display.newImageRect( "Pagina3/Grass.png", 1024, 768 )
     grass.x = 512
     grass.y = 342
     grass.speed = 3
     grass.type = 3
 
-    local grass1 = display.newImageRect( "Grass.png", 1024, 768 )
-    grass1.x = 1500
+    grass1 = display.newImageRect( "Pagina3/Grass.png", 1024, 768 )
+    grass1.x = 1536
     grass1.y = 342
     grass1.speed = 3
     grass1.type = 3
 
-    local forest1 = display.newImageRect( "Forest.png", 500, 263 )
+    forest1 = display.newImageRect( "Pagina3/Forest.png", 500, 263 )
     forest1.type = 2
     forest1.x = 200
     forest1.y = 276
     forest1.speed = 3
 
-    local forest4 = display.newImageRect( "Forest.png", 500, 263 )
+    forest4 = display.newImageRect( "Pagina3/Forest.png", 500, 263 )
     forest4.type = 2
     forest4.x = 1160
     forest4.y = 276
     forest4.speed = 3
 
-    local forest3 = display.newImageRect( "Forest.png", 500, 263 )
+    forest3 = display.newImageRect( "Pagina3/Forest.png", 500, 263 )
     forest3.type = 2
     forest3.x = 878
     forest3.y = 276
     forest3.speed = 3
 
-    local forest2 = display.newImageRect( "Forest.png", 500, 263 )
+    forest2 = display.newImageRect( "Pagina3/Forest.png", 500, 263 )
     forest2.type = 2
     forest2.x = 502
     forest2.y = 276
     forest2.speed = 3
 
-    local forest5 = display.newImageRect( "Forest.png", 500, 263 )
+    forest5 = display.newImageRect( "Pagina3/Forest.png", 500, 263 )
     forest5.type = 2
     forest5.x = 1536
     forest5.y = 276
     forest5.speed = 3
 
+    boton = display.newImageRect( "Pagina3/boton.png", 50, 50 )
+    boton.x = display.contentWidth*0.9
+    boton.y = display.contentHeight*0.9
+    boton.inf, boton.inflate, boton.rate, boton.drate =  0.15, true, 1, 0.03
+   
 
+    Puma = display.newImageRect( "Pagina3/Puma.png", 270, 263 )
+    Puma.x, Puma.y = display.contentWidth*1.2, display.contentHeight * 0.6
+    Puma.inf, Puma.inflate, Puma.rate, Puma.drate =  0.05, true, 1, 0.005
+
+
+    cientifico = display.newImageRect("Pagina3/Scientist.png", display.contentWidth * 0.4, display.contentHeight*0.5)
+    cientifico.x, cientifico.y = display.contentWidth*0.2, display.contentHeight * 0.4
+    cientifico.alpha=0
+
+    local textOption = 
+        {           
+            --parent = textGroup,
+            text = "Los niños comenzaron a recorrer el bosque, cuando de repente…",     
+            width = 500,     --required for multi-line andT alignment
+            font = "Austie Bost Kitten Klub",   
+            fontSize = 40,
+            align = "center"  --new alignment parameter
+    
+        }
+
+    pageText= display.newText(textOption)
+    pageText.x,pageText.y= display.contentWidth *0.4, display.contentHeight*0.5
+   
     --create marker object
     markerObj = display.newImageRect( sceneGroup, "Marcador.png", 80, 120 )
     markerObj.x, markerObj.y = 40, 60
     markerObj.isVisible = false
     markerObj.alpha = 0.2
 
-    --animBack()
 
-    --Animación pasto
-    grass.enterFrame = scrollBackground
-    Runtime:addEventListener("enterFrame",grass)
-    grass1.enterFrame = scrollBackground
-    Runtime:addEventListener("enterFrame",grass1)
-
-    --Animación bosque
-    forest1.enterFrame = scrollBackground
-    Runtime:addEventListener("enterFrame",forest1)
-    forest2.enterFrame = scrollBackground
-    Runtime:addEventListener("enterFrame",forest2)
-    forest3.enterFrame = scrollBackground
-    Runtime:addEventListener("enterFrame",forest3)
-    forest4.enterFrame = scrollBackground
-    Runtime:addEventListener("enterFrame",forest4)
-    forest5.enterFrame = scrollBackground
-    Runtime:addEventListener("enterFrame",forest5)
-
-    --Animación Montaña
-
-    mountain1.enterFrame = scrollBackground
-    Runtime:addEventListener("enterFrame",mountain1)
-    mountain2.enterFrame = scrollBackground
-    Runtime:addEventListener("enterFrame",mountain2)
-    mountain3.enterFrame = scrollBackground
-    Runtime:addEventListener("enterFrame",mountain3)
 end
 
 function scene:show( event )
@@ -412,6 +546,8 @@ function scene:show( event )
 
         showNext()
         markerObj:addEventListener( "touch", activarMarcador )
+
+        startScrollBackground()
         
     end 
 
@@ -455,6 +591,10 @@ function scene:hide( event )
         retratoPuma.alpha = 0
 
         -- Called when the scene is now off screen
+
+            --animBack()
+
+
     end     
 
 end
