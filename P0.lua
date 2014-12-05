@@ -112,7 +112,7 @@ function scene:show( event )
 		-- 
 		-- INSERT code here to make the scene come alive
 		-- e.g. start timers, begin animation, play audio, etc.
-		local pag = composer.getVariable( "pagAnterior" )
+		local pag = composer.getVariable( "paginaAnterior" )
 		if pag then
 			composer.removeScene( pag )
 		end
@@ -135,7 +135,7 @@ function scene:hide( event )
 
 		-- remove event listener from background
 		background:removeEventListener( "touch", background )
-		composer.setVariable( "pagAnterior", "P0" )
+		composer.setVariable( "paginaAnterior", "P0" )
 		
 	elseif phase == "did" then
 		-- Called when the scene is now off screen

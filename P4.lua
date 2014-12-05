@@ -11,10 +11,9 @@ local json = require("json")
 
 
 -- forward declarations and other locals
-local cielo, pasto, cientifico, nube, hojas, bosque, pageText,
-        pageTween, fadeTween1, fadeTween2, markerObj, retratoPuma,
-        ninos, pumaReal, marcoJungla, botonVolver, finger_left,
-        handsTimer
+local cientifico, pageText, animacionTexto, pageText2, pageTween, fadeTween1, 
+      fadeTween2, markerObj, finger_left, handsTimer, globoDiccionario,
+      textoCarnivoro
 
 
 local continuarAnimacion, onPageSwipe
@@ -40,24 +39,82 @@ local function inflate(self,event)
         self.inflate =  true
     end 
 
-self.xScale = self.rate 
-self.yScale = self.rate 
+    self.xScale = self.rate 
+    self.yScale = self.rate 
 
 end 
+
+local function repositionAndFadeIn( texto, factorX, factorY )
+    texto.x = display.contentWidth * factorX
+    texto.y = display.contentHeight * factorY
+
+    texto.isVisible = true
+            
+    fadeTween1 = transition.to( texto, { time=tweenTime*0.5, alpha=1.0 } )
+end
+
+local function desvanecerTexto( texto )
+    fadeTween1 = transition.to( texto, { time=tweenTime*0.5, alpha=0 } )
+    texto.isVisible = false
+end
+
+local function crearTexto( args )
+
+    local textOption = 
+        {           
+            --parent = textGroup,
+            text = args.texto,     
+            width = args.ancho or 900,     --required for multi-line and alignment
+            font = args.fuente or "Austie Bost Kitten Klub",   
+            fontSize = args.tam or 40,
+            align = "center"  --new alignment parameter
+    
+        }
+
+    return display.newText(textOption)
+
+
+end
+
+local function alternarDiccionario( self, event )
+
+    if event.phase == "ended" or event.phase == "cancelled" then
+
+        if self.globoActivo then
+
+            fadeTween1 = transition.to( self.globo, {
+                                                y=display.contentWidth * self.factorYReverso, 
+                                                onComplete=
+                                                desvanecerTexto(self.definicion)
+                                                    } 
+                                      )
+            self.globoActivo = false
+
+        else
+            self.globo.isVisible = true
+            fadeTween1 = transition.to( self.globo, {
+                                                y=display.contentWidth * self.factorY, 
+                                                onComplete=
+                                                repositionAndFadeIn(self.definicion,self.factorX,self.factorY)
+                                                    } 
+                                      )
+            self.globoActivo = true
+        end
+
+    end
+
+    return true
+
+
+
+end
+
+
 
 -- function to show next animation
 local function showNext()
     if readyToContinue then
         readyToContinue = false
-        
-        local function repositionAndFadeIn( factorX, factorY )
-            pageText.x = display.contentWidth * factorX
-            pageText.y = display.contentHeight * factorY
-
-            pageText.isVisible = true
-                    
-            fadeTween1 = transition.to( pageText, { time=tweenTime*0.5, alpha=1.0 } )
-        end
         
         local function completeTween()
             animStep = animStep + 1
@@ -84,28 +141,33 @@ local function showNext()
         if animStep == 1 then
 
             pageText.alpha = 0
+            animacionTexto.alpha = 0
+            pageText2.alpha = 0
 
-            local textOption = 
-                {           
-                    --parent = textGroup,
-                    text = "Érase una vez, un grupo de niños que fueron de expedición a la Cordillera de los Andes.",     
-                    width = 900,     --required for multi-line and alignment
-                    font = "Austie Bost Kitten Klub",   
-                    fontSize = 40,
-                    align = "center"  --new alignment parameter
-            
-                }
+            cientifico.isVisible = true
+            fadeTween1 = transition.to( cientifico, { time=tweenTime, x=display.contentWidth*0.25 ,transition=easing.outExpo } )
 
-            pageText= display.newText(textOption)
+            pageText = crearTexto{texto="!Observa lo grande que es!. Es el mayor "}
             pageText.isVisible = false
-            repositionAndFadeIn(0.50,0.25)
 
-            ninos.isVisible = true  
-           
-            ninos.enterFrame = inflate
-            Runtime:addEventListener("enterFrame", ninos)
+            animacionTexto = crearTexto{texto="carnívoro"}
+            animacionTexto.isVisible = false
 
-            ninos:addEventListener( "touch", continuarAnimacion )
+            pageText2 = crearTexto{texto=" terrestre de Chile."}
+            pageText2.isVisible = false
+
+            repositionAndFadeIn(pageText, 0.40, 0.25)
+            repositionAndFadeIn(animacionTexto, 0.85, 0.25)
+            repositionAndFadeIn(pageText2, 0.80, 0.35)
+
+
+            -- Parametros para posicionar la imagen del globo y la definicion de la palabra.
+            animacionTexto.definicion, animacionTexto.globo = textoCarnivoro, globoDiccionario
+            animacionTexto.factorX, animacionTexto.factorY = 0.85, 0.15
+            animacionTexto.factorXReverso, animacionTexto.factorYReverso = 0.85, -0.2
+            animacionTexto.touch = alternarDiccionario
+            animacionTexto:addEventListener( "touch", animacionTexto )
+
             completeTween()
 
 
@@ -114,8 +176,6 @@ local function showNext()
             pageText.alpha = 0
 
             -- Eliminar funciones anteriores
-            ninos:removeEventListener( "touch", continuarAnimacion )
-            Runtime:removeEventListener("enterFrame",ninos)
             
             cientifico.isVisible = true  
             ninos.isVisible = false
@@ -134,7 +194,7 @@ local function showNext()
 
             pageText= display.newText(textOption)
             pageText.isVisible = false
-            repositionAndFadeIn(0.50,0.25)
+            --repositionAndFadeIn(0.50,0.25)
 
            
             cientifico.enterFrame = inflate
@@ -165,7 +225,7 @@ local function showNext()
 
             pageText= display.newText(textOption)
             pageText.isVisible = false
-            repositionAndFadeIn(0.50,0.25)
+            --repositionAndFadeIn(0.50,0.25)
 
 
             pumaReal.isVisible = true
@@ -206,7 +266,7 @@ local function showNext()
 
             pageText= display.newText(textOption)
             pageText.isVisible = false
-            repositionAndFadeIn(0.50,0.25)
+            --repositionAndFadeIn(0.50,0.25)
 
             botonVolver:removeEventListener( "touch", continuarAnimacion )
             
@@ -341,67 +401,34 @@ function scene:create( event )
     
     -- -- create background image
 
-    cielo = display.newImageRect( sceneGroup, "Pagina1/Sky.jpg", display.contentWidth, display.contentHeight * 0.6 )
-    cielo.x, cielo.y = display.contentWidth*0.5, display.contentHeight * 0.3
-
-    pasto = display.newImageRect( sceneGroup, "Pagina1/Grass.png", display.contentWidth, display.contentHeight * 2)
-    pasto.x, pasto.y = display.contentWidth*0.5, display.contentHeight * 0.35
-
-    hojas = display.newImageRect( sceneGroup, "Pagina1/Hojas2.png", display.contentWidth * 0.45, display.contentHeight * 0.65 )
-    hojas.x, hojas.y = display.contentWidth * -2, display.contentHeight * 0.7
-    hojas.isVisible = false
-
-    bosque = display.newImageRect( sceneGroup, "Pagina1/Forest.png", display.contentWidth * 0.6, display.contentHeight * 0.4 )
-    bosque.x, bosque.y = display.contentWidth * -2, display.contentHeight * 0.3
-    bosque.isVisible = false
-
-    cientifico = display.newImageRect( sceneGroup, "Pagina1/Scientist.png", display.contentWidth * 0.4, display.contentHeight*0.5)
+    cientifico = display.newImageRect( sceneGroup, "Pagina4/Scientist.png", display.contentWidth * 0.4, display.contentHeight*0.5)
     cientifico.x, cientifico.y = display.contentWidth*-0.25, display.contentHeight * 0.6
     cientifico.isVisible, cientifico.inf, cientifico.inflate, cientifico.rate = false, 0.05, true, 1
 
-    nube = display.newImageRect( sceneGroup, "Pagina1/Cloud.png", 256, 256 )
-    nube.x, nube.y = display.contentWidth * 0.8, display.contentHeight * 0.2
-
-    retratoPuma = display.newImageRect( sceneGroup, "Pagina1/retratoPuma.png", display.contentWidth * 0.5, display.contentHeight * 0.7 )
-    retratoPuma.x, retratoPuma.y = display.contentWidth * 0.85, display.contentHeight * 0.7
-    retratoPuma.alpha = 0
-    retratoPuma.isVisible = false
-
-    pumaReal = display.newImageRect( sceneGroup, "Pagina1/pumaReal.jpg", display.contentWidth, display.contentHeight )
-    pumaReal.x, pumaReal.y = -display.contentCenterX, display.contentCenterY
-    pumaReal.isVisible = false
-
-    marcoJungla = display.newImageRect( sceneGroup, "Pagina1/JungleFrame.png", display.contentWidth * 1.3, display.contentHeight * 1.3 )
-    marcoJungla.x, marcoJungla.y = display.contentCenterX * 4, display.contentCenterY
-    marcoJungla.isVisible = false
-
-    botonVolver = display.newImageRect( sceneGroup, "Pagina1/botonVolver.png", display.contentWidth * 0.15, display.contentHeight * 0.15 )
-    botonVolver.x, botonVolver.y = display.contentWidth * -0.9, display.contentHeight * 0.9
-    botonVolver.isVisible = false
-    botonVolver.isVisible, botonVolver.inf, botonVolver.inflate, botonVolver.rate = false, 0.05, true, 1
-
-    ninos = display.newImageRect( sceneGroup, "Pagina1/ninos.png", display.contentWidth * 0.5, display.contentHeight * 0.5 )
-    ninos.x, ninos.y = display.contentWidth * 0.7, display.contentHeight * 0.7
-    ninos.isVisible, ninos.inf, ninos.inflate, ninos.rate = false, 0.05, true, 1
-
-    finger_left = display.newImageRect( sceneGroup, "swipeIzq.png", 150, 150 )
-    finger_left.x, finger_left.y = display.contentWidth * 0.9, display.contentHeight * 0.5
-    finger_left.isVisible = false
-
-
     -- create pageText
     pageText = display.newText( sceneGroup, "", 0, 0, native.systemFontBold, 18 )
-    pageText.x = display.contentWidth * 0.5
-    pageText.y = display.contentHeight * 0.5
     pageText.isVisible = false
+
+    animacionTexto = display.newText( sceneGroup, "", 0, 0, native.systemFontBold, 18 )
+    animacionTexto.isVisible, animacionTexto.globoActivo = false, false
+
+    pageText2 = display.newText( sceneGroup, "", 0, 0, native.systemFontBold, 18 )
+    pageText2.isVisible = false
+
+    globoDiccionario = display.newImageRect( sceneGroup, "Pagina4/globoDiccionario.png", display.contentWidth * 0.2, display.contentHeight * 0.2 )
+    globoDiccionario.x, globoDiccionario.y = display.contentWidth * 0.85, display.contentHeight * -0.35
+    globoDiccionario.isVisible = false
+
+    textoCarnivoro = crearTexto{ texto="Carnívoro: que se alimenta de carne", ancho=500 }
+    textoCarnivoro.isVisible = false
+
+
 
     --create marker object
     markerObj = display.newImageRect( sceneGroup, "Marcador.png", 80, 120 )
     markerObj.x, markerObj.y = 40, 60
     markerObj.isVisible = false
     markerObj.alpha = 0.2
-
-    start = audio.loadSound( "Pagina1/start.wav" )
     
 end
 
@@ -442,18 +469,8 @@ function scene:hide( event )
         --
         -- INSERT code here to pause the scene
         -- e.g. stop timers, stop animation, unload sounds, etc.)
-        
-        -- hide objects
-        pageText.isVisible = false
-        markerObj.isVisible = false
-        hojas.isVisible = false
-        bosque.isVisible = false
-        cientifico.isVisible = false
-        retratoPuma.isVisible = false
-        ninos.isVisible = false
     
         -- remove touch event listener for background
-        pasto:removeEventListener( "touch", background )
         markerObj:removeEventListener( "touch", activarMarcador )
     
         -- cancel page animations (if currently active)
@@ -461,15 +478,10 @@ function scene:hide( event )
         if fadeTween1 then transition.cancel( fadeTween1 ); fadeTween1 = nil; end
         if fadeTween2 then transition.cancel( fadeTween2 ); fadeTween2 = nil; end
 
-        composer.setVariable( "paginaAnterior", "P1" )
+        composer.setVariable( "paginaAnterior", "P4" )
         timer.cancel( handsTimer ); handsTimer = nil;
         
     elseif phase == "did" then
-
-        hojas.x, hojas.y = display.contentWidth * -2, display.contentHeight * 0.7
-        bosque.x, bosque.y = display.contentWidth * -2, display.contentHeight * 0.3
-        retratoPuma.alpha = 0
-
         -- Called when the scene is now off screen
     end     
 

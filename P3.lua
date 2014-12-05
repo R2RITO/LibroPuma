@@ -407,6 +407,8 @@ function scene:show( event )
         markerObj.isVisible = true
         verificarMarcador()
 
+        composer.removeScene( composer.getVariable( "paginaAnterior" ) )
+
         animStep = 1
         readyToContinue = true
 
@@ -445,7 +447,7 @@ function scene:hide( event )
         if fadeTween1 then transition.cancel( fadeTween1 ); fadeTween1 = nil; end
         if fadeTween2 then transition.cancel( fadeTween2 ); fadeTween2 = nil; end
 
-        composer.setVariable( "paginaAnterior", "P1" )
+        composer.setVariable( "paginaAnterior", "P3" )
         timer.cancel( handsTimer ); handsTimer = nil;
         
     elseif phase == "did" then

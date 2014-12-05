@@ -273,6 +273,8 @@ function scene:show( event )
         markerObj.isVisible = true
         verificarMarcador()
 
+        composer.removeScene( composer.getVariable( "paginaAnterior" ) )
+
         juegoCompletado = false
         iniciarJuego()
     
@@ -299,7 +301,7 @@ function scene:hide( event )
     
         -- remove touch event listener for background
         markerObj:removeEventListener( "touch", activarMarcador )
-        composer.setVariable( "pagAnterior", "P2" )
+        composer.setVariable( "paginaAnterior", "P2" )
     
         -- cancel page animations (if currently active)
         if pageTween then transition.cancel( pageTween ); pageTween = nil; end
