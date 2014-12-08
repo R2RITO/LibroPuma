@@ -15,7 +15,7 @@ local cientifico, pageText, pageTween, fadeTween1, fadeTween2, markerObj,
       fondoPreguntas, marcoJungla, puma, ave, caballo, sonidoAve,
       sonidoPuma, sonidoCaballo, juegoCompletado, globoExito, globoFallo
 
-local continuarAnimacion, onPageSwipe
+local onPageSwipe
 
 local swipeThresh = 100     -- amount of pixels finger must travel to initiate page swipe
 local tweenTime = 900
@@ -34,9 +34,6 @@ local function seleccionIncorrecta( self, event )
         globoFallo.alpha = 1
         globoFallo.isVisible = true
         fadeTween1 = transition.to( globoFallo, { y = globoFallo.y - 150, onComplete=desaparecerGlobo } )
-
-
-
     end
 
     return true
@@ -50,6 +47,8 @@ local function seleccionCorrecta( self, event )
 
         if not juegoCompletado then
             juegoCompletado = true
+
+            -- Habilitar deslizamiento a página siguiente
             fondoPreguntas.touch = onPageSwipe
             fondoPreguntas:addEventListener( "touch", fondoPreguntas )
 

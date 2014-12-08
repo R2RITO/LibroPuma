@@ -62,7 +62,7 @@ local function crearTexto( args )
 
     local textOption = 
         {           
-            --parent = textGroup,
+            parent = sceneGroup,
             text = args.texto,     
             width = args.ancho or 900,     --required for multi-line and alignment
             font = args.fuente or "Austie Bost Kitten Klub",   
@@ -72,8 +72,6 @@ local function crearTexto( args )
         }
 
     return display.newText(textOption)
-
-
 end
 
 local function alternarDiccionario( self, event )
@@ -134,11 +132,6 @@ local function showNext()
         end
         
         if animStep == 1 then
-
-            -- Desaparecer texto anterior
-            pageText.alpha = 0
-            animacionTexto.alpha = 0
-            pageText2.alpha = 0
 
             cientifico.isVisible = true
             fadeTween1 = transition.to( cientifico, { time=tweenTime, x=display.contentWidth*0.25 ,transition=easing.outExpo } )
@@ -399,16 +392,6 @@ function scene:create( event )
     cientifico = display.newImageRect( sceneGroup, "Pagina4/Scientist.png", display.contentWidth * 0.4, display.contentHeight*0.5)
     cientifico.x, cientifico.y = display.contentWidth*-0.25, display.contentHeight * 0.6
     cientifico.isVisible, cientifico.inf, cientifico.inflate, cientifico.rate = false, 0.05, true, 1
-
-    -- Textos a mostrar
-    pageText = display.newText( sceneGroup, "", 0, 0, native.systemFontBold, 18 )
-    pageText.isVisible = false
-
-    animacionTexto = display.newText( sceneGroup, "", 0, 0, native.systemFontBold, 18 )
-    animacionTexto.isVisible = false
-
-    pageText2 = display.newText( sceneGroup, "", 0, 0, native.systemFontBold, 18 )
-    pageText2.isVisible = false
 
     -- Sección de diccionario
 

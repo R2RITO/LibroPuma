@@ -36,7 +36,7 @@ onPageSwipe = function( self, event )
 
                 if distance < swipeThresh then
                     -- deslizar hacia la derecha, pagina anterior
-                    composer.gotoScene( pag, "slideLeft", 800 )
+                    composer.gotoScene( "Indice", "slideLeft", 800 )
                     pageText.isVisible=false
                 end 
 
