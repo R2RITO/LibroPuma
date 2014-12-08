@@ -13,7 +13,7 @@ local json = require("json")
 -- forward declarations and other locals
 local cientifico, pageText, animacionTexto, pageText2, pageTween, fadeTween1, 
       fadeTween2, markerObj, finger_left, handsTimer, globoDiccionario,
-      textoCarnivoro
+      textoCarnivoro, siluetaGato, siluetaPerro, siluetaPuma, fondo
 
 
 local continuarAnimacion, onPageSwipe
@@ -82,18 +82,16 @@ local function alternarDiccionario( self, event )
 
         if self.globoActivo then
 
-            fadeTween1 = transition.to( self.globo, {
-                                                y=display.contentWidth * self.factorYReverso, 
-                                                onComplete=
-                                                desvanecerTexto(self.definicion)
-                                                    } 
-                                      )
+            fadeTween1 = transition.fadeOut( self.globo, { 
+                                             onComplete=desvanecerTexto(self.definicion)
+                                                         } 
+                                            )
             self.globoActivo = false
 
         else
+            self.globo.x, self.globo.y = display.contentWidth * self.factorX, display.contentHeight * self.factorY
             self.globo.isVisible = true
-            fadeTween1 = transition.to( self.globo, {
-                                                y=display.contentWidth * self.factorY, 
+            fadeTween1 = transition.fadeIn( self.globo, {                                      
                                                 onComplete=
                                                 repositionAndFadeIn(self.definicion,self.factorX,self.factorY)
                                                     } 
@@ -104,9 +102,6 @@ local function alternarDiccionario( self, event )
     end
 
     return true
-
-
-
 end
 
 
@@ -118,7 +113,7 @@ local function showNext()
         
         local function completeTween()
             animStep = animStep + 1
-            if animStep > 4 then animStep = 1; end
+            if animStep > 5 then animStep = 1; end
             
             readyToContinue = true
         end
@@ -140,6 +135,7 @@ local function showNext()
         
         if animStep == 1 then
 
+            -- Desaparecer texto anterior
             pageText.alpha = 0
             animacionTexto.alpha = 0
             pageText2.alpha = 0
@@ -147,6 +143,7 @@ local function showNext()
             cientifico.isVisible = true
             fadeTween1 = transition.to( cientifico, { time=tweenTime, x=display.contentWidth*0.25 ,transition=easing.outExpo } )
 
+            -- Crear texto nuevo
             pageText = crearTexto{texto="!Observa lo grande que es!. Es el mayor "}
             pageText.isVisible = false
 
@@ -162,117 +159,113 @@ local function showNext()
 
 
             -- Parametros para posicionar la imagen del globo y la definicion de la palabra.
+            -- De ser necesario, reposicionar el globo en cada palabra.
             animacionTexto.definicion, animacionTexto.globo = textoCarnivoro, globoDiccionario
             animacionTexto.factorX, animacionTexto.factorY = 0.85, 0.15
-            animacionTexto.factorXReverso, animacionTexto.factorYReverso = 0.85, -0.2
+            animacionTexto.globoActivo = false
             animacionTexto.touch = alternarDiccionario
             animacionTexto:addEventListener( "touch", animacionTexto )
+
+            cientifico:addEventListener( "touch", continuarAnimacion)
+            cientifico.enterFrame = inflate
+            Runtime:addEventListener("enterFrame", cientifico)
 
             completeTween()
 
 
         elseif animStep == 2 then
 
+            -- Desaparecer texto anterior
             pageText.alpha = 0
+            animacionTexto.alpha = 0
+            pageText2.alpha = 0
 
-            -- Eliminar funciones anteriores
-            
-            cientifico.isVisible = true  
-            ninos.isVisible = false
-            transition.to( cientifico, { time=tweenTime, x=display.contentWidth*0.25 ,transition=easing.outExpo } )
+            -- Preventivamente desaparecer los elementos del diccionario
+            textoCarnivoro.isVisible = false
+            globoDiccionario.alpha = 0
 
-            local textOption = 
-                {           
-                    --parent = textGroup,
-                    text = "¡Hola! Hoy podrás acompañarnos en esta aventura. Recorreremos el bosque y es muy posible que nos encontremos con un puma ",     
-                    width = 500,     --required for multi-line and alignment
-                    font = "Austie Bost Kitten Klub",   
-                    fontSize = 40,
-                    align = "center"  --new alignment parameter
-            
-                }
+            -- Remover las animaciones anteriores
+            Runtime:removeEventListener("enterFrame", cientifico)
+            animacionTexto:removeEventListener( "touch", animacionTexto )
+            cientifico:removeEventListener("touch", continuarAnimacion)
 
-            pageText= display.newText(textOption)
+            -- Crear texto nuevo
+            pageText = crearTexto{texto="Tiene una longitud de hasta "}
             pageText.isVisible = false
-            --repositionAndFadeIn(0.50,0.25)
 
-           
-            cientifico.enterFrame = inflate
-            Runtime:addEventListener("enterFrame", cientifico)
-            cientifico:addEventListener( "touch", continuarAnimacion )
+            animacionTexto = crearTexto{texto="1.90"}
+            animacionTexto.isVisible = false
+
+            pageText2 = crearTexto{texto=" metros. ¡Impresionante!"}
+            pageText2.isVisible = false
+
+            repositionAndFadeIn(pageText, 0.40, 0.25)
+            repositionAndFadeIn(animacionTexto, 0.85, 0.25)
+            repositionAndFadeIn(pageText2, 0.80, 0.35)
+
+            -- Agregar "receptores" para la nueva animacion
+            animacionTexto:addEventListener( "touch", continuarAnimacion )
+
             completeTween()
             
 
         elseif animStep == 3 then
             
-
             -- Eliminar funciones anteriores
-            cientifico:removeEventListener( "touch", continuarAnimacion )
-            Runtime:removeEventListener("enterFrame",cientifico)
+            animacionTexto:removeEventListener( "touch", continuarAnimacion )
 
-            pageText.alpha = 0
+            transition.moveTo( siluetaPuma, {x=display.contentWidth*0.7} )
+            transition.moveTo( siluetaPerro, {x=display.contentWidth*0.7} )
+            transition.moveTo( siluetaGato, {x=display.contentWidth*0.7} )
 
-            local textOption = 
-                {           
-                    --parent = textGroup,
-                    text = "Por si no lo conoces, aquí te muestro una foto",     
-                    width = 500,     --required for multi-line and alignment
-                    font = "Austie Bost Kitten Klub",   
-                    fontSize = 40,
-                    align = "center"  --new alignment parameter
-            
-                }
+            -- Agregar "receptores" para continuar
+            cientifico:addEventListener( "touch", continuarAnimacion)
+            cientifico.enterFrame = inflate
+            Runtime:addEventListener("enterFrame", cientifico)
 
-            pageText= display.newText(textOption)
-            pageText.isVisible = false
-            --repositionAndFadeIn(0.50,0.25)
-
-
-            pumaReal.isVisible = true
-            pumaReal:toFront( )
-            marcoJungla.isVisible = true
-            marcoJungla:toFront( )
-            botonVolver.isVisible = true
-            botonVolver:toFront( )
-
-            transition.to( pumaReal, { time=tweenTime, x=display.contentCenterX, transition=easing.outExpo } )
-            transition.to( marcoJungla, { time=tweenTime, x=display.contentCenterX, transition=easing.outExpo } )
-            transition.to( botonVolver, { time=tweenTime, x=display.contentWidth * 0.9, transition=easing.outExpo } )
-
-
-            botonVolver.enterFrame = inflate
-            Runtime:addEventListener("enterFrame", botonVolver)
-            botonVolver:addEventListener( "touch", continuarAnimacion )
             completeTween()
 
         elseif animStep == 4 then
+            -- Eliminar funciones anteriores
+            Runtime:removeEventListener("enterFrame", cientifico)
+            cientifico:removeEventListener( "touch", continuarAnimacion )
+            siluetaPuma:removeSelf()
+            siluetaPerro:removeSelf()
+            siluetaGato:removeSelf()
 
+            -- Desaparecer texto anterior
             pageText.alpha = 0
+            animacionTexto.alpha = 0
+            pageText2.alpha = 0
 
-            transition.to( pumaReal, { time=tweenTime, x=-display.contentCenterX, transition=easing.outExpo } )
-            transition.to( marcoJungla, { time=tweenTime, x=display.contentCenterX*4, transition=easing.outExpo } )
-            transition.to( botonVolver, { time=tweenTime, x=display.contentWidth * -0.9, transition=easing.outExpo } )
-
-            local textOption = 
-                {           
-                    --parent = textGroup,
-                    text = "¡Continuemos nuestro viaje!",     
-                    width = 500,     --required for multi-line and alignment
-                    font = "Austie Bost Kitten Klub",   
-                    fontSize = 40,
-                    align = "center"  --new alignment parameter
-            
-                }
-
-            pageText= display.newText(textOption)
+             -- Crear texto nuevo
+            pageText = crearTexto{texto="Su cola mide más de 80cm y los más grandes alcanzan a pesar "}
             pageText.isVisible = false
-            --repositionAndFadeIn(0.50,0.25)
 
-            botonVolver:removeEventListener( "touch", continuarAnimacion )
-            
-            pasto.touch = onPageSwipe
-            pasto:addEventListener( "touch", pasto )
+            animacionTexto = crearTexto{texto="55kg."}
+            animacionTexto.isVisible = false
 
+            repositionAndFadeIn(pageText, 0.40, 0.25)
+            repositionAndFadeIn(animacionTexto, 0.85, 0.25)
+
+            -- Agregar "receptores" para la nueva animacion
+            animacionTexto:addEventListener( "touch", continuarAnimacion )
+
+            completeTween()
+
+        elseif animStep == 5 then
+
+            -- Eliminar funciones anteriores
+            animacionTexto:removeEventListener( "touch", continuarAnimacion )
+
+            -- Animar balanza
+            transition.fadeIn( balanza )
+
+            -- Agregar "receptores" para continuar
+            fondo.touch = onPageSwipe
+            fondo:addEventListener( "touch", fondo )
+
+            -- Animar ayuda para swipe
             finger_left.isVisible = true
 
             handsTimer = timer.performWithDelay( 1000, move, -1 )
@@ -400,29 +393,50 @@ function scene:create( event )
     -- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
     
     -- -- create background image
+    fondo = display.newImageRect( sceneGroup, "Pagina4/Sky.jpg", display.contentWidth, display.contentHeight )
+    fondo.x, fondo.y = display.contentCenterX, display.contentCenterY
 
     cientifico = display.newImageRect( sceneGroup, "Pagina4/Scientist.png", display.contentWidth * 0.4, display.contentHeight*0.5)
     cientifico.x, cientifico.y = display.contentWidth*-0.25, display.contentHeight * 0.6
     cientifico.isVisible, cientifico.inf, cientifico.inflate, cientifico.rate = false, 0.05, true, 1
 
-    -- create pageText
+    -- Textos a mostrar
     pageText = display.newText( sceneGroup, "", 0, 0, native.systemFontBold, 18 )
     pageText.isVisible = false
 
     animacionTexto = display.newText( sceneGroup, "", 0, 0, native.systemFontBold, 18 )
-    animacionTexto.isVisible, animacionTexto.globoActivo = false, false
+    animacionTexto.isVisible = false
 
     pageText2 = display.newText( sceneGroup, "", 0, 0, native.systemFontBold, 18 )
     pageText2.isVisible = false
 
+    -- Sección de diccionario
+
     globoDiccionario = display.newImageRect( sceneGroup, "Pagina4/globoDiccionario.png", display.contentWidth * 0.2, display.contentHeight * 0.2 )
-    globoDiccionario.x, globoDiccionario.y = display.contentWidth * 0.85, display.contentHeight * -0.35
-    globoDiccionario.isVisible = false
+    globoDiccionario.x, globoDiccionario.y = display.contentWidth * 0.85, display.contentHeight * 0.15
+    globoDiccionario.alpha = 0
 
     textoCarnivoro = crearTexto{ texto="Carnívoro: que se alimenta de carne", ancho=500 }
     textoCarnivoro.isVisible = false
 
+    -- Sección de siluetas
+    siluetaPuma = display.newImageRect( sceneGroup, "Pagina4/puma.png", display.contentWidth * 0.4, display.contentHeight * 0.4 )
+    siluetaPuma.x, siluetaPuma.y = display.contentWidth * 1.3, display.contentHeight * 0.7
 
+    siluetaPerro = display.newImageRect( sceneGroup, "Pagina4/perro.png", display.contentWidth * 0.35, display.contentHeight * 0.35 )
+    siluetaPerro.x, siluetaPerro.y = display.contentWidth * 1.3, display.contentHeight * 0.75
+
+    siluetaGato = display.newImageRect( sceneGroup, "Pagina4/gato.png", display.contentWidth * 0.2, display.contentHeight * 0.2 )
+    siluetaGato.x, siluetaGato.y = display.contentWidth * 1.3, display.contentHeight * 0.8
+
+    -- Sección de imágenes de la página.
+    balanza = display.newImageRect( sceneGroup, "Pagina4/balanza.png", display.contentWidth * 0.3, display.contentHeight * 0.3 )
+    balanza.x, balanza.y = display.contentWidth * 0.7, display.contentHeight * 0.8
+    balanza.alpha = 0
+
+    finger_left = display.newImageRect( sceneGroup, "swipeIzq.png", 150, 150 )
+    finger_left.x, finger_left.y = display.contentWidth * 0.9, display.contentHeight * 0.5
+    finger_left.isVisible = false
 
     --create marker object
     markerObj = display.newImageRect( sceneGroup, "Marcador.png", 80, 120 )

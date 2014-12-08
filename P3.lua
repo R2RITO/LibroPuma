@@ -11,10 +11,10 @@ local json = require("json")
 
 
 -- forward declarations and other locals
-local cielo, pasto, cientifico, nube, hojas, bosque, pageText,
-        pageTween, fadeTween1, fadeTween2, markerObj, retratoPuma,
-        ninos, pumaReal, marcoJungla, botonVolver, finger_left,
-        grass, grass1, forest1, forest2, forest3, forest4, forest5, mountain1, mountain2, mountain3, Puma, cientifico
+local   cientifico, pageText, finger_left, sky,
+        pageTween, fadeTween1, fadeTween2, markerObj, retratoPuma, 
+        grass, grass1, forest1, forest2, forest3, forest4, forest5, 
+        mountain1, mountain2, mountain3, Puma, cientifico
 
 
 
@@ -564,18 +564,8 @@ function scene:hide( event )
         --
         -- INSERT code here to pause the scene
         -- e.g. stop timers, stop animation, unload sounds, etc.)
-        
-        -- hide objects
-        pageText.isVisible = false
-        markerObj.isVisible = false
-        hojas.isVisible = false
-        bosque.isVisible = false
-        cientifico.isVisible = false
-        retratoPuma.isVisible = false
-        ninos.isVisible = false
     
         -- remove touch event listener for background
-        pasto:removeEventListener( "touch", background )
         markerObj:removeEventListener( "touch", activarMarcador )
     
         -- cancel page animations (if currently active)
@@ -587,15 +577,6 @@ function scene:hide( event )
         timer.cancel( handsTimer ); handsTimer = nil;
         
     elseif phase == "did" then
-
-        hojas.x, hojas.y = display.contentWidth * -2, display.contentHeight * 0.7
-        bosque.x, bosque.y = display.contentWidth * -2, display.contentHeight * 0.3
-        retratoPuma.alpha = 0
-
-        -- Called when the scene is now off screen
-
-            --animBack()
-
 
     end     
 
