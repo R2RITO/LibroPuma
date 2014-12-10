@@ -38,7 +38,7 @@ function moverAMarcador( event )
 	end
 end
 
-local function cargarMarcador()
+local function cargarData()
 	local ruta = system.pathForFile( "data.txt", system.DocumentsDirectory )
 	local archivo = io.open( ruta, "r" )
 
@@ -49,8 +49,15 @@ local function cargarMarcador()
 		io.close( archivo )
 
 		composer.setVariable( "paginaMarcador", tabla.paginaMarcador )
+
+		if tabla.tutorialCompletado then
+			composer.setVariable( "tutorialCompletado", tabla.tutorialCompletado)
+		else
+			composer.setVariable( "tutorialCompletado", 0 )
+		end
 	else
 		composer.setVariable( "paginaMarcador", 0 )
+		composer.setVariable( "tutorialCompletado", 0 )
 	end
 
 end
@@ -98,8 +105,8 @@ botonMarcador.x = 340
 botonMarcador.y = display.contentHeight - 57
 botonMarcador.isVisible = false
 
--- Cargar la página del marcador.
-cargarMarcador()
+-- Cargar información guardada.
+cargarData()
 
 composer.setVariable( "paginaAnterior", nil )
 

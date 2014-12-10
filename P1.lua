@@ -24,9 +24,6 @@ local tweenTime = 900
 local animStep = 1
 local readyToContinue = false
 
-
-
-
 local function inflate(self,event)
     if (self.inflate) then
         self.rate = self.rate + 0.005
@@ -65,11 +62,6 @@ local function showNext()
             
             readyToContinue = true
         end
-
-        local function desaparecer( self )
-            self.isVisible = false
-        end
-
 
         local move = function()
             local function back()
@@ -400,8 +392,6 @@ function scene:create( event )
     markerObj.x, markerObj.y = 40, 60
     markerObj.isVisible = false
     markerObj.alpha = 0.2
-
-    start = audio.loadSound( "Pagina1/start.wav" )
     
 end
 

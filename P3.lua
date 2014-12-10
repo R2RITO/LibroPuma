@@ -227,11 +227,6 @@ local function showNext()
             readyToContinue = true
         end
 
-        local function desaparecer( self )
-            self.isVisible = false
-        end
-
-
         local move = function()
             local function back()
                 transition.to( finger_left, { alpha = 0 } )

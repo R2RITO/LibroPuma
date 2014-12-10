@@ -23,9 +23,6 @@ local tweenTime = 900
 local animStep = 1
 local readyToContinue = false
 
-
-
-
 local function inflate(self,event)
     if (self.inflate) then
         self.rate = self.rate + 0.005
@@ -48,6 +45,7 @@ local function repositionAndFadeIn( texto, factorX, factorY )
     texto.x = display.contentWidth * factorX
     texto.y = display.contentHeight * factorY
 
+    texto.alpha = 0
     texto.isVisible = true
             
     fadeTween1 = transition.to( texto, { time=tweenTime*0.5, alpha=1.0 } )
@@ -115,11 +113,6 @@ local function showNext()
             
             readyToContinue = true
         end
-
-        local function desaparecer( self )
-            self.isVisible = false
-        end
-
 
         local move = function()
             local function back()
@@ -399,7 +392,7 @@ function scene:create( event )
     globoDiccionario.x, globoDiccionario.y = display.contentWidth * 0.85, display.contentHeight * 0.15
     globoDiccionario.alpha = 0
 
-    textoCarnivoro = crearTexto{ texto="Carnívoro: que se alimenta de carne", ancho=500 }
+    textoCarnivoro = crearTexto{ texto="Que se alimenta de carne", ancho=500, tam=30 }
     textoCarnivoro.isVisible = false
 
     -- Sección de siluetas

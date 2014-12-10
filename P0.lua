@@ -26,24 +26,30 @@ onPageSwipe = function( self, event )
     
     elseif self.isFocus then
         if phase == "ended" or phase == "cancelled" then
+
+        	if composer.getVariable( "tutorialCompletado" ) == 0 then
+                composer.gotoScene( "Tutorial", "slideLeft", 800 )
+                pageText.isVisible=false
+        	else
             
-            local distance = event.x - event.xStart
-            if math.abs(distance) > swipeThresh then
+	            local distance = event.x - event.xStart
+	            if math.abs(distance) > swipeThresh then
 
-                pag_sig = 1
-                pag = "P" .. pag_sig
-                composer.setVariable( "pagina", pag_sig)
+	                pag_sig = 1
+	                pag = "P" .. pag_sig
+	                composer.setVariable( "pagina", pag_sig)
 
-                if distance < swipeThresh then
-                    -- deslizar hacia la derecha, pagina anterior
-                    composer.gotoScene( "Indice", "slideLeft", 800 )
-                    pageText.isVisible=false
-                end 
+	                if distance < swipeThresh then
+	                    -- deslizar hacia la derecha, pagina anterior
+	                    composer.gotoScene( pag, "slideLeft", 800 )
+	                    pageText.isVisible=false
+	                end 
 
-            end
-            
-            display.getCurrentStage():setFocus( nil )
-            self.isFocus = nil
+	            end
+	            
+	            display.getCurrentStage():setFocus( nil )
+	            self.isFocus = nil
+	        end
         end
     end
     return true

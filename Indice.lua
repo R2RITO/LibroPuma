@@ -44,6 +44,7 @@ local function repositionAndFadeIn( texto, factorX, factorY )
     texto.x = display.contentWidth * factorX
     texto.y = display.contentHeight * factorY
 
+    texto.alpha = 0
     texto.isVisible = true
             
     fadeTween1 = transition.to( texto, { time=tweenTime*0.5, alpha=1.0 } )
