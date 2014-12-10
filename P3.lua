@@ -26,8 +26,6 @@ local animStep = 1
 local readyToContinue = false
 
 
-
-
 -- local function animPuma()
 
 --    --Para animación Sprite de Puma
@@ -95,6 +93,9 @@ local function scrollBackground(self, event)
 end
 
 local function startScrollBackground()
+
+    print("Ingresó a startScrollBackground")
+
         --Animación pasto
     grass.enterFrame = scrollBackground
     Runtime:addEventListener("enterFrame",grass)
@@ -189,7 +190,7 @@ local function startInflate()
                     --parent = textGroup,
                     text = "¡Observa, es un Felis Concolor!",     
                     width = 500,     --required for multi-line and alignment
-                    font = "Austie Bost Kitten Klub",   
+                    font = PTSERIF,   
                     fontSize = 40,
                     align = "center"  --new alignment parameter
             
@@ -277,7 +278,7 @@ local function showNext()
                     --parent = textGroup,
                     text = "¡Perdona! Este es un puma y su nombre científico es Felis Concolor",     
                     width = 500,     --required for multi-line and alignment
-                    font = "Austie Bost Kitten Klub",   
+                    font = PTSERIF,   
                     fontSize = 40,
                     align = "center"  --new alignment parameter
             
@@ -416,71 +417,72 @@ function scene:create( event )
     
     -- -- create background image
 
-    sky = display.newImageRect( "Pagina3/Sky.jpg", 1021, 365 )
-    sky.x = 511
+    sky = display.newImageRect( "Pagina3/Sky.jpg", display.contentWidth, display.contentHeight )
+    sky.x = display.contentWidth/2
     sky.y = 182
 
 
-    mountain1 = display.newImageRect( "Pagina3/BrownMontain1.png", 640, 480 )
+    mountain1 = display.newImageRect( "Pagina3/BrownMontain1.png", display.contentWidth*2/3, 480 )
     mountain1.type = 1
     mountain1.x = 1440
     mountain1.y = 150
     mountain1.speed = 2
 
-    mountain2 = display.newImageRect( "Pagina3/BrownMontain1.png", 640, 480 )
+    mountain2 = display.newImageRect( "Pagina3/BrownMontain1.png", display.contentWidth*2/3, 480 )
     mountain2.type = 1
     mountain2.x = 320
     mountain2.y = 150
     mountain2.speed = 2
 
-    mountain3 = display.newImageRect( "Pagina3/BrownMontain1.png", 640, 480 )
+    mountain3 = display.newImageRect( "Pagina3/BrownMontain1.png", display.contentWidth*2/3, 480 )
     mountain3.type = 1
     mountain3.x = 900
     mountain3.y = 150
     mountain3.speed = 2
 
-
-    grass = display.newImageRect( "Pagina3/Grass.png", 1024, 768 )
-    grass.x = 512
-    grass.y = 342
-    grass.speed = 3
-    grass.type = 3
-
-    grass1 = display.newImageRect( "Pagina3/Grass.png", 1024, 768 )
+    grass1 = display.newImageRect( "Pagina3/Grass.png", display.contentWidth, display.contentHeight*2)
     grass1.x = 1536
-    grass1.y = 342
+    grass1.y = 0
     grass1.speed = 3
     grass1.type = 3
 
-    forest1 = display.newImageRect( "Pagina3/Forest.png", 500, 263 )
+    grass = display.newImageRect( "Pagina3/Grass.png", display.contentWidth, display.contentHeight*2)
+    grass.x = 512
+    grass.y = 0
+    grass.speed = 3
+    grass.type = 3
+    
+    forest1 = display.newImageRect( "Pagina3/Forest.png", display.contentWidth/2, 263 )
     forest1.type = 2
     forest1.x = 200
-    forest1.y = 276
+    forest1.y = 282
     forest1.speed = 3
 
-    forest4 = display.newImageRect( "Pagina3/Forest.png", 500, 263 )
+    forest4 = display.newImageRect( "Pagina3/Forest.png", display.contentWidth/2, 263 )
     forest4.type = 2
     forest4.x = 1160
-    forest4.y = 276
+    forest4.y = 282
     forest4.speed = 3
 
-    forest3 = display.newImageRect( "Pagina3/Forest.png", 500, 263 )
+    forest3 = display.newImageRect( "Pagina3/Forest.png", display.contentWidth/2, 263 )
     forest3.type = 2
     forest3.x = 878
-    forest3.y = 276
+    forest3.y = 282
     forest3.speed = 3
 
-    forest2 = display.newImageRect( "Pagina3/Forest.png", 500, 263 )
+    forest2 = display.newImageRect( "Pagina3/Forest.png", display.contentWidth/2, 263 )
     forest2.type = 2
     forest2.x = 502
-    forest2.y = 276
+    forest2.y = 282
     forest2.speed = 3
 
-    forest5 = display.newImageRect( "Pagina3/Forest.png", 500, 263 )
+    forest5 = display.newImageRect( "Pagina3/Forest.png", display.contentWidth/2, 263 )
     forest5.type = 2
     forest5.x = 1536
-    forest5.y = 276
+    forest5.y = 282
     forest5.speed = 3
+
+   
 
     boton = display.newImageRect( "Pagina3/boton.png", 50, 50 )
     boton.x = display.contentWidth*0.9
@@ -489,7 +491,7 @@ function scene:create( event )
    
 
     Puma = display.newImageRect( "Pagina3/Puma.png", 270, 263 )
-    Puma.x, Puma.y = display.contentWidth*1.2, display.contentHeight * 0.6
+    Puma.x, Puma.y = display.contentWidth*1.2, display.contentHeight * 0.65
     Puma.inf, Puma.inflate, Puma.rate, Puma.drate =  0.05, true, 1, 0.005
 
 
@@ -502,19 +504,21 @@ function scene:create( event )
             --parent = textGroup,
             text = "Los niños comenzaron a recorrer el bosque, cuando de repente…",     
             width = 500,     --required for multi-line andT alignment
-            font = "Austie Bost Kitten Klub",   
+            font = PTSERIF,   
             fontSize = 40,
             align = "center"  --new alignment parameter
     
         }
 
     pageText= display.newText(textOption)
-    pageText.x,pageText.y= display.contentWidth *0.4, display.contentHeight*0.5
+
+    --pageText = display.newText( "Los niños comenzaron a recorrer el bosque, cuando de repente…", 40, 20, PTSERIF, 40 )
+    
+    pageText.x,pageText.y= display.contentWidth *0.4, display.contentHeight*0.3
    
     --create marker object
-    markerObj = display.newImageRect( sceneGroup, "Marcador.png", 80, 120 )
+    markerObj = display.newImageRect("Marcador.png", 80, 120 )
     markerObj.x, markerObj.y = 40, 60
-    markerObj.isVisible = false
     markerObj.alpha = 0.2
 
 
@@ -533,7 +537,6 @@ function scene:show( event )
         -- e.g. start timers, begin animation, play audio, etc.
 
         markerObj.alpha = 0.2
-        markerObj.isVisible = true
         verificarMarcador()
 
         composer.removeScene( composer.getVariable( "paginaAnterior" ) )
@@ -543,8 +546,8 @@ function scene:show( event )
 
         showNext()
         markerObj:addEventListener( "touch", activarMarcador )
-
         startScrollBackground()
+        
         
     end 
 

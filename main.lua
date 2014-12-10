@@ -14,6 +14,20 @@ local json = require("json")
 
 local botonInicio, botonIndice, botonMarcador
 
+--Font
+
+CustFont = display.newText( "PTSerif-Regular", 40, 20, "PT Serif", 24 )
+
+if "Win" == system.getInfo( "platformName" ) then
+    PTSERIF = "Austie Bost Kitten Klub"
+elseif "Android" == system.getInfo( "platformName" ) then
+    PTSERIF = "AustieBostKittenKlub"
+else
+    -- Mac and iOS
+    PTSERIF = "Austie Bost Kitten Klub"
+end
+
+
 function moverAIndice( event )
 	if event.phase == "ended" or event.phase == "cancelled" then
 		composer.setVariable( "pagina" , 0 )
