@@ -28,7 +28,7 @@ onPageSwipe = function( self, event )
         if phase == "ended" or phase == "cancelled" then
 
         	if composer.getVariable( "tutorialCompletado" ) == 0 then
-                composer.gotoScene( "Tutorial", "slideLeft", 800 )
+                composer.gotoScene( "Indice", "slideLeft", 800 )
                 pageText.isVisible=false
         	else
             

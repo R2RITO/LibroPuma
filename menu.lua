@@ -9,7 +9,7 @@ local cientifico, pageText, pageTween, fadeTween1, fadeTween2
 
 local botonInicio, botonIndice, botonMarcador, fondo
 
-local onPageSwipe
+local onPageTouch
 
 local swipeThresh = 100     -- amount of pixels finger must travel to initiate page swipe
 local tweenTime = 900
@@ -18,16 +18,19 @@ local tweenTime = 900
 local function moverAIndice( event )
     if event.phase == "ended" or event.phase == "cancelled" then
         composer.setVariable( "pagina" , 0 )
-        --composer.setVariable( "paginaAnterior", )
+        composer.setVariable( "paginaAnterior", "menu")
         composer.gotoScene( "Indice", "fade" )
     end
+    return true
 end
 
 local function moverAInicio( event )
     if event.phase == "ended" or event.phase == "cancelled" then
         composer.setVariable( "pagina" , 0 )
+        composer.setVariable( "paginaAnterior", "menu")
         composer.gotoScene( "P0", "fade" )
     end
+    return true
 end
 
 local function moverAMarcador( event )
@@ -35,8 +38,10 @@ local function moverAMarcador( event )
         pag = "P" .. composer.getVariable( "paginaMarcador" )
         pag_sig = composer.getVariable( "paginaMarcador" )
         composer.setVariable( "pagina" , pag_sig )
+        composer.setVariable( "paginaAnterior", "menu")
         composer.gotoScene( pag, "fade" )
     end
+    return true
 end
 
 -- touch event listener for background object
@@ -54,7 +59,6 @@ onPageTouch = function( self, event )
             
             local duracion = event.time - self.tiempo
             if duracion > 1000 then
-                pageText.isVisible = false
                 composer.hideOverlay("fromBottom")
             end
             
@@ -82,25 +86,20 @@ function scene:create( event )
     botonIndice = display.newImageRect( sceneGroup, "Menu/bIndice.png", 160, 160 )
     botonIndice.x = 205
     botonIndice.y = display.contentHeight - 57
-    botonIndice.isVisible = false
 
     botonInicio = display.newImageRect( sceneGroup, "Menu/bInicio.png", 160, 160 )
     botonInicio.x = 70
     botonInicio.y = display.contentHeight - 57
-    botonInicio.isVisible = false
 
     botonMarcador = display.newImageRect( sceneGroup, "Menu/bMarcador.png", 160, 160 )
     botonMarcador.x = 340
     botonMarcador.y = display.contentHeight - 57
-    botonMarcador.isVisible = false
 
-    botonIndice:addEventListener( "touch", moverAIndice)
-    botonInicio:addEventListener( "touch", moverAInicio)
-    botonMarcador:addEventListener( "touch", moverAMarcador)
     fondo:addEventListener( "touch", fondo )
+    botonIndice:addEventListener( "touch", moverAIndice )
+    botonInicio:addEventListener( "touch", moverAInicio )
+    botonMarcador:addEventListener( "touch", moverAMarcador )
 
-
-    
 end
 
 function scene:show( event )

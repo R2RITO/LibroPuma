@@ -17,30 +17,44 @@ local cielo, pasto, cientifico, nube, hojas, bosque, pageText,
         handsTimer
 
 
-local continuarAnimacion, onPageSwipe
+local continuarAnimacion, onPageSwipe, onPageTouch
 
 local swipeThresh = 100     -- amount of pixels finger must travel to initiate page swipe
 local tweenTime = 900
 local animStep = 1
 local readyToContinue = false
 
+local rate , animStart , inflar, drate, max
+
 local function inflate(self,event)
-    if (self.inflate) then
-        self.rate = self.rate + 0.005
-    else 
-        self.rate = self.rate - 0.005
+     if inflar then
+            rate = rate + drate
+        else 
+            rate = rate - drate
+        end 
+
+        if (rate >= 1 + max ) then
+            inflar = false
+        elseif (rate <= 1 - max) then
+            inflar =  true
     end 
+    
 
-    if (self.rate >= 1 + self.inf ) then
-        self.inflate = false
-    elseif (self.rate <= 1 - self.inf) then
-        self.inflate =  true
-    end 
+    self.xScale = rate 
+    self.yScale = rate 
 
-self.xScale = self.rate 
-self.yScale = self.rate 
+end
 
-end 
+local function start(value1,value2,value3)
+
+    rate=value1
+    max=value2
+    drate=value3
+    inflar=true
+
+end
+
+start(1,0.05,0.005)
 
 -- function to show next animation
 local function showNext()
@@ -91,6 +105,9 @@ local function showNext()
             pageText= display.newText(textOption)
             pageText.isVisible = false
             repositionAndFadeIn(0.50,0.25)
+
+            pasto.touch = onPageTouch
+            pasto:addEventListener( "touch", pasto )
 
             ninos.isVisible = true  
            
@@ -181,9 +198,9 @@ local function showNext()
 
             pageText.alpha = 0
 
-            transition.to( pumaReal, { time=tweenTime, x=-display.contentCenterX, transition=easing.outExpo } )
-            transition.to( marcoJungla, { time=tweenTime, x=display.contentCenterX*4, transition=easing.outExpo } )
-            transition.to( botonVolver, { time=tweenTime, x=display.contentWidth * -0.9, transition=easing.outExpo } )
+            transition.fadeOut( pumaReal, { time=tweenTime, transition=easing.outExpo } )
+            transition.fadeOut( marcoJungla, { time=tweenTime, transition=easing.outExpo } )
+            transition.fadeOut( botonVolver, { time=tweenTime, transition=easing.outExpo } )
 
             local textOption = 
                 {           
@@ -319,6 +336,31 @@ onPageSwipe = function( self, event )
     return true
 end
 
+onPageTouch = function( self, event )
+    local phase = event.phase
+    local pag_act = composer.getVariable( "pagina" )
+
+    if phase == "began" then
+        display.getCurrentStage():setFocus( self )
+        self.isFocus = true
+        self.tiempo = event.time
+    
+    elseif self.isFocus then
+        if phase == "ended" or phase == "cancelled" then
+            
+            local duracion = event.time - self.tiempo
+            if duracion > 1000 then
+                pageText.isVisible = false
+                composer.showOverlay( "menu", {effect="fromTop",time=400,isModal=true} )
+            end
+            
+            display.getCurrentStage():setFocus( nil )
+            self.isFocus = nil
+        end
+    end
+    return true
+end
+
 
 
 
@@ -349,7 +391,7 @@ function scene:create( event )
 
     cientifico = display.newImageRect( sceneGroup, "Pagina1/Scientist.png", display.contentWidth * 0.4, display.contentHeight*0.5)
     cientifico.x, cientifico.y = display.contentWidth*-0.25, display.contentHeight * 0.6
-    cientifico.isVisible, cientifico.inf, cientifico.inflate, cientifico.rate = false, 0.05, true, 1
+    cientifico.isVisible, cientifico.inf, cientifico.inflar, cientifico.rate = false, 0.05, true, 1
 
     nube = display.newImageRect( sceneGroup, "Pagina1/Cloud.png", 256, 256 )
     nube.x, nube.y = display.contentWidth * 0.8, display.contentHeight * 0.2
@@ -374,7 +416,7 @@ function scene:create( event )
 
     ninos = display.newImageRect( sceneGroup, "Pagina1/ninos.png", display.contentWidth * 0.5, display.contentHeight * 0.5 )
     ninos.x, ninos.y = display.contentWidth * 0.7, display.contentHeight * 0.7
-    ninos.isVisible, ninos.inf, ninos.inflate, ninos.rate = false, 0.05, true, 1
+    ninos.isVisible, ninos.inf, ninos.inflar, ninos.rate = false, 0.05, true, 1
 
     finger_left = display.newImageRect( sceneGroup, "swipeIzq.png", 150, 150 )
     finger_left.x, finger_left.y = display.contentWidth * 0.9, display.contentHeight * 0.5
@@ -450,9 +492,9 @@ function scene:hide( event )
         if pageTween then transition.cancel( pageTween ); pageTween = nil; end
         if fadeTween1 then transition.cancel( fadeTween1 ); fadeTween1 = nil; end
         if fadeTween2 then transition.cancel( fadeTween2 ); fadeTween2 = nil; end
+        if handsTimer then timer.cancel( handsTimer ); handsTimer = nil; end
 
         composer.setVariable( "paginaAnterior", "P1" )
-        timer.cancel( handsTimer ); handsTimer = nil;
         
     elseif phase == "did" then
 

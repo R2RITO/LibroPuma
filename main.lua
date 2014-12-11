@@ -12,6 +12,19 @@ local composer = require "composer"
 
 local json = require("json")
 
+--Font
+
+--CustFont = display.newText( "PTSerif-Regular", 40, 20, "PT Serif", 24 )
+
+if "Win" == system.getInfo( "platformName" ) then
+    PTSERIF = "Austie Bost Kitten Klub"
+elseif "Android" == system.getInfo( "platformName" ) then
+    PTSERIF = "AustieBostKittenKlub"
+else
+    -- Mac and iOS
+    PTSERIF = "Austie Bost Kitten Klub"
+end
+
 local function cargarData()
 	local ruta = system.pathForFile( "data.txt", system.DocumentsDirectory )
 	local archivo = io.open( ruta, "r" )
@@ -67,12 +80,6 @@ end
 cargarData()
 
 composer.setVariable( "paginaAnterior", nil )
-
-local stage = display.getCurrentStage()
-stage:insert( composer.stage )
-stage:insert( botonInicio )
-stage:insert( botonIndice )
-stage:insert( botonMarcador )
 
 -- load title screen
 composer.gotoScene( "P0", "fade" )
