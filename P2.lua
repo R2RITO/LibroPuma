@@ -86,7 +86,7 @@ local function iniciarJuego()
             --parent = textGroup,
             text = "¡Toca al puma para conocer su hábitat!.",     
             width = 500,     --required for multi-line andT alignment
-            font = "Austie Bost Kitten Klub",   
+            font = PTSERIF,   
             fontSize = 60,
             align = "center"  --new alignment parameter
     

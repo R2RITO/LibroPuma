@@ -28,7 +28,7 @@ onPageSwipe = function( self, event )
         if phase == "ended" or phase == "cancelled" then
 
         	if composer.getVariable( "tutorialCompletado" ) == 0 then
-                composer.gotoScene( "Indice", "slideLeft", 800 )
+                composer.gotoScene( "Tutorial", "slideLeft", 800 )
                 pageText.isVisible=false
         	else
             
@@ -87,7 +87,7 @@ function scene:create( event )
 	--logoCRA.isVisible = false
 
 	-- Texto del titulo
-    pageText = display.newText( sceneGroup, "El Puma Chileno", 0, 0, "Austie Bost Kitten Klub", 80 )
+    pageText = display.newText( sceneGroup, "El Puma Chileno", 0, 0, PTSERIF, 80 )
 	pageText.x = display.contentWidth * 0.7
 	pageText.y = display.contentHeight * 0.1	
 	pageText.isVisible = false
