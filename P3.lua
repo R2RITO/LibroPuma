@@ -315,11 +315,21 @@ end
 local function guardarMarcador()
     local ruta = system.pathForFile( "data.txt", system.DocumentsDirectory )
     local pag = composer.getVariable( "paginaMarcador" )
+    local tabla
 
-    local archivo = io.open( ruta, "w" )
+    local archivo = io.open( ruta, "r" )
 
     if archivo then
-        local tabla = {}
+        local data = archivo:read( "*a" )
+        tabla = json.decode( data )
+        io.close( archivo )
+    else
+        tabla = {}
+    end
+
+    archivo = io.open( ruta, "w" )
+
+    if archivo then
         tabla.paginaMarcador = pag
         contenido = json.encode( tabla )
         archivo:write(contenido)
