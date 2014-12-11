@@ -12,32 +12,6 @@ local composer = require "composer"
 
 local json = require("json")
 
-local botonInicio, botonIndice, botonMarcador
-
-function moverAIndice( event )
-	if event.phase == "ended" or event.phase == "cancelled" then
-		composer.setVariable( "pagina" , 0 )
-		composer.gotoScene( "P0", "fade" )
-	end
-end
-
-function moverAInicio( event )
-	if event.phase == "ended" or event.phase == "cancelled" then
-		composer.setVariable( "pagina" , 0 )
-		composer.gotoScene( "P0", "fade" )
-	end
-end
-
-function moverAMarcador( event )
-	if event.phase == "ended" or event.phase == "cancelled" then
-	    pag = "P" .. composer.getVariable( "paginaMarcador" )
-	    pag_sig = composer.getVariable( "paginaMarcador" )
-	    composer.setVariable( "pagina" , pag_sig )
-	    print( composer.getVariable("pagina") )
-		composer.gotoScene( pag, "fade" )
-	end
-end
-
 local function cargarData()
 	local ruta = system.pathForFile( "data.txt", system.DocumentsDirectory )
 	local archivo = io.open( ruta, "r" )
@@ -89,22 +63,6 @@ end
 --Como loopCount = 0 se reproduce infinitamente
 --Fin animación
 
-
-botonIndice = display.newImageRect( "Menu/bIndice.png", 160, 160 )
-botonIndice.x = 205
-botonIndice.y = display.contentHeight - 57
-botonIndice.isVisible = false
-
-botonInicio = display.newImageRect( "Menu/bInicio.png", 160, 160 )
-botonInicio.x = 70
-botonInicio.y = display.contentHeight - 57
-botonInicio.isVisible = false
-
-botonMarcador = display.newImageRect( "Menu/bMarcador.png", 160, 160 )
-botonMarcador.x = 340
-botonMarcador.y = display.contentHeight - 57
-botonMarcador.isVisible = false
-
 -- Cargar información guardada.
 cargarData()
 
@@ -115,10 +73,6 @@ stage:insert( composer.stage )
 stage:insert( botonInicio )
 stage:insert( botonIndice )
 stage:insert( botonMarcador )
-
-botonIndice:addEventListener( "touch", moverAIndice)
-botonInicio:addEventListener( "touch", moverAInicio)
-botonMarcador:addEventListener( "touch", moverAMarcador)
 
 -- load title screen
 composer.gotoScene( "P0", "fade" )
