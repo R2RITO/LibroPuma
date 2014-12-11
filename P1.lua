@@ -82,7 +82,7 @@ local function showNext()
                     --parent = textGroup,
                     text = "Érase una vez, un grupo de niños que fueron de expedición a la Cordillera de los Andes.",     
                     width = 900,     --required for multi-line and alignment
-                    font = "Austie Bost Kitten Klub",   
+                    font = "PTSERIF",   
                     fontSize = 40,
                     align = "center"  --new alignment parameter
             
@@ -118,7 +118,7 @@ local function showNext()
                     --parent = textGroup,
                     text = "¡Hola! Hoy podrás acompañarnos en esta aventura. Recorreremos el bosque y es muy posible que nos encontremos con un puma ",     
                     width = 500,     --required for multi-line and alignment
-                    font = "Austie Bost Kitten Klub",   
+                    font = "PTSERIF",   
                     fontSize = 40,
                     align = "center"  --new alignment parameter
             
@@ -149,7 +149,7 @@ local function showNext()
                     --parent = textGroup,
                     text = "Por si no lo conoces, aquí te muestro una foto",     
                     width = 500,     --required for multi-line and alignment
-                    font = "Austie Bost Kitten Klub",   
+                    font = "PTSERIF",   
                     fontSize = 40,
                     align = "center"  --new alignment parameter
             
@@ -190,7 +190,7 @@ local function showNext()
                     --parent = textGroup,
                     text = "¡Continuemos nuestro viaje!",     
                     width = 500,     --required for multi-line and alignment
-                    font = "Austie Bost Kitten Klub",   
+                    font = "PTSERIF",   
                     fontSize = 40,
                     align = "center"  --new alignment parameter
             
