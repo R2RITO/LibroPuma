@@ -71,7 +71,7 @@ local function scrollBackground(self, event)
         if (self.x<-250) then
             self.x  = 1440
         else    
-            self.x = self.x-self.speed
+            self.x = self.x-2
         end
     end
     -- Para el boque
@@ -79,7 +79,7 @@ local function scrollBackground(self, event)
         if (self.x<-263) then
             self.x  = 1280
         else    
-            self.x = self.x-self.speed
+            self.x = self.x-3
         end
     end
 
@@ -87,7 +87,7 @@ local function scrollBackground(self, event)
         if (self.x<-511) then
             self.x  = 1530
         else    
-            self.x = self.x-self.speed
+            self.x = self.x-3
         end
     end
 end
@@ -126,25 +126,37 @@ end
 
 
 
-
+local inflar=true
+local rate , drate, max
 
 local function inflate(self,event)
-        if (self.inflate) then
-            self.rate = self.rate + self.drate
+     if inflar then
+            rate = rate + drate
         else 
-            self.rate = self.rate - self.drate
+            rate = rate - drate
         end 
 
-        if (self.rate >= 1 + self.inf ) then
-            self.inflate = false
-        elseif (self.rate <= 1 - self.inf) then
-            self.inflate =  true
-        end 
+        if (rate >= 1 + max ) then
+            inflar = false
+        elseif (rate <= 1 - max) then
+            inflar =  true
+    end 
+    
 
-    self.xScale = self.rate 
-    self.yScale = self.rate 
+self.xScale = rate 
+self.yScale = rate 
 
-end 
+end
+
+local function start(value1,value2,value3)
+
+    rate=value1
+    max=value2
+    drate=value3
+end
+
+start(1,0.05,0.005)
+
 
 local function stopScrollBackground()
 
