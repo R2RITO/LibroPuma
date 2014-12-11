@@ -35,7 +35,7 @@ onPageSwipe = function( self, event )
 	            local distance = event.x - event.xStart
 	            if math.abs(distance) > swipeThresh then
 
-	                pag_sig = 1
+	                pag_sig = 3
 	                pag = "P" .. pag_sig
 	                composer.setVariable( "pagina", pag_sig)
 

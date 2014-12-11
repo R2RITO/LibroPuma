@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------------------
 --
--- page1.lua
+-- P3.lua
 --
 -----------------------------------------------------------------------------------------
 
@@ -65,18 +65,33 @@ local readyToContinue = false
 -- end
 
 local function scrollBackground(self, event)
-    
+
+-- print("Height")
+-- print(display.contentHeight)
+-- --720 se relaciona con coordenada y
+-- print("Width")
+-- print(display.contentWidth)
+-- --1280 se relaciona con cordenada x
+
+--Actual punto de referencia: el medio del objeto
+--x crece de izquierda a derecha
+
 --Para la montaña
     if(self.type==1) then
-        if (self.x<-250) then
-            self.x  = 1440
-        else    
+    print("x")
+    print(mountain2.x)
+    print("y")
+    print(mountain2.y)
+    
+        if (self.x<= 0) then
+            self.x  = display.contentWidth+display.contentWidth*2/3
+        else
             self.x = self.x-2
         end
     end
     -- Para el boque
     if(self.type==2) then
-        if (self.x<-263) then
+        if (self.x<=0) then
             self.x  = 1280
         else    
             self.x = self.x-3
@@ -84,12 +99,39 @@ local function scrollBackground(self, event)
     end
 
     if(self.type==3) then
-        if (self.x<-511) then
-            self.x  = 1530
+        if (self.x<0) then
+            self.x  = display.contentWidth*2
         else    
             self.x = self.x-3
         end
     end
+
+
+    --Para la montaña
+--     if(self.type==1) then
+--         if (self.x<-250) then
+--             self.x  = 1440
+--         else    
+--             self.x = self.x-2
+--         end
+--     end
+--     -- Para el boque
+--     if(self.type==2) then
+--         if (self.x<-263) then
+--             self.x  = 1280
+--         else    
+--             self.x = self.x-3
+--         end
+--     end
+
+--     if(self.type==3) then
+--         if (self.x<-511) then
+--             self.x  = 1530
+--         else    
+--             self.x = self.x-3
+--         end
+--     end
+-- 
 end
 
 local function startScrollBackground()
@@ -434,37 +476,50 @@ function scene:create( event )
     sky.y = 182
 
 
-
-    grass1 = display.newImageRect( "Pagina3/Grass.png", display.contentWidth, display.contentHeight)
-    grass1.x = 1536
+    --pasto derecha
+    grass1 = display.newImageRect( "Pagina3/Grass.png", display.contentWidth+display.contentWidth/100, display.contentHeight)
+    grass1.anchorX=1
+    grass1.x = display.contentWidth*2
     grass1.y = display.contentHeight/2
     grass1.speed = 3
     grass1.type = 3
+    grass1.isVisible= true
 
-    grass = display.newImageRect( "Pagina3/Grass.png", display.contentWidth, display.contentHeight)
-    grass.x = 512
+    --el de la izquierda
+    grass = display.newImageRect( "Pagina3/Grass.png", display.contentWidth+display.contentWidth/100, display.contentHeight)
+    grass.anchorX=1--el punto de referencia de la imagen es el de la derecha
+    grass.x = display.contentWidth
     grass.y = display.contentHeight/2
     grass.speed = 3
     grass.type = 3
+    grass.isVisible= true
     
 
     mountain1 = display.newImageRect( "Pagina3/BrownMontain1.png", display.contentWidth*2/3, 480 )
     mountain1.type = 1
-    mountain1.x = 1440
+    mountain1.anchorX=1 --el punto de referencia de la imagen es el de la derecha
+    mountain1.x = display.contentWidth+display.contentWidth/4
     mountain1.y = 150
     mountain1.speed = 2
-
+    mountain1.isVisible=true
+ 
+    --mas a la izquierda
     mountain2 = display.newImageRect( "Pagina3/BrownMontain1.png", display.contentWidth*2/3, 480 )
+    mountain2.anchorX=1 --el punto de referencia de la imagen es el de la derecha
     mountain2.type = 1
-    mountain2.x = 320
+    mountain2.x = display.contentWidth*2/3
     mountain2.y = 150
     mountain2.speed = 2
+    mountain2.isVisible= true
 
+    --fuera de pantalla
     mountain3 = display.newImageRect( "Pagina3/BrownMontain1.png", display.contentWidth*2/3, 480 )
+    mountain3.anchorX=1 --el punto de referencia de la imagen es el de la derecha
     mountain3.type = 1
-    mountain3.x = 900
+    mountain3.x = display.contentWidth+display.contentWidth*5/6
     mountain3.y = 150
     mountain3.speed = 2
+    mountain3.isVisible= true
 
     forest1 = display.newImageRect( "Pagina3/Forest.png", display.contentWidth/2, 263 )
     forest1.type = 2
