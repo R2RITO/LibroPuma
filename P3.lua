@@ -422,6 +422,20 @@ function scene:create( event )
     sky.y = 182
 
 
+
+    grass1 = display.newImageRect( "Pagina3/Grass.png", display.contentWidth, display.contentHeight)
+    grass1.x = 1536
+    grass1.y = display.contentHeight/2
+    grass1.speed = 3
+    grass1.type = 3
+
+    grass = display.newImageRect( "Pagina3/Grass.png", display.contentWidth, display.contentHeight)
+    grass.x = 512
+    grass.y = display.contentHeight/2
+    grass.speed = 3
+    grass.type = 3
+    
+
     mountain1 = display.newImageRect( "Pagina3/BrownMontain1.png", display.contentWidth*2/3, 480 )
     mountain1.type = 1
     mountain1.x = 1440
@@ -440,18 +454,6 @@ function scene:create( event )
     mountain3.y = 150
     mountain3.speed = 2
 
-    grass1 = display.newImageRect( "Pagina3/Grass.png", display.contentWidth, display.contentHeight*2)
-    grass1.x = 1536
-    grass1.y = 0
-    grass1.speed = 3
-    grass1.type = 3
-
-    grass = display.newImageRect( "Pagina3/Grass.png", display.contentWidth, display.contentHeight*2)
-    grass.x = 512
-    grass.y = 0
-    grass.speed = 3
-    grass.type = 3
-    
     forest1 = display.newImageRect( "Pagina3/Forest.png", display.contentWidth/2, 263 )
     forest1.type = 2
     forest1.x = 200
