@@ -34,8 +34,11 @@ local function cargarData()
 		local data = archivo:read( "*a" )
 		local tabla = json.decode( data )
 		io.close( archivo )
-
-		composer.setVariable( "paginaMarcador", tabla.paginaMarcador )
+		if tabla.paginaMarcador then
+			composer.setVariable( "paginaMarcador", tabla.paginaMarcador )
+		else 
+			composer.setVariable( "paginaMarcador", 0 )
+		end
 
 		if tabla.tutorialCompletado then
 			composer.setVariable( "tutorialCompletado", tabla.tutorialCompletado)

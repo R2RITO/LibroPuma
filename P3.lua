@@ -366,16 +366,27 @@ end
 
 -- Funcion para guardar en el archivo los datos del marcador
 local function guardarMarcador()
-	local ruta = system.pathForFile( "data.txt", system.DocumentsDirectory )
-	local pag = composer.getVariable( "paginaMarcador" )
 
-	local archivo = io.open( ruta, "w" )
+    local ruta = system.pathForFile( "data.txt", system.DocumentsDirectory )
+    local pag = composer.getVariable( "paginaMarcador" )
+    local tabla
 
-	if archivo then
-		local tabla = {}
-		tabla.paginaMarcador = pag
-		contenido = json.encode( tabla )
-		archivo:write(contenido)
+    local archivo = io.open( ruta, "r" )
+
+    if archivo then
+        local data = archivo:read( "*a" )
+        tabla = json.decode( data )
+        io.close( archivo )
+    else
+        tabla = {}
+    end
+
+    archivo = io.open( ruta, "w" )
+
+    if archivo then
+        tabla.paginaMarcador = pag
+        contenido = json.encode( tabla )
+        archivo:write(contenido)
 
 		io.close( archivo )
 	end

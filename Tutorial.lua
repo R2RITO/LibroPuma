@@ -130,10 +130,20 @@ local function finalizarTutorial( event )
 
         local ruta = system.pathForFile( "data.txt", system.DocumentsDirectory )
 
+        local tabla
+        local archivo = io.open( ruta, "r" )
+
+        if archivo then
+            local data = archivo:read( "*a" )
+            tabla = json.decode( data )
+            io.close( archivo )
+        else
+            tabla = {}
+        end
+
         local archivo = io.open( ruta, "w" )
 
         if archivo then
-            local tabla = {}
             tabla.tutorialCompletado = 1
             contenido = json.encode( tabla )
             archivo:write(contenido)
