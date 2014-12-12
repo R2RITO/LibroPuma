@@ -5,7 +5,7 @@ local scene = composer.newScene()
 local json = require("json")
 
 -- forward declarations and other locals
-local cientifico, pageText, pageTween, fadeTween1, fadeTween2
+local pageTween, fadeTween1, fadeTween2
 
 local botonInicio, botonIndice, botonMarcador, fondo
 
@@ -59,7 +59,7 @@ onPageTouch = function( self, event )
             
             local duracion = event.time - self.tiempo
             if duracion > 1000 then
-                composer.hideOverlay("fromBottom")
+                composer.hideOverlay("fade")
             end
             
             display.getCurrentStage():setFocus( nil )
@@ -79,7 +79,7 @@ function scene:create( event )
     
     -- -- create background image
 
-    fondo = display.newImageRect( sceneGroup, "Menu/fondo.jpg", display.contentWidth, display.contentHeight )
+    fondo = display.newImageRect( sceneGroup, "Menu/fondo.png", display.contentWidth, display.contentHeight )
     fondo.x, fondo.y = display.contentCenterX, display.contentCenterY
     fondo.touch = onPageTouch
 

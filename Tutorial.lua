@@ -70,7 +70,7 @@ local function crearTexto( args )
             parent = textGroup,
             text = args.texto,     
             width = args.ancho or 900,     --required for multi-line and alignment
-            font = args.fuente or "PTSERIF",   
+            font = args.fuente or PTSERIF,   
             fontSize = args.tam or 40,
             align = "center"  --new alignment parameter
     

@@ -19,6 +19,8 @@ local cielo, pasto, cientifico, nube, hojas, bosque, pageText,
 
 local continuarAnimacion, onPageSwipe, onPageTouch
 
+local textGroup = display.newGroup()
+
 local swipeThresh = 100     -- amount of pixels finger must travel to initiate page swipe
 local tweenTime = 900
 local animStep = 1
@@ -56,19 +58,37 @@ end
 
 start(1,0.05,0.005)
 
+local function crearTexto( args )
+
+    local textOption = 
+        {           
+            parent = textGroup,
+            text = args.texto,     
+            width = args.ancho or 900,     --required for multi-line and alignment
+            font = args.fuente or PTSERIF,   
+            fontSize = args.tam or 40,
+            align = "center"  --new alignment parameter
+    
+        }
+
+    return display.newText(textOption)
+end
+
+-- Funcion para reposicionar texto
+local function repositionAndFadeIn( texto, factorX, factorY )
+    texto.x = display.contentWidth * factorX
+    texto.y = display.contentHeight * factorY
+
+    texto.alpha = 0
+    texto.isVisible = true
+            
+    fadeTween1 = transition.to( texto, { time=tweenTime*0.5, alpha=1.0 } )
+end
+
 -- function to show next animation
 local function showNext()
     if readyToContinue then
         readyToContinue = false
-        
-        local function repositionAndFadeIn( factorX, factorY )
-            pageText.x = display.contentWidth * factorX
-            pageText.y = display.contentHeight * factorY
-
-            pageText.isVisible = true
-                    
-            fadeTween1 = transition.to( pageText, { time=tweenTime*0.5, alpha=1.0 } )
-        end
         
         local function completeTween()
             animStep = animStep + 1
@@ -89,22 +109,9 @@ local function showNext()
         
         if animStep == 1 then
 
-            pageText.alpha = 0
-
-            local textOption = 
-                {           
-                    --parent = textGroup,
-                    text = "Érase una vez, un grupo de niños que fueron de expedición a la Cordillera de los Andes.",     
-                    width = 900,     --required for multi-line and alignment
-                    font = PTSERIF,   
-                    fontSize = 40,
-                    align = "center"  --new alignment parameter
-            
-                }
-
-            pageText= display.newText(textOption)
+            pageText = crearTexto{texto="Érase una vez, un grupo de niños que fueron de expedición a la Cordillera de los Andes."}
             pageText.isVisible = false
-            repositionAndFadeIn(0.50,0.25)
+            repositionAndFadeIn( pageText,0.50,0.25 )
 
             pasto.touch = onPageTouch
             pasto:addEventListener( "touch", pasto )
@@ -120,7 +127,7 @@ local function showNext()
 
         elseif animStep == 2 then
 
-            pageText.alpha = 0
+            pageText:removeSelf()
 
             -- Eliminar funciones anteriores
             ninos:removeEventListener( "touch", continuarAnimacion )
@@ -130,20 +137,9 @@ local function showNext()
             ninos.isVisible = false
             transition.to( cientifico, { time=tweenTime, x=display.contentWidth*0.25 ,transition=easing.outExpo } )
 
-            local textOption = 
-                {           
-                    --parent = textGroup,
-                    text = "¡Hola! Hoy podrás acompañarnos en esta aventura. Recorreremos el bosque y es muy posible que nos encontremos con un puma ",     
-                    width = 500,     --required for multi-line and alignment
-                    font = PTSERIF,   
-                    fontSize = 40,
-                    align = "center"  --new alignment parameter
-            
-                }
-
-            pageText= display.newText(textOption)
+            pageText = crearTexto{texto="¡Hola! Hoy podrás acompañarnos en esta aventura. Recorreremos el bosque y es muy posible que nos encontremos con un puma ", ancho=500}
             pageText.isVisible = false
-            repositionAndFadeIn(0.50,0.25)
+            repositionAndFadeIn(pageText,0.50,0.25)
 
            
             cientifico.enterFrame = inflate
@@ -161,20 +157,9 @@ local function showNext()
 
             pageText.alpha = 0
 
-            local textOption = 
-                {           
-                    --parent = textGroup,
-                    text = "Por si no lo conoces, aquí te muestro una foto",     
-                    width = 500,     --required for multi-line and alignment
-                    font = PTSERIF,   
-                    fontSize = 40,
-                    align = "center"  --new alignment parameter
-            
-                }
-
-            pageText= display.newText(textOption)
+            pageText = crearTexto{texto="Por si no lo conoces, aquí te muestro una foto",ancho=500}
             pageText.isVisible = false
-            repositionAndFadeIn(0.50,0.25)
+            repositionAndFadeIn(pageText,0.50,0.25)
 
 
             pumaReal.isVisible = true
@@ -202,20 +187,9 @@ local function showNext()
             transition.fadeOut( marcoJungla, { time=tweenTime, transition=easing.outExpo } )
             transition.fadeOut( botonVolver, { time=tweenTime, transition=easing.outExpo } )
 
-            local textOption = 
-                {           
-                    --parent = textGroup,
-                    text = "¡Continuemos nuestro viaje!",     
-                    width = 500,     --required for multi-line and alignment
-                    font = PTSERIF,   
-                    fontSize = 40,
-                    align = "center"  --new alignment parameter
-            
-                }
-
-            pageText= display.newText(textOption)
+            pageText = crearTexto{texto="¡Continuemos nuestro viaje!", ancho=500}
             pageText.isVisible = false
-            repositionAndFadeIn(0.50,0.25)
+            repositionAndFadeIn(pageText,0.50,0.25)
 
             botonVolver:removeEventListener( "touch", continuarAnimacion )
             
@@ -360,8 +334,7 @@ onPageTouch = function( self, event )
             
             local duracion = event.time - self.tiempo
             if duracion > 1000 then
-                pageText.isVisible = false
-                composer.showOverlay( "menu", {effect="fromTop",time=400,isModal=true} )
+                composer.showOverlay( "menu", {effect="fade",time=900,isModal=true} )
             end
             
             display.getCurrentStage():setFocus( nil )
@@ -432,13 +405,6 @@ function scene:create( event )
     finger_left.x, finger_left.y = display.contentWidth * 0.9, display.contentHeight * 0.5
     finger_left.isVisible = false
 
-
-    -- create pageText
-    pageText = display.newText( sceneGroup, "", 0, 0, native.systemFontBold, 18 )
-    pageText.x = display.contentWidth * 0.5
-    pageText.y = display.contentHeight * 0.5
-    pageText.isVisible = false
-
     --create marker object
     markerObj = display.newImageRect( sceneGroup, "Marcador.png", 80, 120 )
     markerObj.x, markerObj.y = 40, 60
@@ -486,13 +452,13 @@ function scene:hide( event )
         -- e.g. stop timers, stop animation, unload sounds, etc.)
         
         -- hide objects
-        pageText.isVisible = false
-        markerObj.isVisible = false
-        hojas.isVisible = false
-        bosque.isVisible = false
-        cientifico.isVisible = false
-        retratoPuma.isVisible = false
-        ninos.isVisible = false
+        -- pageText.isVisible = false
+        -- markerObj.isVisible = false
+        -- hojas.isVisible = false
+        -- bosque.isVisible = false
+        -- cientifico.isVisible = false
+        -- retratoPuma.isVisible = false
+        -- ninos.isVisible = false
     
         -- remove touch event listener for background
         pasto:removeEventListener( "touch", background )

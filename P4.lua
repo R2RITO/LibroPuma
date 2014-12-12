@@ -18,6 +18,8 @@ local cientifico, pageText, animacionTexto, pageText2, pageTween, fadeTween1,
 
 local continuarAnimacion, onPageSwipe
 
+local textGroup = display.newGroup()
+
 local swipeThresh = 100     -- amount of pixels finger must travel to initiate page swipe
 local tweenTime = 900
 local animStep = 1
@@ -60,7 +62,7 @@ local function crearTexto( args )
 
     local textOption = 
         {           
-            parent = sceneGroup,
+            parent = textGroup,
             text = args.texto,     
             width = args.ancho or 900,     --required for multi-line and alignment
             font = args.fuente or "Austie Bost Kitten Klub",   
@@ -423,6 +425,8 @@ function scene:create( event )
     finger_left = display.newImageRect( sceneGroup, "swipeIzq.png", 150, 150 )
     finger_left.x, finger_left.y = display.contentWidth * 0.9, display.contentHeight * 0.5
     finger_left.isVisible = false
+
+    sceneGroup:insert(textGroup)
 
     --create marker object
     markerObj = display.newImageRect( sceneGroup, "Marcador.png", 80, 120 )
