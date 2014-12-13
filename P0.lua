@@ -35,7 +35,7 @@ onPageSwipe = function( self, event )
 	            local distance = event.x - event.xStart
 	            if math.abs(distance) > swipeThresh then
 
-	                pag_sig = 1
+	                pag_sig = 3
 	                pag = "P" .. pag_sig
 	                composer.setVariable( "pagina", pag_sig)
 
@@ -51,6 +51,7 @@ onPageSwipe = function( self, event )
 	            self.isFocus = nil
 	        end
         end
+
     end
     return true
 end
@@ -59,32 +60,102 @@ end
 function scene:create( event )
 	local sceneGroup = self.view
 
+	-- Para coordenadas x e y, el cero es a la izquierda y arriba respectivamente.
+
 	-- Called when the scene's view does not exist.
 	-- 
 	-- INSERT code here to initialize the scene
 	-- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
 
 	-- display a background image
-	background = display.newImageRect( sceneGroup, "Portada/fondoJungla.jpg", display.contentWidth, display.contentHeight )
-	background.x, background.y = display.contentWidth * 0.5, display.contentHeight * 0.5
-	background.isVisible = false
+
+	backWhite = display.newImageRect( sceneGroup, "Portada/BackgroundWhite.jpg", display.contentWidth, display.contentHeight)
+	backWhite.anchorX,backWhite.anchorY=0,0 --el punto de referencia (0,0) de la imagen es el de la izquierda y arriba
+	backWhite.x, backWhite.y = 0, 0
+	backWhite.isVisible = true
+
+
+	background = display.newImageRect( sceneGroup, "Portada/capa_1_1.png", display.contentWidth, display.contentHeight*0.84)
+	background.anchorX,background.anchorY=0,0 --el punto de referencia (0,0) de la imagen es el de la izquierda y arriba
+	background.x, background.y = 0, display.contentHeight*0.14
+	background.isVisible = true
+	
+	background2 = display.newImageRect( sceneGroup, "Portada/capa_1_3.png", display.contentWidth+display.contentWidth/10, display.contentHeight/3)
+	background2.anchorX,background2.anchorY=0,1 --el punto de referencia (0,0) de la imagen es el de la izquierda y abajo
+	background2.x, background2.y = -display.contentWidth/11,display.contentHeight
+	background2.isVisible = true
 
 	patita = display.newImageRect( sceneGroup, "Portada/PataPumita.png", display.contentWidth * 0.4, display.contentHeight * 0.6 )
 	patita.x, patita.y = display.contentWidth * 0.75, display.contentHeight * 0.6
 	patita.isVisible = false
 
+	botonIndice = display.newImageRect( sceneGroup, "Portada/boton_huella_2.png", display.contentWidth*0.30, display.contentHeight*0.12)
+	botonIndice.anchorX,botonIndice.anchorY=0.5,0.5 --el punto de referencia (0,0) de la imagen es el de la izquierda y abajo
+	botonIndice.x, botonIndice.y = display.contentWidth/2,display.contentHeight*0.55
+	botonIndice.isVisible = true
+
+	indiceText = display.newText( sceneGroup, "Ir al índice", 0, 0, PTSERIF, 30 )
+	indiceText.x = display.contentWidth*0.55
+	indiceText.y = display.contentHeight * 0.55
+	indiceText.isVisible = true
+
+	local options = 
+	{
+	    --parent = textGroup,
+	    text = "Sorpresas en la expedición:",     
+	    x = display.contentWidth*0.55,
+	    y = display.contentHeight* 0.08,
+	    width = display.contentWidth*0.6,
+	    height =display.contentHeight*0.2,
+	    font = PTSERIF1,   
+	    fontSize = 40,
+	    align = "center"  --new alignment parameter
+	}
+
+	local tituloText = display.newText( options )
+
+	tituloText:setFillColor( 0, 0, 0 ) -- color negro
+	tituloText.isVisible=true
+
+	local options = 
+	{
+	    --parent = textGroup,
+	    text = "El puma chileno",     
+	    x = display.contentWidth*0.55,
+	    y = display.contentHeight* 0.14,
+	    width = display.contentWidth*0.40,
+	    height =display.contentHeight*0.2,
+	    font = PTSERIF1,   
+	    fontSize = 40,
+	    align = "center"  --new alignment parameter
+	}
+
+	local tituloText1 = display.newText( options )
+	tituloText1:setFillColor( 0, 0, 0 ) -- color negro
+	tituloText1.isVisible=true
+
+
+
+ 	--display.newText( [parentGroup,] text, x, y, [], font, fontSize )
+	subtituloText = display.newText( sceneGroup, "Un cuento de Pontificia Universidad Católica y Programa de Bibliotecas Escolares CRA", display.contentWidth*0.69, display.contentHeight * 0.45
+	,display.contentWidth*0.6,display.contentHeight*0.55, PTSERIF1 , 30)
+	subtituloText:setFillColor( 0, 0, 0 ) -- color negro
+	
+
 	puma = display.newImageRect( sceneGroup, "Portada/Puma.png", display.contentWidth * 1.5, display.contentHeight * 1.5 )
-	puma.x, puma.y = display.contentWidth * -0.2, display.contentHeight * 0.4
+	puma.x, puma.y = display.contentWidth * -0.2, display.contentHeight * 0.3
 	puma.rotation = -10
 	puma.isVisible = false
 
 	logoPUC = display.newImageRect( sceneGroup, "Portada/LogoPUC.png", display.contentWidth * 0.15, display.contentHeight * 0.25 ) 
-	logoPUC.x, logoPUC.y = display.contentWidth * 0.1, display.contentHeight * 0.9
-	logoPUC.isVisible = false
+	logoPUC.anchorX,logoPUC.anchorY=0.5,0.5 --el punto de referencia (0,0) de la imagen es el default (al medio)
+	logoPUC.x, logoPUC.y = display.contentWidth*0.1, display.contentHeight*0.23
+	logoPUC.isVisible = true
 
-	--logoCRA = display.newImageRect( sceneGroup, "Portada/LogoCRA.jpg", display.contentWidth * 0.15, display.contentHeight * 0.25 ) 
-	--logoCRA.x, logoCRA.y = display.contentWidth * 0.4, display.contentHeight * 0.8
-	--logoCRA.isVisible = false
+	logoCRA = display.newImageRect( sceneGroup, "Portada/logo-cra20.png", display.contentWidth * 0.15, display.contentHeight * 0.25 ) 
+	logoCRA.anchorX,logoCRA.anchorY=0.5,0.5 --el punto de referencia (0,0) de la imagen es el default (al medio)
+	logoCRA.x, logoCRA.y = display.contentWidth*0.25, display.contentHeight*0.23
+	logoCRA.isVisible = true
 
 	-- Texto del titulo
     pageText = display.newText( sceneGroup, "El Puma Chileno", 0, 0, PTSERIF, 80 )
@@ -92,6 +163,7 @@ function scene:create( event )
 	pageText.y = display.contentHeight * 0.1	
 	pageText.isVisible = false
 
+	
 	-- Establecer el numero de pagina
 	composer.setVariable( "pagina", 0 )
 	
@@ -105,12 +177,12 @@ function scene:show( event )
 	if phase == "will" then
 		-- Called when the scene is still off screen and is about to move on screen
 
-		background.isVisible = true
-		patita.isVisible = true
-		puma.isVisible = true
-		logoPUC.isVisible = true
-		--logoCRA.isVisible = true
-		pageText.isVisible = true
+		-- background.isVisible = true
+		-- patita.isVisible = true
+		-- puma.isVisible = true
+		-- logoPUC.isVisible = true
+		-- --logoCRA.isVisible = true
+		-- pageText.isVisible = true
 
 	elseif phase == "did" then
 
@@ -145,12 +217,12 @@ function scene:hide( event )
 		
 	elseif phase == "did" then
 		-- Called when the scene is now off screen
-		background.isVisible = false
-		patita.isVisible = false
-		puma.isVisible = false
-		logoPUC.isVisible = false
-		--logoCRA.isVisible = false
-		pageText.isVisible = false
+		-- background.isVisible = false
+		-- patita.isVisible = false
+		-- puma.isVisible = false
+		-- logoPUC.isVisible = false
+		-- --logoCRA.isVisible = false
+		-- pageText.isVisible = false
 
 	end	
 end
