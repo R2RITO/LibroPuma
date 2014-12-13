@@ -106,6 +106,9 @@ local function showNext()
             pageText.isVisible = false
             repositionAndFadeIn(0.50,0.1)
 
+            transition.to( arbol, { time=tweenTime*1.5, alpha=1.0 } )
+            transition.to( ninos, { time=tweenTime*0.5, alpha=1.0, delay=1000 } )
+
             ninos.isVisible = true  
            
             ninos.enterFrame = inflate
@@ -349,12 +352,12 @@ function scene:create( event )
 
     background = display.newImageRect( sceneGroup, "Pagina1/capa_2.png", display.contentWidth+display.contentWidth/10, display.contentHeight*0.84)
     background.anchorX,background.anchorY=0,0 --el punto de referencia (0,0) de la imagen es el de la izquierda y arriba
-    background.x, background.y = -display.contentWidth/11, display.contentHeight*0.14
+    background.x, background.y = -display.contentWidth*0.02, display.contentHeight*0.14
     background.isVisible = true
     
     background2 = display.newImageRect( sceneGroup, "Pagina1/capa_2_1.png", display.contentWidth+display.contentWidth/10, display.contentHeight*0.84)
     background2.anchorX,background2.anchorY=0,1 --el punto de referencia (0,0) de la imagen es el de la izquierda y abajo
-    background2.x, background2.y = 0,display.contentHeight
+    background2.x, background2.y = -display.contentWidth*0.1,display.contentHeight
     background2.isVisible = true
 
     backWhite = display.newImageRect( sceneGroup, "Portada/BackgroundWhite.jpg", display.contentWidth, display.contentHeight*0.2)
@@ -369,6 +372,7 @@ function scene:create( event )
     arbol.anchorX,arbol.anchorY=0,1 --el punto de referencia (0,0) de la imagen es el de la izquierda y abajo
     arbol.x, arbol.y = display.contentWidth*0.6,display.contentHeight*0.9
     arbol.isVisible = true
+    arbol.alpha=0
 
     hojas = display.newImageRect( sceneGroup, "Pagina1/Hojas2.png", display.contentWidth * 0.45, display.contentHeight * 0.65 )
     hojas.x, hojas.y = display.contentWidth * -2, display.contentHeight * 0.7
@@ -404,6 +408,7 @@ function scene:create( event )
     ninos = display.newImageRect( sceneGroup, "Pagina1/ninios.png", display.contentWidth * 0.4, display.contentHeight * 0.4 )
     ninos.x, ninos.y = display.contentWidth * 0.3, display.contentHeight * 0.7
     ninos.isVisible, ninos.inf, ninos.inflar, ninos.rate = false, 0.05, true, 1
+    ninos.alpha=0
 
     finger_left = display.newImageRect( sceneGroup, "swipeIzq.png", 150, 150 )
     finger_left.x, finger_left.y = display.contentWidth * 0.9, display.contentHeight * 0.5
