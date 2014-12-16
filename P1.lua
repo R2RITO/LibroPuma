@@ -42,14 +42,14 @@ local function inflate(self,event)
             inflar =  true
     end 
     
-
+--La indentación del código es una buena práctica para facilitar la lectura de éste. CARLOS
 self.xScale = rate 
 self.yScale = rate 
 
 end
 
 local function start(value1,value2,value3)
-
+--La indentación del código es una buena práctica para facilitar la lectura de éste. CARLOS
 rate=value1
 max=value2
 drate=value3
@@ -343,16 +343,19 @@ function scene:create( event )
     
     -- -- create background image
 
+    --Tal vez sería  recomendable cargar esta imagen como variable local. CARLOS 
     background = display.newImageRect( sceneGroup, "Pagina1/capa_2.png", display.contentWidth+display.contentWidth/10, display.contentHeight*0.84)
     background.anchorX,background.anchorY=0,0 --el punto de referencia (0,0) de la imagen es el de la izquierda y arriba
     background.x, background.y = -display.contentWidth*0.02, display.contentHeight*0.14
     background.isVisible = true
     
+    --Tal vez sería  recomendable cargar esta imagen como variable local. CARLOS 
     background2 = display.newImageRect( sceneGroup, "Pagina1/capa_2_1.png", display.contentWidth+display.contentWidth/10, display.contentHeight*0.84)
     background2.anchorX,background2.anchorY=0,1 --el punto de referencia (0,0) de la imagen es el de la izquierda y abajo
     background2.x, background2.y = -display.contentWidth*0.1,display.contentHeight
     background2.isVisible = true
 
+    --Tal vez sería  recomendable cargar esta imagen como variable local. CARLOS 
     backWhite = display.newImageRect( sceneGroup, "Portada/BackgroundWhite.jpg", display.contentWidth, display.contentHeight*0.2)
     backWhite.anchorX,backWhite.anchorY=0,0 --el punto de referencia (0,0) de la imagen es el de la izquierda y arriba
     backWhite.x, backWhite.y = 0, 0
@@ -492,6 +495,8 @@ function scene:destroy( event )
     -- 
     -- INSERT code here to cleanup the scene
     -- e.g. remove display objects, remove touch listeners, save state, etc.
+
+    --!!!! Es recomendable usar el object:removeself() y object=nil para liberar memoria en el dispositivo. CARLOS
 end
 
 ---------------------------------------------------------------------------------

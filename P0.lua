@@ -82,11 +82,13 @@ print("create")
 	background.x, background.y = 0, display.contentHeight*0.14
 	background.isVisible = true
 	
+	--Tal vez sería  recomendable cargar esta imagen como variable local. CARLOS 
 	background2 = display.newImageRect( sceneGroup, "Portada/capa_1_3.png", display.contentWidth+display.contentWidth/10, display.contentHeight/3)
 	background2.anchorX,background2.anchorY=0,1 --el punto de referencia (0,0) de la imagen es el de la izquierda y abajo
 	background2.x, background2.y = -display.contentWidth/11,display.contentHeight
 	background2.isVisible = true
 
+	--Tal vez sería  recomendable cargar esta imagen como variable local. CARLOS 
 	backWhite = display.newImageRect( sceneGroup, "Portada/BackgroundWhite.jpg", display.contentWidth, display.contentHeight*0.2)
     backWhite.anchorX,backWhite.anchorY=0,0 --el punto de referencia (0,0) de la imagen es el de la izquierda y arriba
     backWhite.x, backWhite.y = 0, 0
@@ -96,6 +98,7 @@ print("create")
 	patita.x, patita.y = display.contentWidth * 0.75, display.contentHeight * 0.6
 	patita.isVisible = false
 
+	--Tal vez sería  recomendable cargar esta imagen como variable local. CARLOS 
 	botonIndice = display.newImageRect( sceneGroup, "Portada/boton_huella_2.png", display.contentWidth*0.30, display.contentHeight*0.12)
 	botonIndice.anchorX,botonIndice.anchorY=0.5,0.5 --el punto de referencia (0,0) de la imagen es el de la izquierda y abajo
 	botonIndice.x, botonIndice.y = display.contentWidth/2,display.contentHeight*0.55
@@ -256,6 +259,9 @@ function scene:destroy( event )
 	-- 
 	-- INSERT code here to cleanup the scene
 	-- e.g. remove display objects, remove touch listeners, save state, etc.
+
+
+	--!!!! Es recomendable usar el object:removeself() y object=nil para liberar memoria en el dispositivo. CARLOS
 end
 
 ---------------------------------------------------------------------------------
