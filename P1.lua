@@ -14,10 +14,10 @@ local json = require("json")
 local cielo, pasto, cientifico, nube, hojas, bosque, pageText,
         pageTween, fadeTween1, fadeTween2, markerObj, retratoPuma,
         ninos, pumaReal, marcoJungla, botonVolver, finger_left,
-        handsTimer
+        handsTimer,arbol
 
 
-local continuarAnimacion, onPageSwipe, onPageTouch
+local continuarAnimacion, onPageSwipe
 
 local textGroup = display.newGroup()
 
@@ -26,7 +26,8 @@ local tweenTime = 900
 local animStep = 1
 local readyToContinue = false
 
-local rate , animStart , inflar, drate, max
+local inflar=true
+local rate , drate, max
 
 local function inflate(self,event)
      if inflar then
@@ -42,18 +43,16 @@ local function inflate(self,event)
     end 
     
 
-    self.xScale = rate 
-    self.yScale = rate 
+self.xScale = rate 
+self.yScale = rate 
 
 end
 
 local function start(value1,value2,value3)
 
-    rate=value1
-    max=value2
-    drate=value3
-    inflar=true
-
+rate=value1
+max=value2
+drate=value3
 end
 
 start(1,0.05,0.005)
@@ -113,8 +112,8 @@ local function showNext()
             pageText.isVisible = false
             repositionAndFadeIn( pageText,0.50,0.25 )
 
-            pasto.touch = onPageTouch
-            pasto:addEventListener( "touch", pasto )
+            transition.to( arbol, { time=tweenTime*1.5, alpha=1.0 } )
+            transition.to( ninos, { time=tweenTime*0.5, alpha=1.0, delay=1000 } )
 
             ninos.isVisible = true  
            
@@ -183,9 +182,9 @@ local function showNext()
 
             pageText.alpha = 0
 
-            transition.fadeOut( pumaReal, { time=tweenTime, transition=easing.outExpo } )
-            transition.fadeOut( marcoJungla, { time=tweenTime, transition=easing.outExpo } )
-            transition.fadeOut( botonVolver, { time=tweenTime, transition=easing.outExpo } )
+            transition.to( pumaReal, { time=tweenTime, x=-display.contentCenterX, transition=easing.outExpo } )
+            transition.to( marcoJungla, { time=tweenTime, x=display.contentCenterX*4, transition=easing.outExpo } )
+            transition.to( botonVolver, { time=tweenTime, x=display.contentWidth * -0.9, transition=easing.outExpo } )
 
             pageText = crearTexto{texto="¡Continuemos nuestro viaje!", ancho=500}
             pageText.isVisible = false
@@ -222,21 +221,11 @@ end
 local function guardarMarcador()
     local ruta = system.pathForFile( "data.txt", system.DocumentsDirectory )
     local pag = composer.getVariable( "paginaMarcador" )
-    local tabla
 
-    local archivo = io.open( ruta, "r" )
-
-    if archivo then
-        local data = archivo:read( "*a" )
-        tabla = json.decode( data )
-        io.close( archivo )
-    else
-        tabla = {}
-    end
-
-    archivo = io.open( ruta, "w" )
+    local archivo = io.open( ruta, "w" )
 
     if archivo then
+        local tabla = {}
         tabla.paginaMarcador = pag
         contenido = json.encode( tabla )
         archivo:write(contenido)
@@ -319,7 +308,7 @@ onPageSwipe = function( self, event )
     end
     return true
 end
-
+ 
 onPageTouch = function( self, event )
     local phase = event.phase
     local pag_act = composer.getVariable( "pagina" )
@@ -344,10 +333,6 @@ onPageTouch = function( self, event )
     return true
 end
 
-
-
-
-
 function scene:create( event )
     local sceneGroup = self.view
 
@@ -358,11 +343,29 @@ function scene:create( event )
     
     -- -- create background image
 
-    cielo = display.newImageRect( sceneGroup, "Pagina1/Sky.jpg", display.contentWidth, display.contentHeight * 0.6 )
-    cielo.x, cielo.y = display.contentWidth*0.5, display.contentHeight * 0.3
+    background = display.newImageRect( sceneGroup, "Pagina1/capa_2.png", display.contentWidth+display.contentWidth/10, display.contentHeight*0.84)
+    background.anchorX,background.anchorY=0,0 --el punto de referencia (0,0) de la imagen es el de la izquierda y arriba
+    background.x, background.y = -display.contentWidth*0.02, display.contentHeight*0.14
+    background.isVisible = true
+    
+    background2 = display.newImageRect( sceneGroup, "Pagina1/capa_2_1.png", display.contentWidth+display.contentWidth/10, display.contentHeight*0.84)
+    background2.anchorX,background2.anchorY=0,1 --el punto de referencia (0,0) de la imagen es el de la izquierda y abajo
+    background2.x, background2.y = -display.contentWidth*0.1,display.contentHeight
+    background2.isVisible = true
 
-    pasto = display.newImageRect( sceneGroup, "Pagina1/Grass.png", display.contentWidth, display.contentHeight * 2)
-    pasto.x, pasto.y = display.contentWidth*0.5, display.contentHeight * 0.35
+    backWhite = display.newImageRect( sceneGroup, "Portada/BackgroundWhite.jpg", display.contentWidth, display.contentHeight*0.2)
+    backWhite.anchorX,backWhite.anchorY=0,0 --el punto de referencia (0,0) de la imagen es el de la izquierda y arriba
+    backWhite.x, backWhite.y = 0, 0
+    backWhite.isVisible = true
+  
+    nube = display.newImageRect( sceneGroup, "Pagina1/nubes.png", display.contentWidth*0.8, display.contentHeight*0.1 )
+    nube.x, nube.y = display.contentWidth * 0.8, display.contentHeight * 0.2
+
+    arbol = display.newImageRect( sceneGroup, "Pagina1/arbol_2.png", display.contentWidth*0.4, display.contentHeight*0.7)
+    arbol.anchorX,arbol.anchorY=0,1 --el punto de referencia (0,0) de la imagen es el de la izquierda y abajo
+    arbol.x, arbol.y = display.contentWidth*0.6,display.contentHeight*0.9
+    arbol.isVisible = true
+    arbol.alpha=0
 
     hojas = display.newImageRect( sceneGroup, "Pagina1/Hojas2.png", display.contentWidth * 0.45, display.contentHeight * 0.65 )
     hojas.x, hojas.y = display.contentWidth * -2, display.contentHeight * 0.7
@@ -372,19 +375,17 @@ function scene:create( event )
     bosque.x, bosque.y = display.contentWidth * -2, display.contentHeight * 0.3
     bosque.isVisible = false
 
-    cientifico = display.newImageRect( sceneGroup, "Pagina1/Scientist.png", display.contentWidth * 0.4, display.contentHeight*0.5)
+    cientifico = display.newImageRect( sceneGroup, "Pagina1/Scientist.png", display.contentWidth * 0.4, display.contentHeight*0.1)
     cientifico.x, cientifico.y = display.contentWidth*-0.25, display.contentHeight * 0.6
     cientifico.isVisible, cientifico.inf, cientifico.inflar, cientifico.rate = false, 0.05, true, 1
 
-    nube = display.newImageRect( sceneGroup, "Pagina1/Cloud.png", 256, 256 )
-    nube.x, nube.y = display.contentWidth * 0.8, display.contentHeight * 0.2
 
     retratoPuma = display.newImageRect( sceneGroup, "Pagina1/retratoPuma.png", display.contentWidth * 0.5, display.contentHeight * 0.7 )
     retratoPuma.x, retratoPuma.y = display.contentWidth * 0.85, display.contentHeight * 0.7
     retratoPuma.alpha = 0
     retratoPuma.isVisible = false
 
-    pumaReal = display.newImageRect( sceneGroup, "Pagina1/pumaReal.jpg", display.contentWidth, display.contentHeight )
+    pumaReal = display.newImageRect( sceneGroup, "Pagina1/puma_sentado_1.png", display.contentWidth, display.contentHeight )
     pumaReal.x, pumaReal.y = -display.contentCenterX, display.contentCenterY
     pumaReal.isVisible = false
 
@@ -395,11 +396,12 @@ function scene:create( event )
     botonVolver = display.newImageRect( sceneGroup, "Pagina1/botonVolver.png", display.contentWidth * 0.15, display.contentHeight * 0.15 )
     botonVolver.x, botonVolver.y = display.contentWidth * -0.9, display.contentHeight * 0.9
     botonVolver.isVisible = false
-    botonVolver.isVisible, botonVolver.inf, botonVolver.inflate, botonVolver.rate = false, 0.05, true, 1
+    botonVolver.isVisible, botonVolver.inf, botonVolver.inflar, botonVolver.rate = false, 0.05, true, 1
 
-    ninos = display.newImageRect( sceneGroup, "Pagina1/ninos.png", display.contentWidth * 0.5, display.contentHeight * 0.5 )
-    ninos.x, ninos.y = display.contentWidth * 0.7, display.contentHeight * 0.7
+    ninos = display.newImageRect( sceneGroup, "Pagina1/ninios.png", display.contentWidth * 0.4, display.contentHeight * 0.4 )
+    ninos.x, ninos.y = display.contentWidth * 0.3, display.contentHeight * 0.7
     ninos.isVisible, ninos.inf, ninos.inflar, ninos.rate = false, 0.05, true, 1
+    ninos.alpha=0
 
     finger_left = display.newImageRect( sceneGroup, "swipeIzq.png", 150, 150 )
     finger_left.x, finger_left.y = display.contentWidth * 0.9, display.contentHeight * 0.5
@@ -468,9 +470,9 @@ function scene:hide( event )
         if pageTween then transition.cancel( pageTween ); pageTween = nil; end
         if fadeTween1 then transition.cancel( fadeTween1 ); fadeTween1 = nil; end
         if fadeTween2 then transition.cancel( fadeTween2 ); fadeTween2 = nil; end
-        if handsTimer then timer.cancel( handsTimer ); handsTimer = nil; end
 
         composer.setVariable( "paginaAnterior", "P1" )
+        timer.cancel( handsTimer ); handsTimer = nil;
         
     elseif phase == "did" then
 

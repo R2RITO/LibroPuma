@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------------------
 --
--- P3.lua
+-- page1.lua
 --
 -----------------------------------------------------------------------------------------
 
@@ -12,9 +12,9 @@ local json = require("json")
 
 -- forward declarations and other locals
 local   cientifico, pageText, finger_left, sky,
-        pageTween, fadeTween1, fadeTween2, markerObj, retratoPuma, 
-        grass, grass1, forest1, forest2, forest3, forest4, forest5, 
-        mountain1, mountain2, mountain3, Puma, cientifico
+		pageTween, fadeTween1, fadeTween2, markerObj, retratoPuma, 
+		grass, grass1, forest1, forest2, forest3, forest4, 
+		mountain1, mountain2, mountain3, Puma, cientifico
 
 
 
@@ -77,37 +77,37 @@ local function scrollBackground(self, event)
 --x crece de izquierda a derecha
 
 --Para la montaña
-    if(self.type==1) then
-    print("x")
-    print(mountain2.x)
-    print("y")
-    print(mountain2.y)
-    
-        if (self.x<= 0) then
-            self.x  = display.contentWidth+display.contentWidth*2/3
-        else
-            self.x = self.x-2
-        end
-    end
-    -- Para el boque
-    if(self.type==2) then
-        if (self.x<=0) then
-            self.x  = 1280
-        else    
-            self.x = self.x-3
-        end
-    end
+	if(self.type==1) then
+	print("x")
+	print(mountain2.x)
+	print("y")
+	print(mountain2.y)
+	
+		if (self.x<= 0) then
+			self.x  = display.contentWidth+display.contentWidth*2/3
+		else
+			self.x = self.x-2
+		end
+	end
+	-- Para el boque
+	if(self.type==2) then
+		if (self.x<=0) then
+			self.x  = display.contentWidth+display.contentWidth/2+display.contentWidth/20
+		else    
+			self.x = self.x-3
+		end
+	end
 
-    if(self.type==3) then
-        if (self.x<0) then
-            self.x  = display.contentWidth*2
-        else    
-            self.x = self.x-3
-        end
-    end
+	if(self.type==3) then
+		if (self.x<0) then
+			self.x  = display.contentWidth*2
+		else    
+			self.x = self.x-3
+		end
+	end
 
 
-    --Para la montaña
+	--Para la montaña
 --     if(self.type==1) then
 --         if (self.x<-250) then
 --             self.x  = 1440
@@ -136,34 +136,33 @@ end
 
 local function startScrollBackground()
 
-    print("Ingresó a startScrollBackground")
+	print("Ingresó a startScrollBackground")
 
-        --Animación pasto
-    grass.enterFrame = scrollBackground
-    Runtime:addEventListener("enterFrame",grass)
-    grass1.enterFrame = scrollBackground
-    Runtime:addEventListener("enterFrame",grass1)
+		--Animación pasto
+	grass.enterFrame = scrollBackground
+	Runtime:addEventListener("enterFrame",grass)
+	grass1.enterFrame = scrollBackground
+	Runtime:addEventListener("enterFrame",grass1)
 
-    --Animación bosque
-    forest1.enterFrame = scrollBackground
-    Runtime:addEventListener("enterFrame",forest1)
-    forest2.enterFrame = scrollBackground
-    Runtime:addEventListener("enterFrame",forest2)
-    forest3.enterFrame = scrollBackground
-    Runtime:addEventListener("enterFrame",forest3)
-    forest4.enterFrame = scrollBackground
-    Runtime:addEventListener("enterFrame",forest4)
-    forest5.enterFrame = scrollBackground
-    Runtime:addEventListener("enterFrame",forest5)
+	--Animación bosque
+	forest1.enterFrame = scrollBackground
+	Runtime:addEventListener("enterFrame",forest1)
+	forest2.enterFrame = scrollBackground
+	Runtime:addEventListener("enterFrame",forest2)
+	forest3.enterFrame = scrollBackground
+	Runtime:addEventListener("enterFrame",forest3)
+	forest4.enterFrame = scrollBackground
+	Runtime:addEventListener("enterFrame",forest4)
+	
 
-    --Animación Montaña
+	--Animación Montaña
 
-    mountain1.enterFrame = scrollBackground
-    Runtime:addEventListener("enterFrame",mountain1)
-    mountain2.enterFrame = scrollBackground
-    Runtime:addEventListener("enterFrame",mountain2)
-    mountain3.enterFrame = scrollBackground
-    Runtime:addEventListener("enterFrame",mountain3)
+	mountain1.enterFrame = scrollBackground
+	Runtime:addEventListener("enterFrame",mountain1)
+	mountain2.enterFrame = scrollBackground
+	Runtime:addEventListener("enterFrame",mountain2)
+	mountain3.enterFrame = scrollBackground
+	Runtime:addEventListener("enterFrame",mountain3)
 end
 
 
@@ -172,18 +171,18 @@ local inflar=true
 local rate , drate, max
 
 local function inflate(self,event)
-     if inflar then
-            rate = rate + drate
-        else 
-            rate = rate - drate
-        end 
+	 if inflar then
+			rate = rate + drate
+		else 
+			rate = rate - drate
+		end 
 
-        if (rate >= 1 + max ) then
-            inflar = false
-        elseif (rate <= 1 - max) then
-            inflar =  true
-    end 
-    
+		if (rate >= 1 + max ) then
+			inflar = false
+		elseif (rate <= 1 - max) then
+			inflar =  true
+	end 
+	
 
 self.xScale = rate 
 self.yScale = rate 
@@ -192,9 +191,9 @@ end
 
 local function start(value1,value2,value3)
 
-    rate=value1
-    max=value2
-    drate=value3
+	rate=value1
+	max=value2
+	drate=value3
 end
 
 start(1,0.05,0.005)
@@ -202,20 +201,20 @@ start(1,0.05,0.005)
 
 local function stopScrollBackground()
 
-    --Animación pasto
-    
-    Runtime:removeEventListener("enterFrame",grass)
-    Runtime:removeEventListener("enterFrame",grass1)         
+	--Animación pasto
+	
+	Runtime:removeEventListener("enterFrame",grass)
+	Runtime:removeEventListener("enterFrame",grass1)         
 
-    --Animación bosque
+	--Animación bosque
 
-    Runtime:removeEventListener("enterFrame",forest1)
-    Runtime:removeEventListener("enterFrame",forest2)
-    Runtime:removeEventListener("enterFrame",forest3)
-    Runtime:removeEventListener("enterFrame",forest4)
-    Runtime:removeEventListener("enterFrame",forest5)
+	Runtime:removeEventListener("enterFrame",forest1)
+	Runtime:removeEventListener("enterFrame",forest2)
+	Runtime:removeEventListener("enterFrame",forest3)
+	Runtime:removeEventListener("enterFrame",forest4)
 
-    --Animación Montaña
+
+	--Animación Montaña
 
    Runtime:removeEventListener("enterFrame",mountain1)
    Runtime:removeEventListener("enterFrame",mountain2)
@@ -231,142 +230,143 @@ local function startInflate()
  end
 
  local function pumaReady()
-    stopScrollBackground()
-    startInflate()
+	stopScrollBackground()
+	startInflate()
 
-    --transition.to( cientifico, { time=tweenTime, x=display.contentWidth*0.2, y=display.contentHeight*0.4 ,transition=easing.outExpo } )
-    transition.fadeIn( cientifico, { time=300 } )
+	--transition.to( cientifico, { time=tweenTime, x=display.contentWidth*0.2, y=display.contentHeight*0.4 ,transition=easing.outExpo } )
+	transition.fadeIn( cientifico, { time=300 } )
 
   
 
-            local textOption = 
-                {           
-                    --parent = textGroup,
-                    text = "¡Observa, es un Felis Concolor!",     
-                    width = 500,     --required for multi-line and alignment
-                    font = PTSERIF,   
-                    fontSize = 40,
-                    align = "center"  --new alignment parameter
-            
-                }
-    pageText= display.newText(textOption)
-    pageText.isVisible=true
-    --transition.to( pageText, { time=tweenTime*0.5, x=display.contentWidth * 0.35, y = display.contentHeight * 0.2} )
-    
-           
-    pageText.x = display.contentWidth * 0.35
-    pageText.y = display.contentHeight * 0.2
+			local textOption = 
+				{           
+					--parent = textGroup,
+					text = "¡Observa, es un Felis Concolor!",     
+					width = 500,     --required for multi-line and alignment
+					font = PTSERIF,   
+					fontSize = 40,
+					align = "center"  --new alignment parameter
+			
+				}
+	pageText= display.newText(textOption)
+	pageText.isVisible=true
+	--transition.to( pageText, { time=tweenTime*0.5, x=display.contentWidth * 0.35, y = display.contentHeight * 0.2} )
+	
+		   
+	pageText.x = display.contentWidth * 0.35
+	pageText.y = display.contentHeight * 0.2
 
-                              
+							  
 
   end
 
 -- function to show next animation
 local function showNext()
-    if readyToContinue then
-        readyToContinue = false
-        
-        local function repositionAndFadeIn( factorX, factorY )
-            pageText.x = display.contentWidth * factorX
-            pageText.y = display.contentHeight * factorY
+	if readyToContinue then
+		readyToContinue = false
+		
+		local function repositionAndFadeIn( factorX, factorY )
+			pageText.x = display.contentWidth * factorX
+			pageText.y = display.contentHeight * factorY
 
-            pageText.isVisible = true
-                    
-            fadeTween1 = transition.to( pageText, { time=tweenTime*0.5, alpha=1.0 } )
-        end
-        
-        local function completeTween()
-            animStep = animStep + 1
-            if animStep > 4 then animStep = 1; end
-            
-            readyToContinue = true
-        end
+			pageText.isVisible = true
+					
+			fadeTween1 = transition.to( pageText, { time=tweenTime*0.5, alpha=1.0 } )
+		end
+		
+		local function completeTween()
+			animStep = animStep + 1
+			if animStep > 4 then animStep = 1; end
+			
+			readyToContinue = true
+		end
 
-        local move = function()
-            local function back()
-                transition.to( finger_left, { alpha = 0 } )
-                finger_left.x=display.contentWidth * 0.9
-            end
-            transition.to( finger_left, { alpha = 1 } )
-            transition.to( finger_left, { x=display.contentWidth * 0.7, time=900, onComplete=back})
-            
-        end
-        
-        if animStep == 1 then
-            --animacion de inflado para boton
-            boton.enterFrame = inflate
-            Runtime:addEventListener("enterFrame", boton)
-            --boton queda disponible para ser clickeado
-            boton:addEventListener( "touch", continuarAnimacion )
-            --Se avanza en animStep
-            completeTween()
+		local move = function()
+			local function back()
+				transition.to( finger_left, { alpha = 0 } )
+				finger_left.x=display.contentWidth * 0.9
+			end
+			transition.to( finger_left, { alpha = 1 } )
+			transition.to( finger_left, { x=display.contentWidth * 0.7, time=900, onComplete=back})
+			
+		end
+		
+		if animStep == 1 then
+			--animacion de inflado para boton
+			boton.enterFrame = inflate
+			Runtime:addEventListener("enterFrame", boton)
+			--boton queda disponible para ser clickeado
+			boton:addEventListener( "touch", continuarAnimacion )
+			--Se avanza en animStep
+			completeTween()
 
-            
-        elseif animStep == 2 then
-            --desaparece texto y boton al apretar este ultimo
-            pageText.isVisible=false
-            boton:removeEventListener( "touch", continuarAnimacion )
-            boton.isVisible = false 
-            
-            --entra el puma y luego se infla
-            transition.to( Puma, { time=tweenTime, x=display.contentWidth*0.75, onComplete=pumaReady} )
-        
-            --aparece el científico y habla
-            --cientifico.x, cientifico.y=display.contentWidth*0.15,display.contentHeight*0.5 
-            
-            --Puma queda disponible para ser clickeado
-            Puma:addEventListener( "touch", continuarAnimacion )
+			
+		elseif animStep == 2 then
+			--desaparece texto y boton al apretar este ultimo
+			pageText.isVisible=false
+			boton:removeEventListener( "touch", continuarAnimacion )
+			boton.isVisible = false 
+			
+			--entra el puma y luego se infla
+			transition.to( Puma, { time=tweenTime, x=display.contentWidth*0.75, onComplete=pumaReady} )
+		
+			--aparece el científico y habla
+			--cientifico.x, cientifico.y=display.contentWidth*0.15,display.contentHeight*0.5 
+			
+			--Puma queda disponible para ser clickeado
+			Puma:addEventListener( "touch", continuarAnimacion )
 
-            --Se avanza en animStep
-            completeTween()
+			--Se avanza en animStep
+			completeTween()
 
-        elseif animStep == 3 then
+		elseif animStep == 3 then
 
-            --Se quita la funcionalidad del puma y su inflado
-            Puma.rate, Puma.drate=1,0
-            Puma:removeEventListener( "touch", continuarAnimacion )
-            pageText.isVisible=false
+			--Se quita la funcionalidad del puma y su inflado
+			Puma.rate, Puma.drate=1,0
+			Puma:removeEventListener( "touch", continuarAnimacion )
+			pageText.isVisible=false
 
-            local textOption = 
-                {           
-                    --parent = textGroup,
-                    text = "¡Perdona! Este es un puma y su nombre científico es Felis Concolor",     
-                    width = 500,     --required for multi-line and alignment
-                    font = PTSERIF,   
-                    fontSize = 40,
-                    align = "center"  --new alignment parameter
-            
-                }
+			local textOption = 
+				{           
+					--parent = textGroup,
+					text = "¡Perdona! Este es un puma y su nombre científico es Felis Concolor",     
+					width = 500,     --required for multi-line and alignment
+					font = PTSERIF,   
+					fontSize = 40,
+					align = "center"  --new alignment parameter
+			
+				}
 
-            pageText= display.newText(textOption)
-            pageText.isVisible = true
-            repositionAndFadeIn(0.50,0.25)
-            
+			pageText= display.newText(textOption)
+			pageText.isVisible = true
+			repositionAndFadeIn(0.50,0.25)
+			
 
-        elseif animStep == 4 then
+		elseif animStep == 4 then
 
-          
+		  
 
-        end
+		end
 
-    end
+	end
 end
 
 -- Funcion para verificar si esta página corresponde al marcador, y hacerlo visible.
 local function verificarMarcador()
-    local pagMarcador = composer.getVariable( "paginaMarcador" )
-    local pag_act = composer.getVariable( "pagina" )
+	local pagMarcador = composer.getVariable( "paginaMarcador" )
+	local pag_act = composer.getVariable( "pagina" )
 
-    if pagMarcador == pag_act then
-        transition.to( markerObj, { alpha=1 } )
-    else
-        transition.to( markerObj, { alpha=0.2 } )
-    end
-    return true
+	if pagMarcador == pag_act then
+		transition.to( markerObj, { alpha=1 } )
+	else
+		transition.to( markerObj, { alpha=0.2 } )
+	end
+	return true
 end
 
 -- Funcion para guardar en el archivo los datos del marcador
 local function guardarMarcador()
+
     local ruta = system.pathForFile( "data.txt", system.DocumentsDirectory )
     local pag = composer.getVariable( "paginaMarcador" )
     local tabla
@@ -388,83 +388,83 @@ local function guardarMarcador()
         contenido = json.encode( tabla )
         archivo:write(contenido)
 
-        io.close( archivo )
-    end
-    return true
+		io.close( archivo )
+	end
+	return true
 
 end
 
 -- Funcion que activa el marcador para la página actual.
 local function activarMarcador( event )
 
-    if event.phase == "ended" or event.phase == "cancelled" then
+	if event.phase == "ended" or event.phase == "cancelled" then
 
-        local pagActual = composer.getVariable( "pagina" )
-        local pagMarcador = composer.getVariable( "paginaMarcador" )
+		local pagActual = composer.getVariable( "pagina" )
+		local pagMarcador = composer.getVariable( "paginaMarcador" )
 
-        if pagActual == pagMarcador then
-            transition.to( markerObj, { alpha=0.2 } )
-            composer.setVariable( "paginaMarcador", 0 )
-        else
-            -- Hacer visible el marcador y guardar la pagina
-            transition.to( markerObj, { alpha=1 } )
-            composer.setVariable( "paginaMarcador", pagActual )
-        end
+		if pagActual == pagMarcador then
+			transition.to( markerObj, { alpha=0.2 } )
+			composer.setVariable( "paginaMarcador", 0 )
+		else
+			-- Hacer visible el marcador y guardar la pagina
+			transition.to( markerObj, { alpha=1 } )
+			composer.setVariable( "paginaMarcador", pagActual )
+		end
 
-        guardarMarcador()
-    end
+		guardarMarcador()
+	end
 
-    return true
+	return true
 end
 
 -- Funcion que se activa cuando se toca al puma guia.
 continuarAnimacion = function( event )
 
-    if event.phase == "ended" or event.phase == "cancelled" then
-        showNext()
-    end
+	if event.phase == "ended" or event.phase == "cancelled" then
+		showNext()
+	end
 
-    return true
+	return true
 
 end
 
 
 -- touch event listener for background object
 onPageSwipe = function( self, event )
-    local phase = event.phase
-    local pag_act = composer.getVariable( "pagina" )
+	local phase = event.phase
+	local pag_act = composer.getVariable( "pagina" )
 
-    if phase == "began" then
-        display.getCurrentStage():setFocus( self )
-        self.isFocus = true
-    
-    elseif self.isFocus then
-        if phase == "ended" or phase == "cancelled" then
-            
-            local distance = event.x - event.xStart
-            if math.abs(distance) > swipeThresh then
+	if phase == "began" then
+		display.getCurrentStage():setFocus( self )
+		self.isFocus = true
+	
+	elseif self.isFocus then
+		if phase == "ended" or phase == "cancelled" then
+			
+			local distance = event.x - event.xStart
+			if math.abs(distance) > swipeThresh then
 
-                pag_sig = pag_act - distance/math.abs(distance)
-                pag = "P" .. pag_sig
-                composer.setVariable( "pagina", pag_sig)
+				pag_sig = pag_act - distance/math.abs(distance)
+				pag = "P" .. pag_sig
+				composer.setVariable( "pagina", pag_sig)
 
-                if distance > swipeThresh then
-                    -- deslizar hacia la derecha, pagina anterior
-                    composer.gotoScene( pag, "slideRight", 800 )
-                    pageText.isVisible=false
-                else
-                    -- deslizar a la izquierda, pagina siguiente
-                    composer.gotoScene( pag, "slideLeft", 800 )
-                    pageText.isVisible=false
-                end
+				if distance > swipeThresh then
+					-- deslizar hacia la derecha, pagina anterior
+					composer.gotoScene( pag, "slideRight", 800 )
+					pageText.isVisible=false
+				else
+					-- deslizar a la izquierda, pagina siguiente
+					composer.gotoScene( pag, "slideLeft", 800 )
+					pageText.isVisible=false
+				end
 
-            end
-            
-            display.getCurrentStage():setFocus( nil )
-            self.isFocus = nil
-        end
-    end
-    return true
+			end
+			
+			display.getCurrentStage():setFocus( nil )
+			self.isFocus = nil
+		end
+	end
+	return true
 end
 
 
@@ -472,200 +472,208 @@ end
 
 
 function scene:create( event )
-    local sceneGroup = self.view
+	local sceneGroup = self.view
 
-    -- Called when the scene's view does not exist.
-    -- 
-    -- INSERT code here to initialize the scene
-    -- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
-    
-    -- -- create background image
+	-- Called when the scene's view does not exist.
+	-- 
+	-- INSERT code here to initialize the scene
+	-- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
+	
+	-- -- create background image
 
-    sky = display.newImageRect( "Pagina3/Sky.jpg", display.contentWidth, display.contentHeight )
-    sky.x = display.contentWidth/2
-    sky.y = 182
+	sky = display.newImageRect( "Pagina3/Sky.jpg", display.contentWidth, display.contentHeight )
+	sky.x = display.contentWidth/2
+	sky.y = 182
 
 
-    --pasto derecha
-    grass1 = display.newImageRect( "Pagina3/Grass.png", display.contentWidth+display.contentWidth/100, display.contentHeight)
-    grass1.anchorX=1
-    grass1.x = display.contentWidth*2
-    grass1.y = display.contentHeight/2
-    grass1.speed = 3
-    grass1.type = 3
-    grass1.isVisible= true
+	--pasto derecha
+	grass1 = display.newImageRect( "Pagina3/Grass.png", display.contentWidth+display.contentWidth/100, display.contentHeight)
+	grass1.anchorX=1
+	grass1.x = display.contentWidth*2
+	grass1.y = display.contentHeight/2
+	grass1.speed = 3
+	grass1.type = 3
+	grass1.isVisible= true
 
-    --el de la izquierda
-    grass = display.newImageRect( "Pagina3/Grass.png", display.contentWidth+display.contentWidth/100, display.contentHeight)
-    grass.anchorX=1--el punto de referencia de la imagen es el de la derecha
-    grass.x = display.contentWidth
-    grass.y = display.contentHeight/2
-    grass.speed = 3
-    grass.type = 3
-    grass.isVisible= true
-    
+	--el de la izquierda
+	grass = display.newImageRect( "Pagina3/Grass.png", display.contentWidth+display.contentWidth/100, display.contentHeight)
+	grass.anchorX=1--el punto de referencia de la imagen es el de la derecha
+	grass.x = display.contentWidth
+	grass.y = display.contentHeight/2
+	grass.speed = 3
+	grass.type = 3
+	grass.isVisible= true
+	
 
-    mountain1 = display.newImageRect( "Pagina3/BrownMontain1.png", display.contentWidth*2/3, 480 )
-    mountain1.type = 1
-    mountain1.anchorX=1 --el punto de referencia de la imagen es el de la derecha
-    mountain1.x = display.contentWidth+display.contentWidth/4
-    mountain1.y = 150
-    mountain1.speed = 2
-    mountain1.isVisible=true
+	mountain1 = display.newImageRect( "Pagina3/BrownMontain1.png", display.contentWidth*2/3, 480 )
+	mountain1.type = 1
+	mountain1.anchorX=1 --el punto de referencia de la imagen es el de la derecha
+	mountain1.x = display.contentWidth+display.contentWidth/4
+	mountain1.y = 150
+	mountain1.speed = 2
+	mountain1.isVisible=true
  
-    --mas a la izquierda
-    mountain2 = display.newImageRect( "Pagina3/BrownMontain1.png", display.contentWidth*2/3, 480 )
-    mountain2.anchorX=1 --el punto de referencia de la imagen es el de la derecha
-    mountain2.type = 1
-    mountain2.x = display.contentWidth*2/3
-    mountain2.y = 150
-    mountain2.speed = 2
-    mountain2.isVisible= true
+	--mas a la izquierda
+	mountain2 = display.newImageRect( "Pagina3/BrownMontain1.png", display.contentWidth*2/3, 480 )
+	mountain2.anchorX=1 --el punto de referencia de la imagen es el de la derecha
+	mountain2.type = 1
+	mountain2.x = display.contentWidth*2/3
+	mountain2.y = 150
+	mountain2.speed = 2
+	mountain2.isVisible= true
 
-    --fuera de pantalla
-    mountain3 = display.newImageRect( "Pagina3/BrownMontain1.png", display.contentWidth*2/3, 480 )
-    mountain3.anchorX=1 --el punto de referencia de la imagen es el de la derecha
-    mountain3.type = 1
-    mountain3.x = display.contentWidth+display.contentWidth*5/6
-    mountain3.y = 150
-    mountain3.speed = 2
-    mountain3.isVisible= true
+	--fuera de pantalla
+	mountain3 = display.newImageRect( "Pagina3/BrownMontain1.png", display.contentWidth*2/3, 480 )
+	mountain3.anchorX=1 --el punto de referencia de la imagen es el de la derecha
+	mountain3.type = 1
+	mountain3.x = display.contentWidth+display.contentWidth*5/6
+	mountain3.y = 150
+	mountain3.speed = 2
+	mountain3.isVisible= true
 
-    forest1 = display.newImageRect( "Pagina3/Forest.png", display.contentWidth/2, 263 )
-    forest1.type = 2
-    forest1.x = 200
-    forest1.y = 282
-    forest1.speed = 3
+	--bosque de mas a la izquierda
+	forest1 = display.newImageRect( "Pagina3/Forest.png", display.contentWidth/2+display.contentWidth/20, 263 )
+	forest1.type = 2
+	forest1.anchorX=1 --el punto de referencia de la imagen es el de la derecha  
+	forest1.x = display.contentWidth/2
+	forest1.y = 282
+	forest1.speed = 3
+	forest1.isVisible= true
 
-    forest4 = display.newImageRect( "Pagina3/Forest.png", display.contentWidth/2, 263 )
-    forest4.type = 2
-    forest4.x = 1160
-    forest4.y = 282
-    forest4.speed = 3
+	
+    --tercer bosque de izquierda a derecha
+	forest4 = display.newImageRect( "Pagina3/Forest.png", display.contentWidth/2+display.contentWidth/20, 263 )
+	forest4.type = 2
+	forest4.anchorX=1 --el punto de referencia de la imagen es el de la derecha  
+	forest4.x = display.contentWidth+display.contentWidth/3
+	forest4.y = 282
+	forest4.speed = 3
+	forest4.isVisible= true
+	
+    --segundo de izquierda a derecha
+	forest3 = display.newImageRect( "Pagina3/Forest.png", display.contentWidth/2+display.contentWidth/20, 263 )
+	forest3.type = 2
+	forest3.anchorX=1 --el punto de referencia de la imagen es el de la derecha  
+	forest3.x = display.contentWidth*8/9
+	forest3.y = 282
+	forest3.speed = 3
+	forest3.isVisible= true
 
-    forest3 = display.newImageRect( "Pagina3/Forest.png", display.contentWidth/2, 263 )
-    forest3.type = 2
-    forest3.x = 878
-    forest3.y = 282
-    forest3.speed = 3
+	-- cuarto de izq a der
+	forest2 = display.newImageRect( "Pagina3/Forest.png",display.contentWidth/2+display.contentWidth/20, 263 )
+	forest2.type = 2
+	forest2.anchorX=1 --el punto de referencia de la imagen es el de la derecha  
+	forest2.x = display.contentWidth+display.contentWidth*2/3
+	forest2.y = 282
+	forest2.speed = 3
+	forest2.isVisible= true
 
-    forest2 = display.newImageRect( "Pagina3/Forest.png", display.contentWidth/2, 263 )
-    forest2.type = 2
-    forest2.x = 502
-    forest2.y = 282
-    forest2.speed = 3
-
-    forest5 = display.newImageRect( "Pagina3/Forest.png", display.contentWidth/2, 263 )
-    forest5.type = 2
-    forest5.x = 1536
-    forest5.y = 282
-    forest5.speed = 3
-
+	
    
 
-    boton = display.newImageRect( "Pagina3/boton.png", 50, 50 )
-    boton.x = display.contentWidth*0.9
-    boton.y = display.contentHeight*0.9
-    boton.inf, boton.inflate, boton.rate, boton.drate =  0.15, true, 1, 0.03
+	boton = display.newImageRect( "Pagina3/boton.png", 50, 50 )
+	boton.x = display.contentWidth*0.9
+	boton.y = display.contentHeight*0.9
+	boton.inf, boton.inflate, boton.rate, boton.drate =  0.15, true, 1, 0.03
    
 
-    Puma = display.newImageRect( "Pagina3/Puma.png", 270, 263 )
-    Puma.x, Puma.y = display.contentWidth*1.2, display.contentHeight * 0.65
-    Puma.inf, Puma.inflate, Puma.rate, Puma.drate =  0.05, true, 1, 0.005
+	Puma = display.newImageRect( "Pagina3/Puma.png", 270, 263 )
+	Puma.x, Puma.y = display.contentWidth*1.2, display.contentHeight * 0.65
+	Puma.inf, Puma.inflate, Puma.rate, Puma.drate =  0.05, true, 1, 0.005
 
 
-    cientifico = display.newImageRect("Pagina3/Scientist.png", display.contentWidth * 0.4, display.contentHeight*0.5)
-    cientifico.x, cientifico.y = display.contentWidth*0.2, display.contentHeight * 0.4
-    cientifico.alpha=0
+	cientifico = display.newImageRect("Pagina3/Scientist.png", display.contentWidth * 0.4, display.contentHeight*0.5)
+	cientifico.x, cientifico.y = display.contentWidth*0.2, display.contentHeight * 0.4
+	cientifico.alpha=0
 
-    local textOption = 
-        {           
-            --parent = textGroup,
-            text = "Los niños comenzaron a recorrer el bosque, cuando de repente…",     
-            width = 500,     --required for multi-line andT alignment
-            font = PTSERIF,   
-            fontSize = 40,
-            align = "center"  --new alignment parameter
-    
-        }
+	local textOption = 
+		{           
+			--parent = textGroup,
+			text = "Los niños comenzaron a recorrer el bosque, cuando de repente…",     
+			width = 500,     --required for multi-line andT alignment
+			font = PTSERIF,   
+			fontSize = 40,
+			align = "center"  --new alignment parameter
+	
+		}
 
-    pageText= display.newText(textOption)
+	pageText= display.newText(textOption)
 
-    --pageText = display.newText( "Los niños comenzaron a recorrer el bosque, cuando de repente…", 40, 20, PTSERIF, 40 )
-    
-    pageText.x,pageText.y= display.contentWidth *0.4, display.contentHeight*0.3
+	--pageText = display.newText( "Los niños comenzaron a recorrer el bosque, cuando de repente…", 40, 20, PTSERIF, 40 )
+	
+	pageText.x,pageText.y= display.contentWidth *0.4, display.contentHeight*0.3
    
-    --create marker object
-    markerObj = display.newImageRect("Marcador.png", 80, 120 )
-    markerObj.x, markerObj.y = 40, 60
-    markerObj.alpha = 0.2
+	--create marker object
+	markerObj = display.newImageRect("Marcador.png", 80, 120 )
+	markerObj.x, markerObj.y = 40, 60
+	markerObj.alpha = 0.2
 
 
 end
 
 function scene:show( event )
-    local sceneGroup = self.view
-    local phase = event.phase
-    
-    if phase == "will" then
-        -- Called when the scene is still off screen and is about to move on screen
-    elseif phase == "did" then
-        -- Called when the scene is now on screen
-        -- 
-        -- INSERT code here to make the scene come alive
-        -- e.g. start timers, begin animation, play audio, etc.
+	local sceneGroup = self.view
+	local phase = event.phase
+	
+	if phase == "will" then
+		-- Called when the scene is still off screen and is about to move on screen
+	elseif phase == "did" then
+		-- Called when the scene is now on screen
+		-- 
+		-- INSERT code here to make the scene come alive
+		-- e.g. start timers, begin animation, play audio, etc.
 
-        markerObj.alpha = 0.2
-        verificarMarcador()
+		markerObj.alpha = 0.2
+		verificarMarcador()
 
-        composer.removeScene( composer.getVariable( "paginaAnterior" ) )
+		composer.removeScene( composer.getVariable( "paginaAnterior" ) )
 
-        animStep = 1
-        readyToContinue = true
+		animStep = 1
+		readyToContinue = true
 
-        showNext()
-        markerObj:addEventListener( "touch", activarMarcador )
-        startScrollBackground()
-        
-        
-    end 
+		showNext()
+		markerObj:addEventListener( "touch", activarMarcador )
+		startScrollBackground()
+		
+		
+	end 
 
 end
 
 function scene:hide( event )
-    local sceneGroup = self.view
-    local phase = event.phase
-    
-    if event.phase == "will" then
-        -- Called when the scene is on screen and is about to move off screen
-        --
-        -- INSERT code here to pause the scene
-        -- e.g. stop timers, stop animation, unload sounds, etc.)
-    
-        -- remove touch event listener for background
-        markerObj:removeEventListener( "touch", activarMarcador )
-    
-        -- cancel page animations (if currently active)
-        if pageTween then transition.cancel( pageTween ); pageTween = nil; end
-        if fadeTween1 then transition.cancel( fadeTween1 ); fadeTween1 = nil; end
-        if fadeTween2 then transition.cancel( fadeTween2 ); fadeTween2 = nil; end
+	local sceneGroup = self.view
+	local phase = event.phase
+	
+	if event.phase == "will" then
+		-- Called when the scene is on screen and is about to move off screen
+		--
+		-- INSERT code here to pause the scene
+		-- e.g. stop timers, stop animation, unload sounds, etc.)
+	
+		-- remove touch event listener for background
+		markerObj:removeEventListener( "touch", activarMarcador )
+	
+		-- cancel page animations (if currently active)
+		if pageTween then transition.cancel( pageTween ); pageTween = nil; end
+		if fadeTween1 then transition.cancel( fadeTween1 ); fadeTween1 = nil; end
+		if fadeTween2 then transition.cancel( fadeTween2 ); fadeTween2 = nil; end
 
-        composer.setVariable( "paginaAnterior", "P3" )
-        timer.cancel( handsTimer ); handsTimer = nil;
-        
-    elseif phase == "did" then
+		composer.setVariable( "paginaAnterior", "P3" )
+		timer.cancel( handsTimer ); handsTimer = nil;
+		
+	elseif phase == "did" then
 
-    end     
+	end     
 
 end
 
 function scene:destroy( event )
-    local sceneGroup = self.view
-    
-    -- Called prior to the removal of scene's "view" (sceneGroup)
-    -- 
-    -- INSERT code here to cleanup the scene
-    -- e.g. remove display objects, remove touch listeners, save state, etc.
+	local sceneGroup = self.view
+	
+	-- Called prior to the removal of scene's "view" (sceneGroup)
+	-- 
+	-- INSERT code here to cleanup the scene
+	-- e.g. remove display objects, remove touch listeners, save state, etc.
 end
 
 ---------------------------------------------------------------------------------
