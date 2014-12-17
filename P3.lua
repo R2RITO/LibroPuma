@@ -14,16 +14,49 @@ local json = require("json")
 local   cientifico, pageText, finger_left, sky,
 		pageTween, fadeTween1, fadeTween2, markerObj, retratoPuma, 
 		grass, grass1, forest1, forest2, forest3, forest4, 
-		mountain1, mountain2, mountain3, Puma, cientifico
+		mountain1, mountain2, mountain3, Puma, cientifico, boton,
+        handsTimer
 
 
 
-local continuarAnimacion, onPageSwipe
+local continuarAnimacion, onPageSwipe, onPageTouch
+
+local textGroup = display.newGroup()
 
 local swipeThresh = 100     -- amount of pixels finger must travel to initiate page swipe
 local tweenTime = 4000  --ms
 local animStep = 1
 local readyToContinue = false
+
+
+-- Funciones
+
+local function crearTexto( args )
+
+    local textOption = 
+        {           
+            parent = textGroup,
+            text = args.texto,     
+            width = args.ancho or 900,     --required for multi-line and alignment
+            font = args.fuente or PTSERIF,   
+            fontSize = args.tam or 40,
+            align = "center"  --new alignment parameter
+    
+        }
+
+    return display.newText(textOption)
+end
+
+-- Funcion para reposicionar texto
+local function repositionAndFadeIn( texto, factorX, factorY )
+    texto.x = display.contentWidth * factorX
+    texto.y = display.contentHeight * factorY
+
+    texto.alpha = 0
+    texto.isVisible = true
+            
+    fadeTween1 = transition.to( texto, { time=tweenTime*0.5, alpha=1.0 } )
+end
 
 
 -- local function animPuma()
@@ -184,8 +217,8 @@ local function inflate(self,event)
 	end 
 	
 
-self.xScale = rate 
-self.yScale = rate 
+    self.xScale = rate 
+    self.yScale = rate 
 
 end
 
@@ -222,57 +255,24 @@ local function stopScrollBackground()
 
 end
 
-local function startInflate()
---- Inflado Puma
-   Puma.enterFrame = inflate
-   Runtime:addEventListener("enterFrame", Puma)
-
- end
-
- local function pumaReady()
+local function pumaReady()
 	stopScrollBackground()
-	startInflate()
+
+    Puma.enterFrame = inflate
+    Runtime:addEventListener("enterFrame", Puma)
 
 	--transition.to( cientifico, { time=tweenTime, x=display.contentWidth*0.2, y=display.contentHeight*0.4 ,transition=easing.outExpo } )
 	transition.fadeIn( cientifico, { time=300 } )
+	pageText= crearTexto{texto="¡Observa, es un Felis Concolor!",ancho=500}
+    pageText.isVisible = false
+	repositionAndFadeIn(pageText,0.35,0.2)
 
-  
-
-			local textOption = 
-				{           
-					--parent = textGroup,
-					text = "¡Observa, es un Felis Concolor!",     
-					width = 500,     --required for multi-line and alignment
-					font = PTSERIF,   
-					fontSize = 40,
-					align = "center"  --new alignment parameter
-			
-				}
-	pageText= display.newText(textOption)
-	pageText.isVisible=true
-	--transition.to( pageText, { time=tweenTime*0.5, x=display.contentWidth * 0.35, y = display.contentHeight * 0.2} )
-	
-		   
-	pageText.x = display.contentWidth * 0.35
-	pageText.y = display.contentHeight * 0.2
-
-							  
-
-  end
+end
 
 -- function to show next animation
 local function showNext()
 	if readyToContinue then
 		readyToContinue = false
-		
-		local function repositionAndFadeIn( factorX, factorY )
-			pageText.x = display.contentWidth * factorX
-			pageText.y = display.contentHeight * factorY
-
-			pageText.isVisible = true
-					
-			fadeTween1 = transition.to( pageText, { time=tweenTime*0.5, alpha=1.0 } )
-		end
 		
 		local function completeTween()
 			animStep = animStep + 1
@@ -324,27 +324,39 @@ local function showNext()
 			--Se quita la funcionalidad del puma y su inflado
 			Puma.rate, Puma.drate=1,0
 			Puma:removeEventListener( "touch", continuarAnimacion )
+            Runtime:removeEventListener( "enterFrame", Puma)
+
 			pageText.isVisible=false
-
-			local textOption = 
-				{           
-					--parent = textGroup,
-					text = "¡Perdona! Este es un puma y su nombre científico es Felis Concolor",     
-					width = 500,     --required for multi-line and alignment
-					font = PTSERIF,   
-					fontSize = 40,
-					align = "center"  --new alignment parameter
+			pageText= crearTexto{texto="¡Perdona! Este es un puma y su nombre científico es Felis Concolor", ancho=500}
+			repositionAndFadeIn(pageText,0.50,0.25)
 			
-				}
+            cientifico.enterFrame = inflate
+            Runtime:addEventListener( "enterFrame", cientifico )
+            cientifico:addEventListener( "touch", continuarAnimacion )
 
-			pageText= display.newText(textOption)
-			pageText.isVisible = true
-			repositionAndFadeIn(0.50,0.25)
-			
+            completeTween()
 
 		elseif animStep == 4 then
 
-		  
+		    pageText:removeSelf()
+            Runtime:removeEventListener( "enterFrame", cientifico )
+            cientifico:removeEventListener( "touch", continuarAnimacion )
+
+            Puma.isVisible = false
+
+            pageText = crearTexto{texto="Miremos más de cerca", ancho=500}
+            pageText.isVisible = false
+            repositionAndFadeIn(pageText,0.50,0.25)
+
+            Runtime:removeEventListener( "touch", onPageTouch )
+
+            sky.touch = onPageSwipe
+            sky:addEventListener( "touch", sky )
+
+            finger_left.isVisible = true
+
+            handsTimer = timer.performWithDelay( 1000, move, -1 )
+
 
 		end
 
@@ -481,13 +493,13 @@ function scene:create( event )
 	
 	-- -- create background image
 
-	sky = display.newImageRect( "Pagina3/Sky.jpg", display.contentWidth, display.contentHeight )
+	sky = display.newImageRect( sceneGroup, "Pagina3/Sky.jpg", display.contentWidth, display.contentHeight )
 	sky.x = display.contentWidth/2
 	sky.y = 182
 
 
 	--pasto derecha
-	grass1 = display.newImageRect( "Pagina3/Grass.png", display.contentWidth+display.contentWidth/100, display.contentHeight)
+	grass1 = display.newImageRect( sceneGroup, "Pagina3/Grass.png", display.contentWidth+display.contentWidth/100, display.contentHeight)
 	grass1.anchorX=1
 	grass1.x = display.contentWidth*2
 	grass1.y = display.contentHeight/2
@@ -496,7 +508,7 @@ function scene:create( event )
 	grass1.isVisible= true
 
 	--el de la izquierda
-	grass = display.newImageRect( "Pagina3/Grass.png", display.contentWidth+display.contentWidth/100, display.contentHeight)
+	grass = display.newImageRect( sceneGroup, "Pagina3/Grass.png", display.contentWidth+display.contentWidth/100, display.contentHeight)
 	grass.anchorX=1--el punto de referencia de la imagen es el de la derecha
 	grass.x = display.contentWidth
 	grass.y = display.contentHeight/2
@@ -505,7 +517,7 @@ function scene:create( event )
 	grass.isVisible= true
 	
 
-	mountain1 = display.newImageRect( "Pagina3/BrownMontain1.png", display.contentWidth*2/3, 480 )
+	mountain1 = display.newImageRect( sceneGroup, "Pagina3/BrownMontain1.png", display.contentWidth*2/3, 480 )
 	mountain1.type = 1
 	mountain1.anchorX=1 --el punto de referencia de la imagen es el de la derecha
 	mountain1.x = display.contentWidth+display.contentWidth/4
@@ -514,7 +526,7 @@ function scene:create( event )
 	mountain1.isVisible=true
  
 	--mas a la izquierda
-	mountain2 = display.newImageRect( "Pagina3/BrownMontain1.png", display.contentWidth*2/3, 480 )
+	mountain2 = display.newImageRect( sceneGroup, "Pagina3/BrownMontain1.png", display.contentWidth*2/3, 480 )
 	mountain2.anchorX=1 --el punto de referencia de la imagen es el de la derecha
 	mountain2.type = 1
 	mountain2.x = display.contentWidth*2/3
@@ -523,7 +535,7 @@ function scene:create( event )
 	mountain2.isVisible= true
 
 	--fuera de pantalla
-	mountain3 = display.newImageRect( "Pagina3/BrownMontain1.png", display.contentWidth*2/3, 480 )
+	mountain3 = display.newImageRect( sceneGroup, "Pagina3/BrownMontain1.png", display.contentWidth*2/3, 480 )
 	mountain3.anchorX=1 --el punto de referencia de la imagen es el de la derecha
 	mountain3.type = 1
 	mountain3.x = display.contentWidth+display.contentWidth*5/6
@@ -532,7 +544,7 @@ function scene:create( event )
 	mountain3.isVisible= true
 
 	--bosque de mas a la izquierda
-	forest1 = display.newImageRect( "Pagina3/Forest.png", display.contentWidth/2+display.contentWidth/20, 263 )
+	forest1 = display.newImageRect( sceneGroup, "Pagina3/Forest.png", display.contentWidth/2+display.contentWidth/20, 263 )
 	forest1.type = 2
 	forest1.anchorX=1 --el punto de referencia de la imagen es el de la derecha  
 	forest1.x = display.contentWidth/2
@@ -542,7 +554,7 @@ function scene:create( event )
 
 	
     --tercer bosque de izquierda a derecha
-	forest4 = display.newImageRect( "Pagina3/Forest.png", display.contentWidth/2+display.contentWidth/20, 263 )
+	forest4 = display.newImageRect( sceneGroup, "Pagina3/Forest.png", display.contentWidth/2+display.contentWidth/20, 263 )
 	forest4.type = 2
 	forest4.anchorX=1 --el punto de referencia de la imagen es el de la derecha  
 	forest4.x = display.contentWidth+display.contentWidth/3
@@ -551,7 +563,7 @@ function scene:create( event )
 	forest4.isVisible= true
 	
     --segundo de izquierda a derecha
-	forest3 = display.newImageRect( "Pagina3/Forest.png", display.contentWidth/2+display.contentWidth/20, 263 )
+	forest3 = display.newImageRect( sceneGroup, "Pagina3/Forest.png", display.contentWidth/2+display.contentWidth/20, 263 )
 	forest3.type = 2
 	forest3.anchorX=1 --el punto de referencia de la imagen es el de la derecha  
 	forest3.x = display.contentWidth*8/9
@@ -560,51 +572,41 @@ function scene:create( event )
 	forest3.isVisible= true
 
 	-- cuarto de izq a der
-	forest2 = display.newImageRect( "Pagina3/Forest.png",display.contentWidth/2+display.contentWidth/20, 263 )
+	forest2 = display.newImageRect( sceneGroup, "Pagina3/Forest.png",display.contentWidth/2+display.contentWidth/20, 263 )
 	forest2.type = 2
 	forest2.anchorX=1 --el punto de referencia de la imagen es el de la derecha  
 	forest2.x = display.contentWidth+display.contentWidth*2/3
 	forest2.y = 282
 	forest2.speed = 3
-	forest2.isVisible= true
+	forest2.isVisible= true   
 
-	
-   
-
-	boton = display.newImageRect( "Pagina3/boton.png", 50, 50 )
+	boton = display.newImageRect( sceneGroup, "Pagina3/boton.png", 50, 50 )
 	boton.x = display.contentWidth*0.9
 	boton.y = display.contentHeight*0.9
 	boton.inf, boton.inflate, boton.rate, boton.drate =  0.15, true, 1, 0.03
    
-
-	Puma = display.newImageRect( "Pagina3/Puma.png", 270, 263 )
+	Puma = display.newImageRect( sceneGroup, "Pagina3/Puma.png", 270, 263 )
 	Puma.x, Puma.y = display.contentWidth*1.2, display.contentHeight * 0.65
 	Puma.inf, Puma.inflate, Puma.rate, Puma.drate =  0.05, true, 1, 0.005
 
-
-	cientifico = display.newImageRect("Pagina3/Scientist.png", display.contentWidth * 0.4, display.contentHeight*0.5)
+	cientifico = display.newImageRect( sceneGroup, "Pagina3/Scientist.png", display.contentWidth * 0.4, display.contentHeight*0.5)
 	cientifico.x, cientifico.y = display.contentWidth*0.2, display.contentHeight * 0.4
 	cientifico.alpha=0
 
-	local textOption = 
-		{           
-			--parent = textGroup,
-			text = "Los niños comenzaron a recorrer el bosque, cuando de repente…",     
-			width = 500,     --required for multi-line andT alignment
-			font = PTSERIF,   
-			fontSize = 40,
-			align = "center"  --new alignment parameter
-	
-		}
+    finger_left = display.newImageRect( sceneGroup, "swipeIzq.png", 150, 150 )
+    finger_left.x, finger_left.y = display.contentWidth * 0.9, display.contentHeight * 0.5
+    finger_left.isVisible = false
 
-	pageText= display.newText(textOption)
+	pageText= crearTexto{texto="Los niños comenzaron a recorrer el bosque, cuando de repente…", ancho=500}
 
 	--pageText = display.newText( "Los niños comenzaron a recorrer el bosque, cuando de repente…", 40, 20, PTSERIF, 40 )
 	
 	pageText.x,pageText.y= display.contentWidth *0.4, display.contentHeight*0.3
+
+    sceneGroup:insert(textGroup)
    
 	--create marker object
-	markerObj = display.newImageRect("Marcador.png", 80, 120 )
+	markerObj = display.newImageRect(sceneGroup, "Marcador.png", 80, 120 )
 	markerObj.x, markerObj.y = 40, 60
 	markerObj.alpha = 0.2
 

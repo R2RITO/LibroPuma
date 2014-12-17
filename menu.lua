@@ -79,7 +79,7 @@ function scene:create( event )
     
     -- -- create background image
 
-    fondo = display.newImageRect( sceneGroup, "Menu/fondo.png", display.contentWidth, display.contentHeight )
+    fondo = display.newImageRect( sceneGroup, "Menu/fondo.jpg", display.contentWidth, display.contentHeight )
     fondo.x, fondo.y = display.contentCenterX, display.contentCenterY
     fondo.touch = onPageTouch
 

@@ -251,7 +251,7 @@ local function showNext()
 
             -- Agregar "receptores" para continuar
             fondo.touch = onPageSwipe
-            fondo:addEventListener( "touch", fondo )
+            --fondo:addEventListener( "touch", fondo )
 
             -- Animar ayuda para swipe
             finger_left.isVisible = true

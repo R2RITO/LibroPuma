@@ -14,7 +14,7 @@ local json = require("json")
 local cielo, pasto, cientifico, nube, hojas, bosque, pageText,
         pageTween, fadeTween1, fadeTween2, markerObj, retratoPuma,
         ninos, pumaReal, marcoJungla, botonVolver, finger_left,
-        handsTimer,arbol
+        handsTimer,arbol, tiempoInicio
 
 
 local continuarAnimacion, onPageSwipe
@@ -192,8 +192,8 @@ local function showNext()
 
             botonVolver:removeEventListener( "touch", continuarAnimacion )
             
-            pasto.touch = onPageSwipe
-            pasto:addEventListener( "touch", pasto )
+            background2.touch = onPageSwipe
+            background2:addEventListener( "touch", pasto )
 
             finger_left.isVisible = true
 
@@ -279,11 +279,15 @@ onPageSwipe = function( self, event )
     if phase == "began" then
         display.getCurrentStage():setFocus( self )
         self.isFocus = true
+        self.tiempo = event.time
     
     elseif self.isFocus then
         if phase == "ended" or phase == "cancelled" then
             
             local distance = event.x - event.xStart
+
+            local duracion = event.time - self.tiempo
+
             if math.abs(distance) > swipeThresh then
 
                 pag_sig = pag_act - distance/math.abs(distance)
@@ -300,6 +304,8 @@ onPageSwipe = function( self, event )
                     pageText.isVisible=false
                 end
 
+            elseif duracion > 800 then
+                composer.showOverlay( "menu", {effect="fade",time=900,isModal=true} )
             end
             
             display.getCurrentStage():setFocus( nil )
@@ -309,25 +315,18 @@ onPageSwipe = function( self, event )
     return true
 end
  
-onPageTouch = function( self, event )
+onPageTouch = function( event )
     local phase = event.phase
     local pag_act = composer.getVariable( "pagina" )
 
     if phase == "began" then
-        display.getCurrentStage():setFocus( self )
-        self.isFocus = true
-        self.tiempo = event.time
+        tiempoInicio = event.time
     
-    elseif self.isFocus then
-        if phase == "ended" or phase == "cancelled" then
-            
-            local duracion = event.time - self.tiempo
-            if duracion > 1000 then
-                composer.showOverlay( "menu", {effect="fade",time=900,isModal=true} )
-            end
-            
-            display.getCurrentStage():setFocus( nil )
-            self.isFocus = nil
+    elseif phase == "ended" or phase == "cancelled" then
+        
+        local duracion = event.time - tiempoInicio
+        if duracion > 800 then
+            composer.showOverlay( "menu", {effect="fade",time=900,isModal=true} )
         end
     end
     return true
@@ -434,10 +433,13 @@ function scene:show( event )
         markerObj.isVisible = true
         verificarMarcador()
 
+        sceneGroup:insert(textGroup)
+
         composer.removeScene( composer.getVariable( "paginaAnterior" ) )
 
         animStep = 1
         readyToContinue = true
+        Runtime:addEventListener( "touch", onPageTouch )
 
         showNext()
         markerObj:addEventListener( "touch", activarMarcador )
@@ -466,7 +468,7 @@ function scene:hide( event )
         -- ninos.isVisible = false
     
         -- remove touch event listener for background
-        pasto:removeEventListener( "touch", background )
+        --pasto:removeEventListener( "touch", background )
         markerObj:removeEventListener( "touch", activarMarcador )
     
         -- cancel page animations (if currently active)
