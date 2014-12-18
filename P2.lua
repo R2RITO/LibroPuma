@@ -20,6 +20,22 @@ local onPageSwipe
 local swipeThresh = 100     -- amount of pixels finger must travel to initiate page swipe
 local tweenTime = 900
 
+local function crearTexto( args )
+
+    local textOption = 
+        {           
+            parent = textGroup,
+            text = args.texto,     
+            width = args.ancho or display.contentWidth*0.90,     --required for multi-line and alignment
+            font = args.fuente or PTSERIF1,   
+            fontSize = args.tam or 33,
+            align = "center"  --new alignment parameter
+        
+        }
+
+    return display.newText(textOption)
+end
+
 local function desaparecerGlobo( globo )
     transition.to( globo, { alpha=0 })
     globo.isVisible = false
@@ -49,8 +65,12 @@ local function seleccionCorrecta( self, event )
             juegoCompletado = true
 
             -- Habilitar deslizamiento a página siguiente
-            fondoPreguntas.touch = onPageSwipe
-            fondoPreguntas:addEventListener( "touch", fondoPreguntas )
+            --fondoPreguntas.touch = onPageSwipe
+            --fondoPreguntas:addEventListener( "touch", fondoPreguntas )
+              fondoPreguntas.touch = onPageSwipe
+              fondoPreguntas:addEventListener( "touch", fondoPreguntas )
+              fondoPreguntas1.touch = onPageSwipe
+              fondoPreguntas1:addEventListener( "touch", fondoPreguntas1 )
 
             -- Iniciar animacion de swipe.
 
@@ -68,35 +88,26 @@ local function seleccionCorrecta( self, event )
 
 end
 
+local function repositionAndFadeIn( texto, factorX, factorY )
+    texto.x = display.contentWidth * factorX
+    texto.y = display.contentHeight * factorY
+
+    texto.alpha = 0
+    texto.isVisible = true
+            
+    fadeTween1 = transition.to( texto, { time=tweenTime*0.5, alpha=1.0 } )
+end
+
 local function iniciarJuego()
-        
-    local function repositionAndFadeIn( factorX, factorY )
-        pageText.x = display.contentWidth * factorX
-        pageText.y = display.contentHeight * factorY
+   
 
-        pageText.isVisible = true
-                
-        fadeTween1 = transition.to( pageText, { time=tweenTime*0.5, alpha=1.0 } )
-    end
-
-    pageText.alpha = 0
-
-    local textOption = 
-        {           
-            --parent = textGroup,
-            text = "¡Toca al puma para conocer su hábitat!.",     
-            width = 500,     --required for multi-line andT alignment
-            font = PTSERIF,   
-            fontSize = 60,
-            align = "center"  --new alignment parameter
-    
-        }
-
-    pageText= display.newText(textOption)
+    pageText = crearTexto{texto="Veamos si aprendiste a reconocer a un puma. Toca al puma para continuar el cuento."}
     pageText.isVisible = false
+    pageText:setFillColor( 0, 0, 0 ) -- color negro
+    repositionAndFadeIn( pageText,0.54,0.10 )
 
     cientifico.isVisible = true          
-    repositionAndFadeIn(0.3,0.25)
+    
 
     puma:addEventListener( "touch", puma )
     ave:addEventListener( "touch", ave )
@@ -216,28 +227,42 @@ function scene:create( event )
     
     -- -- create background image
 
-    fondoPreguntas = display.newImageRect( sceneGroup, "Pagina2/fondoPregNegro.jpg", display.contentWidth, display.contentHeight )
-    fondoPreguntas.x, fondoPreguntas.y = display.contentWidth * 0.5, display.contentHeight * 0.5
+    fondoPreguntas = display.newImageRect( sceneGroup, "Portada/capa_1_1.png", display.contentWidth, display.contentHeight)
+    fondoPreguntas.anchorX,fondoPreguntas.anchorY=0,0 --el punto de referencia (0,0) de la imagen es el de la izquierda y arriba
+    fondoPreguntas.x, fondoPreguntas.y = 0, display.contentHeight*0.05
+    fondoPreguntas.isVisible = true
+    
+    --Tal vez sería  recomendable cargar esta imagen como variable local. CARLOS 
+    fondoPreguntas1 = display.newImageRect( sceneGroup, "Portada/capa_1_3.png", display.contentWidth*1.2, display.contentHeight/3)
+    fondoPreguntas1.anchorX,fondoPreguntas1.anchorY=0,1 --el punto de referencia (0,0) de la imagen es el de la izquierda y abajo
+    fondoPreguntas1.x, fondoPreguntas1.y = -display.contentWidth*0.01,display.contentHeight
+    fondoPreguntas1.isVisible = true
 
-    marcoJungla = display.newImageRect( sceneGroup, "Pagina2/JungleFrame.png", display.contentWidth * 1.3, display.contentHeight * 1.3 )
-    marcoJungla.x, marcoJungla.y = display.contentWidth * 0.5, display.contentHeight * 0.5
+    --Tal vez sería  recomendable cargar esta imagen como variable local. CARLOS 
+    backWhite = display.newImageRect( sceneGroup, "Portada/BackgroundWhite.jpg", display.contentWidth, display.contentHeight*0.2)
+    backWhite.anchorX,backWhite.anchorY=0,0 --el punto de referencia (0,0) de la imagen es el de la izquierda y arriba
+    backWhite.x, backWhite.y = 0, 0
+    backWhite.isVisible = true
 
-    cientifico = display.newImageRect( sceneGroup, "Pagina2/Scientist.png", display.contentWidth * 0.4, display.contentHeight*0.5)
-    cientifico.x, cientifico.y = display.contentWidth*0.25, display.contentHeight * 0.6
+    --marcoJungla = display.newImageRect( sceneGroup, "Pagina2/JungleFrame.png", display.contentWidth * 1.3, display.contentHeight * 1.3 )
+    --marcoJungla.x, marcoJungla.y = display.contentWidth * 0.5, display.contentHeight * 0.5
+
+    cientifico = display.newImageRect( sceneGroup, "Pagina2/explorador.png", display.contentWidth * 0.15, display.contentHeight*0.6)
+    cientifico.x, cientifico.y = display.contentWidth*0.84, display.contentHeight * 0.63
     cientifico.isVisible = false
 
-    puma = display.newImageRect( sceneGroup, "Pagina2/puma.png", display.contentWidth * 0.35, display.contentHeight * 0.35 )
-    puma.x, puma.y = display.contentWidth * 0.65, display.contentHeight * 0.7
+    puma = display.newImageRect( sceneGroup, "Pagina2/cilueta_puma.png", display.contentWidth * 0.3, display.contentHeight * 0.3)
+    puma.x, puma.y = display.contentWidth * 0.18, display.contentHeight * 0.635
     puma.sonido = audio.loadSound( "Pagina2/puma.mp3" )
     puma.touch = seleccionCorrecta
 
-    ave = display.newImageRect( sceneGroup, "Pagina2/ave.png", display.contentWidth * 0.15, display.contentHeight * 0.15 )
-    ave.x, ave.y = display.contentWidth * 0.5, display.contentHeight * 0.55
+    ave = display.newImageRect( sceneGroup, "Pagina2/cilueta_paloma.png", display.contentWidth * 0.12, display.contentHeight * 0.15 )
+    ave.x, ave.y = display.contentWidth * 0.2, display.contentHeight * 0.35
     ave.sonido = audio.loadSound( "Pagina2/ave.mp3" )
     ave.touch = seleccionIncorrecta
 
-    caballo = display.newImageRect( sceneGroup, "Pagina2/caballo.png", display.contentWidth * 0.3, display.contentHeight * 0.4 )
-    caballo.x, caballo.y = display.contentWidth * 0.75, display.contentHeight * 0.35
+    caballo = display.newImageRect( sceneGroup, "Pagina2/cilueta_caballo.png", display.contentWidth * 0.2, display.contentHeight * 0.25 )
+    caballo.x, caballo.y = display.contentWidth * 0.65, display.contentHeight * 0.53
     caballo.sonido = audio.loadSound( "Pagina2/caballo.mp3" )
     caballo.touch = seleccionIncorrecta
 

@@ -62,7 +62,7 @@ local function crearTexto( args )
             text = args.texto,     
             width = args.ancho or display.contentWidth*0.90,     --required for multi-line and alignment
             font = args.fuente or PTSERIF1,   
-            fontSize = args.tam or 32,
+            fontSize = args.tam or 33,
             align = "center"  --new alignment parameter
     
         }
@@ -108,7 +108,7 @@ local function showNext()
             pageText = crearTexto{texto="Érase una vez, un grupo de niños que fueron de expedición a la Cordillera de los Andes."}
             pageText.isVisible = false
             pageText:setFillColor( 0, 0, 0 ) -- color negro
-            repositionAndFadeIn( pageText,0.55,0.10 )
+            repositionAndFadeIn( pageText,0.54,0.10 )
 
             transition.to( arbol, { time=tweenTime*1.5, alpha=1.0 } )
             transition.to( ninos, { time=tweenTime*0.5, alpha=1.0, delay=1000 } )
@@ -137,7 +137,7 @@ local function showNext()
             pageText = crearTexto{texto="¡Hola! Hoy podrás acompañarnos en esta aventura. Recorreremos el bosque y es muy posible que nos encontremos con un puma ", tam=30}
             pageText:setFillColor( 0, 0, 0 ) -- color negro
             pageText.isVisible = false
-            repositionAndFadeIn(pageText,0.55,0.10)
+            repositionAndFadeIn(pageText,0.54,0.10)
 
            
             cientifico.enterFrame = inflate
