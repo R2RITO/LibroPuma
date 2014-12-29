@@ -210,9 +210,14 @@ function scene:show( event )
 		transition.to( botonIndice, { time=tweenTime*0.3, alpha=1.0, delay=5000 } )
 		transition.to( indiceText, { time=tweenTime*0.3, alpha=1.0, delay=5000 } )
 		
+		function goGame(  )
+			composer.gotoScene("game","slideLeft", 800)
+		end
 
 		background.touch = onPageSwipe
 		background:addEventListener( "touch", background )
+		logoPUC:addEventListener( "touch", goGame )
+
 	end
 end
 
