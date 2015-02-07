@@ -386,7 +386,7 @@ function scene:create( event )
     nube.x, nube.y = display.contentWidth * 0.8, display.contentHeight * 0.2
 
     --Tal vez sería  recomendable cargar esta imagen como variable local. CARLOS 
-    backWhite = display.newImageRect( sceneGroup, "Portada/BackgroundWhite.jpg", display.contentWidth, display.contentHeight*0.2)
+    backWhite = display.newImageRect( sceneGroup, "Pagina1/BackgroundWhite.jpg", display.contentWidth, display.contentHeight*0.2)
     backWhite.anchorX,backWhite.anchorY=0,0 --el punto de referencia (0,0) de la imagen es el de la izquierda y arriba
     backWhite.x, backWhite.y = 0, 0
     backWhite.isVisible = true
