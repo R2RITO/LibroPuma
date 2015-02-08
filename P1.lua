@@ -11,10 +11,8 @@ local json = require("json")
 
 
 -- forward declarations and other locals
-local cielo, pasto, cientifico, nube, hojas, bosque, pageText,
-        pageTween, fadeTween1, fadeTween2, markerObj, retratoPuma,
-        ninos, pumaReal, marcoJungla, botonVolver, finger_left,
-        handsTimer,arbol, tiempoInicio, square
+local   cientifico, pageTween, fadeTween1, fadeTween2, markerObj, retratoPuma,
+        ninos, botonVolver, finger_left, handsTimer, tiempoInicio, square
 
 
 local continuarAnimacion, onPageSwipe
@@ -40,8 +38,8 @@ local function inflate(self,event)
         self.inflar =  true
     end 
 
-self.xScale = self.cuaninflado
-self.yScale = self.cuaninflado 
+    self.xScale = self.cuaninflado
+    self.yScale = self.cuaninflado 
 
 end 
 
@@ -105,13 +103,7 @@ local function showNext()
         
         if animStep == 1 then
 
-            pageText = crearTexto{texto="Érase una vez, un grupo de niños que fueron de expedición a la Cordillera de los Andes."}
-            pageText.isVisible = false
-            pageText:setFillColor( 0, 0, 0 ) -- color negro
-            repositionAndFadeIn( pageText,0.54,0.10 )
-
-            transition.to( arbol, { time=tweenTime*1.5, alpha=1.0 } )
-            transition.to( ninos, { time=tweenTime*0.5, alpha=1.0, delay=1000 } )
+            fadeTween1 = transition.to( ninos, { time=tweenTime*0.5, alpha=1.0, delay=1000 } )
 
             ninos.isVisible = true  
            
@@ -124,22 +116,16 @@ local function showNext()
 
         elseif animStep == 2 then
 
-            pageText:removeSelf()
-
             -- Eliminar funciones anteriores
             ninos:removeEventListener( "touch", continuarAnimacion )
             Runtime:removeEventListener("enterFrame",ninos)
+
+            fadeTween1 = transition.dissolve( background, background2, 500, 0 )
             
             cientifico.isVisible = true  
             ninos.isVisible = false
             transition.to( cientifico, { time=tweenTime, x=display.contentWidth*0.25 ,transition=easing.outExpo } )
-
-            pageText = crearTexto{texto="¡Hola! Hoy podrás acompañarnos en esta aventura. Recorreremos el bosque y es muy posible que nos encontremos con un puma ", tam=30}
-            pageText:setFillColor( 0, 0, 0 ) -- color negro
-            pageText.isVisible = false
-            repositionAndFadeIn(pageText,0.54,0.10)
-
-           
+          
             cientifico.enterFrame = inflate
             Runtime:addEventListener("enterFrame", cientifico)
             cientifico:addEventListener( "touch", continuarAnimacion )
@@ -147,29 +133,20 @@ local function showNext()
             
 
         elseif animStep == 3 then
-             pageText:removeSelf()
 
              -- Eliminar funciones anteriores
             cientifico:removeEventListener( "touch", continuarAnimacion )
             Runtime:removeEventListener("enterFrame",cientifico)
 
+            fadeTween1 = transition.dissolve( background2, background3, 500, 0 )
+
             cientifico2.isVisible = true  
             cientifico.isVisible = false
             transition.to( cientifico2, { time=tweenTime, x=display.contentWidth*0.25 ,transition=easing.outExpo } )
 
-            pageText.alpha = 0
-
-            pageText = crearTexto{texto="Por si no lo conoces, aquí te muestro una foto"}
-            pageText:setFillColor( 0, 0, 0 ) -- color negro
-            pageText.isVisible = false
-            repositionAndFadeIn(pageText,0.50,0.10)
-
-
             retratoPuma.isVisible = true
             retratoPuma:toFront( )
-            transition.to( retratoPuma, { time=tweenTime, x=display.contentWidth*0.345 ,transition=easing.outExpo } )
-
-
+            transition.to( retratoPuma, { time=tweenTime, x=display.contentWidth*0.228 ,transition=easing.outExpo } )
 
             retratoPuma.enterFrame = inflate
             Runtime:addEventListener("enterFrame", retratoPuma)
@@ -177,17 +154,15 @@ local function showNext()
             completeTween()
 
         elseif animStep == 4 then
-            pageText:removeSelf()
-        -- Eliminar funciones anteriores
+
+            -- Eliminar funciones anteriores
             retratoPuma:removeEventListener( "touch", continuarAnimacion )
             Runtime:removeEventListener("enterFrame",retratoPuma)
 
-
-            square.isVisible=true
             botonVolver.isVisible=true
 
-            transition.to( retratoPuma, { time=tweenTime*3, width= display.contentWidth*0.4,height= display.contentHeight*0.7, x=display.contentCenterX, rotation=0,transition=easing.outExpo } )
-            transition.to( square, { time=tweenTime*3, x=display.contentCenterX,  width= display.contentWidth,height= display.contentHeight, rotation=0,transition=easing.outExpo } )
+            transition.to( retratoPuma, { time=tweenTime*3, width= display.contentWidth, height= display.contentHeight, 
+                                          x=display.contentCenterX, rotation=0, transition=easing.outExpo } )
             transition.to( botonVolver, { time=tweenTime, delay=1000,x=display.contentWidth*0.9,alpha=1, transition=easing.outExpo } )
 
 
@@ -370,79 +345,48 @@ function scene:create( event )
     
     -- -- create background image
 
-    --Tal vez sería  recomendable cargar esta imagen como variable local. CARLOS 
-    background = display.newImageRect( sceneGroup, "Pagina1/capa_2.png", display.contentWidth+display.contentWidth/10, display.contentHeight*0.84)
-    background.anchorX,background.anchorY=0,0 --el punto de referencia (0,0) de la imagen es el de la izquierda y arriba
-    background.x, background.y = -display.contentWidth*0.02, display.contentHeight*0.14
+    -- Fondos para cada una de las transiciones. 
+    background = display.newImageRect( sceneGroup, "Pagina1/fondo1.png", display.contentWidth, display.contentHeight)
+    background.x, background.y = display.contentCenterX, display.contentCenterY
     background.isVisible = true
+
+    background2 = display.newImageRect( sceneGroup, "Pagina1/fondo2.png", display.contentWidth, display.contentHeight)
+    background2.x, background2.y = display.contentCenterX, display.contentCenterY
+    background2.isVisible = false
+
+    background3 = display.newImageRect( sceneGroup, "Pagina1/fondo3.png", display.contentWidth, display.contentHeight)
+    background3.x, background3.y = display.contentCenterX, display.contentCenterY
+    background3.isVisible = false
+
+    background4 = display.newImageRect( sceneGroup, "Pagina1/fondo4.png", display.contentWidth, display.contentHeight)
+    background4.x, background4.y = display.contentCenterX, display.contentCenterY
+    background4.isVisible = false
     
-    --Tal vez sería  recomendable cargar esta imagen como variable local. CARLOS 
-    background2 = display.newImageRect( sceneGroup, "Pagina1/capa_2_1.png", display.contentWidth+display.contentWidth/10, display.contentHeight*0.84)
-    background2.anchorX,background2.anchorY=0,1 --el punto de referencia (0,0) de la imagen es el de la izquierda y abajo
-    background2.x, background2.y = -display.contentWidth*0.1,display.contentHeight
-    background2.isVisible = true
-    
-    nube = display.newImageRect( sceneGroup, "Pagina1/nubes.png", display.contentWidth*0.8, display.contentHeight*0.1 )
-    nube.x, nube.y = display.contentWidth * 0.8, display.contentHeight * 0.2
-
-    --Tal vez sería  recomendable cargar esta imagen como variable local. CARLOS 
-    backWhite = display.newImageRect( sceneGroup, "Pagina1/BackgroundWhite.jpg", display.contentWidth, display.contentHeight*0.2)
-    backWhite.anchorX,backWhite.anchorY=0,0 --el punto de referencia (0,0) de la imagen es el de la izquierda y arriba
-    backWhite.x, backWhite.y = 0, 0
-    backWhite.isVisible = true
-  
-    
-    arbol = display.newImageRect( sceneGroup, "Pagina1/arbol_2.png", display.contentWidth*0.4, display.contentHeight*0.7)
-    arbol.anchorX,arbol.anchorY=0,1 --el punto de referencia (0,0) de la imagen es el de la izquierda y abajo
-    arbol.x, arbol.y = display.contentWidth*0.6,display.contentHeight*0.9
-    arbol.isVisible = true
-    arbol.alpha=0
-
-    hojas = display.newImageRect( sceneGroup, "Pagina1/Hojas2.png", display.contentWidth * 0.45, display.contentHeight * 0.65 )
-    hojas.x, hojas.y = display.contentWidth * -2, display.contentHeight * 0.7
-    hojas.isVisible = false
-
-    bosque = display.newImageRect( sceneGroup, "Pagina1/Forest.png", display.contentWidth * 0.6, display.contentHeight * 0.4 )
-    bosque.x, bosque.y = display.contentWidth * -2, display.contentHeight * 0.3
-    bosque.isVisible = false
-
+    -- Explorador.
     cientifico = display.newImageRect( sceneGroup, "Pagina1/explorador.png",   display.contentWidth * 0.15, display.contentHeight*0.6)
     cientifico.x, cientifico.y = display.contentWidth * 0.3, display.contentHeight * 0.6
     cientifico.isVisible, cientifico.maximoinflado, cientifico.inflar, cientifico.cuaninflado = false, 0.05, true, 1
 
-    cientifico2 = display.newImageRect( sceneGroup, "Pagina1/explorador_2.png",   display.contentWidth * 0.25, display.contentHeight*0.6)
+    cientifico2 = display.newImageRect( sceneGroup, "Pagina1/explorador_foto.png",   display.contentWidth * 0.4, display.contentHeight*0.6)
     cientifico2.x, cientifico2.y = display.contentWidth * 0.3, display.contentHeight * 0.6
     cientifico2.isVisible, cientifico2.maximoinflado, cientifico.inflar, cientifico.cuaninflado = false, 0.05, true, 1
 
-
-    retratoPuma = display.newImageRect( sceneGroup, "Pagina1/puma_sentado_1.png", display.contentWidth * 0.03, display.contentHeight * 0.07 )
-    retratoPuma.x, retratoPuma.y = display.contentWidth * 0.4, display.contentHeight * 0.55
-    retratoPuma.rotation= -10
+    -- Foto real del puma
+    retratoPuma = display.newImageRect( sceneGroup, "Pagina1/pumaReal.jpg", display.contentWidth * 0.03, display.contentHeight * 0.07 )
+    retratoPuma.x, retratoPuma.y = display.contentWidth * 0.4, display.contentHeight * 0.56
+    retratoPuma.rotation = -10
     retratoPuma.isVisible = false
     retratoPuma.isVisible, retratoPuma.maximoinflado, retratoPuma.inflar, retratoPuma.cuaninflado = false, 0.05, true, 1
-
-    -- pumaReal = display.newImageRect( sceneGroup, "Pagina1/puma_sentado_1.png", display.contentWidth, display.contentHeight )
-    -- pumaReal.x, pumaReal.y = -display.contentCenterX, display.contentCenterY
-    -- pumaReal.isVisible = false
-
-    marcoJungla = display.newImageRect( sceneGroup, "Pagina1/JungleFrame.png", display.contentWidth * 1.3, display.contentHeight * 1.3 )
-    marcoJungla.x, marcoJungla.y = display.contentCenterX * 4, display.contentCenterY
-    marcoJungla.isVisible = false
-
-    square = display.newRect(sceneGroup, display.contentWidth * 0.345, display.contentHeight * 0.55, display.contentWidth*0.05, display.contentHeight *0.07)
-    square:setFillColor(1,1,1)
-    square.isVisible,square.rotation=false,-10
-
 
     botonVolver = display.newImageRect( sceneGroup, "Pagina1/botonVolver.png", display.contentWidth * 0.15, display.contentHeight * 0.2 )
     botonVolver.x, botonVolver.y = display.contentWidth * 0.8, display.contentHeight * 0.85
     botonVolver.isVisible, botonVolver.alpha = true, 0
     botonVolver.isVisible, botonVolver.maximoinflado, botonVolver.inflar, botonVolver.cuaninflado = false, 0.05, true, 1
 
-    ninos = display.newImageRect( sceneGroup, "Pagina1/ninios.png", display.contentWidth * 0.4, display.contentHeight * 0.4 )
+    ninos = display.newImageRect( sceneGroup, "Pagina1/ninos_lupa.png", display.contentWidth * 0.4, display.contentHeight * 0.4 )
     ninos.x, ninos.y = display.contentWidth * 0.3, display.contentHeight * 0.7
     ninos.isVisible, ninos.maximoinflado, ninos.inflar, ninos.cuaninflado = false, 0.05, true, 1
-    ninos.alpha=0
+    ninos.alpha = 0
 
     finger_left = display.newImageRect( sceneGroup, "swipeIzq.png", 150, 150 )
     finger_left.x, finger_left.y = display.contentWidth * 0.9, display.contentHeight * 0.5

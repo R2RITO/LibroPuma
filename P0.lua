@@ -10,7 +10,7 @@ local scene = composer.newScene()
 --------------------------------------------
 
 -- forward declaration
-local background, botonIndice, botonComenzar
+local background, botonIndice, botonComenzar, onPageSwipe
 local swipeThresh = 100 
 local tweenTime = 900
 
@@ -55,6 +55,19 @@ onPageSwipe = function( self, event )
     return true
 end
 
+local function comenzarCuento( event )
+	local phase = event.phase
+
+	if phase == "ended" or phase == "cancelled" then
+	    local pag_sig = 1
+	    local pag = "P" .. pag_sig
+	    composer.setVariable( "pagina", pag_sig)	
+	    composer.gotoScene( pag, "slideLeft", 800 )	
+	end
+
+	return true
+end
+
 
 function scene:create( event )
 	local sceneGroup = self.view
@@ -74,11 +87,13 @@ function scene:create( event )
 	botonIndice.x, botonIndice.y = display.contentWidth * 0.85,display.contentHeight*0.55
 	botonIndice.isVisible = true
 	botonIndice.alpha=1
+	botonIndice:addEventListener("touch", moverAIndice)
 
 	botonComenzar = display.newImageRect( sceneGroup, "Portada/comenzar.png", display.contentWidth*0.20, display.contentHeight*0.12)
 	botonComenzar.x, botonComenzar.y = display.contentWidth * 0.9,display.contentHeight*0.70
 	botonComenzar.isVisible = true
 	botonComenzar.alpha=1
+	botonComenzar:addEventListener( "touch", comenzarCuento )
 
 
 		
@@ -107,8 +122,8 @@ function scene:show( event )
 		end
 		pag = nil
 		
-		background.touch = onPageSwipe
-		background:addEventListener( "touch", background )
+		--background.touch = onPageSwipe
+		--background:addEventListener( "touch", background )
 	end
 end
 

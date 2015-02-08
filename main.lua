@@ -16,7 +16,7 @@ local botonInicio, botonIndice, botonMarcador
 
 --Font
 
-CustFont = display.newText( "PTSerif-Regular", 40, 20, "PT Serif", 24 )
+--CustFont = display.newText( "PTSerif-Regular", 40, 20, "PT Serif", 24 )
 
 if "Win" == system.getInfo( "platformName" ) then
     PTSERIF = "Austie Bost Kitten Klub"
@@ -41,8 +41,9 @@ end
 function moverAIndice( event )
 	if event.phase == "ended" or event.phase == "cancelled" then
 		composer.setVariable( "pagina" , 0 )
-		composer.gotoScene( "P0", "fade" )
+		composer.gotoScene( "Indice", "fade" )
 	end
+	return true
 end
 
 function moverAInicio( event )
@@ -50,6 +51,7 @@ function moverAInicio( event )
 		composer.setVariable( "pagina" , 0 )
 		composer.gotoScene( "P0", "fade" )
 	end
+	return true
 end
 
 function moverAMarcador( event )
@@ -60,6 +62,7 @@ function moverAMarcador( event )
 	    print( composer.getVariable("pagina") )
 		composer.gotoScene( pag, "fade" )
 	end
+	return true
 end
 
 local function cargarData()

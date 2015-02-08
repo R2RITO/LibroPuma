@@ -36,7 +36,9 @@ local function crearTexto( args )
     
         }
 
-    return display.newText(textOption)
+    local txt = display.newText(textOption)
+    txt:setTextColor( 0, 0, 0 )
+    return txt
 end
 
 
@@ -117,11 +119,11 @@ function scene:create( event )
     
     -- Fondo
 
-    fondo = display.newImageRect( sceneGroup, "Indice/fondo.jpg", display.contentWidth, display.contentHeight )
+    fondo = display.newImageRect( sceneGroup, "Indice/fondo.png", display.contentWidth, display.contentHeight )
     fondo.x, fondo.y = display.contentCenterX, display.contentCenterY 
 
-    titulo = crearTexto{texto="Índice", tam=50}
-    repositionAndFadeIn(titulo, 0.5, 0.1)
+    -- titulo = crearTexto{texto="Índice", tam=50}
+    -- repositionAndFadeIn(titulo, 0.5, 0.1)
 
     -- Texto e imagen de cada página
     sceneGroup:insert(textGroup)
@@ -130,10 +132,10 @@ function scene:create( event )
     textoP2, fondoP2 = crearElementoIndice("Juego de reconocimiento", "Indice/pag1.png", 0.3, 2, sceneGroup)
     textoP3, fondoP3 = crearElementoIndice("Nombre científico", "Indice/pag1.png", 0.4, 3, sceneGroup)
     textoP4, fondoP4 = crearElementoIndice("Tamaño y peso","Indice/pag1.png", 0.5, 4, sceneGroup)
-    textoP5, fondoP5 = crearElementoIndice("Dieta", "Indice/pag1.png", 0.6, 1, sceneGroup)
-    textoP6, fondoP6 = crearElementoIndice("Juego acerca de la dieta", "Indice/pag1.png", 0.7, 1, sceneGroup)
-    textoP7, fondoP7 = crearElementoIndice("Reproducción","Indice/pag1.png", 0.8, 1, sceneGroup)
-    textoP8, fondoP8 = crearElementoIndice("Protección", "Indice/pag1.png", 0.9, 1, sceneGroup)
+    textoP5, fondoP5 = crearElementoIndice("Dieta", "Indice/pag1.png", 0.6, 0, sceneGroup)
+    textoP6, fondoP6 = crearElementoIndice("Juego acerca de la dieta", "Indice/pag1.png", 0.7, 0, sceneGroup)
+    textoP7, fondoP7 = crearElementoIndice("Reproducción","Indice/pag1.png", 0.8, 0, sceneGroup)
+    textoP8, fondoP8 = crearElementoIndice("Protección", "Indice/pag1.png", 0.9, 0, sceneGroup)
 
 end
 
