@@ -39,6 +39,7 @@ local function moverAMarcador( event )
         pag_sig = composer.getVariable( "paginaMarcador" )
         composer.setVariable( "pagina" , pag_sig )
         composer.setVariable( "paginaAnterior", "menu")
+        print(pag_sig .. " Marc")
         composer.gotoScene( pag, "fade" )
     end
     return true
@@ -79,21 +80,21 @@ function scene:create( event )
     
     -- -- create background image
 
-    fondo = display.newImageRect( sceneGroup, "Menu/fondo.jpg", display.contentWidth, display.contentHeight )
+    fondo = display.newImageRect( sceneGroup, "Menu/fondoMenu.jpg", display.contentWidth, display.contentHeight )
     fondo.x, fondo.y = display.contentCenterX, display.contentCenterY
     fondo.touch = onPageTouch
 
     botonIndice = display.newImageRect( sceneGroup, "Menu/bIndice.png", 160, 160 )
-    botonIndice.x = 205
-    botonIndice.y = display.contentHeight - 57
+    botonIndice.x = display.contentWidth * 0.3
+    botonIndice.y = display.contentCenterY
 
     botonInicio = display.newImageRect( sceneGroup, "Menu/bInicio.png", 160, 160 )
-    botonInicio.x = 70
-    botonInicio.y = display.contentHeight - 57
+    botonInicio.x = display.contentWidth * 0.5
+    botonInicio.y = display.contentCenterY
 
     botonMarcador = display.newImageRect( sceneGroup, "Menu/bMarcador.png", 160, 160 )
-    botonMarcador.x = 340
-    botonMarcador.y = display.contentHeight - 57
+    botonMarcador.x = display.contentWidth * 0.7
+    botonMarcador.y = display.contentCenterY
 
     fondo:addEventListener( "touch", fondo )
     botonIndice:addEventListener( "touch", moverAIndice )

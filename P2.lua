@@ -190,11 +190,15 @@ onPageSwipe = function( self, event )
     if phase == "began" then
         display.getCurrentStage():setFocus( self )
         self.isFocus = true
+        self.tiempo = event.time
     
     elseif self.isFocus then
         if phase == "ended" or phase == "cancelled" then
             
             local distance = event.x - event.xStart
+
+            local duracion = event.time - self.tiempo
+
             if math.abs(distance) > swipeThresh then
 
                 pag_sig = pag_act - distance/math.abs(distance)
@@ -209,10 +213,29 @@ onPageSwipe = function( self, event )
                     composer.gotoScene( pag, "slideLeft", 800 )
                 end
 
+            elseif duracion > 800 then
+                composer.showOverlay( "menu", {effect="fade",time=900,isModal=true} )
             end
             
             display.getCurrentStage():setFocus( nil )
             self.isFocus = nil
+        end
+    end
+    return true
+end
+
+onPageTouch = function( event )
+    local phase = event.phase
+    local pag_act = composer.getVariable( "pagina" )
+
+    if phase == "began" then
+        tiempoInicio = event.time
+    
+    elseif phase == "ended" or phase == "cancelled" then
+        
+        local duracion = event.time - tiempoInicio
+        if duracion > 800 then
+            composer.showOverlay( "menu", {effect="fade",time=900,isModal=true} )
         end
     end
     return true
@@ -285,6 +308,8 @@ function scene:show( event )
         markerObj.isVisible = true
         verificarMarcador()
 
+        Runtime:addEventListener( "touch", onPageTouch )
+
         composer.removeScene( composer.getVariable( "paginaAnterior" ) )
 
         juegoCompletado = false
@@ -317,8 +342,9 @@ function scene:hide( event )
         if pageTween then transition.cancel( pageTween ); pageTween = nil; end
         if fadeTween1 then transition.cancel( fadeTween1 ); fadeTween1 = nil; end
         if fadeTween2 then transition.cancel( fadeTween2 ); fadeTween2 = nil; end
+        Runtime:removeEventListener( "touch", onPageTouch )
 
-        timer.cancel( handsTimer ); handsTimer = nil;
+        if handsTimer then timer.cancel( handsTimer ); handsTimer = nil; end
         
     elseif phase == "did" then
         -- Called when the scene is now off screen

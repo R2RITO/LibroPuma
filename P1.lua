@@ -446,8 +446,10 @@ function scene:hide( event )
         if fadeTween1 then transition.cancel( fadeTween1 ); fadeTween1 = nil; end
         if fadeTween2 then transition.cancel( fadeTween2 ); fadeTween2 = nil; end
 
+        Runtime:removeEventListener( "touch", onPageTouch )
+
         composer.setVariable( "paginaAnterior", "P1" )
-        timer.cancel( handsTimer ); handsTimer = nil;
+        if handsTimer then timer.cancel( handsTimer ); handsTimer = nil; end
         
     elseif phase == "did" then
 

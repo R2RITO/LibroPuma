@@ -87,13 +87,14 @@ local function zoomVistaPrevia( self, event )
 end
 
 -- Funcion para crear el texto y la imagen de muestra de una pagina
-local function crearElementoIndice( textoPag, ruta, factorY, pag, sceneGroup)
+local function crearElementoIndice( rutaTexto, factorXTexto, ruta, factorY, pag, sceneGroup)
 
-    local textoFinal = crearTexto{texto=textoPag}
-    repositionAndFadeIn(textoFinal, 0.4, factorY)
+    local textoFinal = display.newImageRect( sceneGroup, rutaTexto, display.contentWidth * factorXTexto, display.contentHeight * 0.07 )
+    textoFinal.anchorX = 0.0
+    textoFinal.x, textoFinal.y = display.contentWidth * 0.25, display.contentHeight * factorY
 
     local fondoFinal = display.newImageRect( sceneGroup, ruta, display.contentWidth * 0.7, display.contentHeight * 0.7 )
-    fondoFinal.x, fondoFinal.y = (display.contentWidth * 0.1) - 40, (display.contentHeight * factorY) - (64 * (0.5 - factorY))
+    fondoFinal.x, fondoFinal.y = (display.contentWidth * 0.15) - 40, (display.contentHeight * factorY) - (64 * (0.5 - factorY))
     fondoFinal.xScale, fondoFinal.yScale = 0.12, 0.12
     fondoFinal.anchorX, fondoFinal.anchorY = 0, factorY
     fondoFinal.activo, fondoFinal.factorY = false, factorY
@@ -128,14 +129,14 @@ function scene:create( event )
     -- Texto e imagen de cada página
     sceneGroup:insert(textGroup)
 
-    textoP1, fondoP1 = crearElementoIndice("Introducción","Indice/pag1.png", 0.2, 1, sceneGroup)
-    textoP2, fondoP2 = crearElementoIndice("Juego de reconocimiento", "Indice/pag1.png", 0.3, 2, sceneGroup)
-    textoP3, fondoP3 = crearElementoIndice("Nombre científico", "Indice/pag1.png", 0.4, 3, sceneGroup)
-    textoP4, fondoP4 = crearElementoIndice("Tamaño y peso","Indice/pag1.png", 0.5, 4, sceneGroup)
-    textoP5, fondoP5 = crearElementoIndice("Dieta", "Indice/pag1.png", 0.6, 0, sceneGroup)
-    textoP6, fondoP6 = crearElementoIndice("Juego acerca de la dieta", "Indice/pag1.png", 0.7, 0, sceneGroup)
-    textoP7, fondoP7 = crearElementoIndice("Reproducción","Indice/pag1.png", 0.8, 0, sceneGroup)
-    textoP8, fondoP8 = crearElementoIndice("Protección", "Indice/pag1.png", 0.9, 0, sceneGroup)
+    textoP1, fondoP1 = crearElementoIndice("Indice/intro.png", 0.26, "Indice/p1.png", 0.2, 1, sceneGroup)
+    textoP2, fondoP2 = crearElementoIndice("Indice/juego_rec.png", 0.36, "Indice/p2.png", 0.3, 2, sceneGroup)
+    textoP3, fondoP3 = crearElementoIndice("Indice/nombre_cientifico.png", 0.28, "Indice/p3.png", 0.4, 3, sceneGroup)
+    textoP4, fondoP4 = crearElementoIndice("Indice/tamano.png", 0.28, "Indice/p4.png", 0.5, 4, sceneGroup)
+    textoP5, fondoP5 = crearElementoIndice("Indice/dieta.png", 0.15, "Indice/p1.png", 0.6, 0, sceneGroup)
+    textoP6, fondoP6 = crearElementoIndice("Indice/juego_dieta.png", 0.26, "Indice/p1.png", 0.7, 0, sceneGroup)
+    textoP7, fondoP7 = crearElementoIndice("Indice/reproduccion.png", 0.28, "Indice/p1.png", 0.8, 0, sceneGroup)
+    textoP8, fondoP8 = crearElementoIndice("Indice/proteccion.png", 0.26, "Indice/p1.png", 0.9, 0, sceneGroup)
 
 end
 

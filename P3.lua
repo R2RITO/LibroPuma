@@ -220,38 +220,61 @@ end
 
 -- touch event listener for background object
 onPageSwipe = function( self, event )
-	local phase = event.phase
-	local pag_act = composer.getVariable( "pagina" )
+    local phase = event.phase
+    local pag_act = composer.getVariable( "pagina" )
 
-	if phase == "began" then
-		display.getCurrentStage():setFocus( self )
-		self.isFocus = true
-	
-	elseif self.isFocus then
-		if phase == "ended" or phase == "cancelled" then
-			
-			local distance = event.x - event.xStart
-			if math.abs(distance) > swipeThresh then
+    if phase == "began" then
+        display.getCurrentStage():setFocus( self )
+        self.isFocus = true
+        self.tiempo = event.time
+    
+    elseif self.isFocus then
+        if phase == "ended" or phase == "cancelled" then
+            
+            local distance = event.x - event.xStart
 
-				pag_sig = pag_act - distance/math.abs(distance)
-				pag = "P" .. pag_sig
-				composer.setVariable( "pagina", pag_sig)
+            local duracion = event.time - self.tiempo
 
-				if distance > swipeThresh then
-					-- deslizar hacia la derecha, pagina anterior
-					composer.gotoScene( pag, "slideRight", 800 )
-				else
-					-- deslizar a la izquierda, pagina siguiente
-					composer.gotoScene( pag, "slideLeft", 800 )
-				end
+            if math.abs(distance) > swipeThresh then
 
-			end
-			
-			display.getCurrentStage():setFocus( nil )
-			self.isFocus = nil
-		end
-	end
-	return true
+                pag_sig = pag_act - distance/math.abs(distance)
+                pag = "P" .. pag_sig
+                composer.setVariable( "pagina", pag_sig)
+
+                if distance > swipeThresh then
+                    -- deslizar hacia la derecha, pagina anterior
+                    composer.gotoScene( pag, "slideRight", 800 )
+                else
+                    -- deslizar a la izquierda, pagina siguiente
+                    composer.gotoScene( pag, "slideLeft", 800 )
+                end
+
+            elseif duracion > 800 then
+                composer.showOverlay( "menu", {effect="fade",time=900,isModal=true} )
+            end
+            
+            display.getCurrentStage():setFocus( nil )
+            self.isFocus = nil
+        end
+    end
+    return true
+end
+
+onPageTouch = function( event )
+    local phase = event.phase
+    local pag_act = composer.getVariable( "pagina" )
+
+    if phase == "began" then
+        tiempoInicio = event.time
+    
+    elseif phase == "ended" or phase == "cancelled" then
+        
+        local duracion = event.time - tiempoInicio
+        if duracion > 800 then
+            composer.showOverlay( "menu", {effect="fade",time=900,isModal=true} )
+        end
+    end
+    return true
 end
 
 function scene:create( event )
@@ -296,6 +319,7 @@ function scene:show( event )
 		verificarMarcador()
 
 		composer.removeScene( composer.getVariable( "paginaAnterior" ) )
+		Runtime:addEventListener( "touch", onPageTouch )
 
 		animStep = 1
 		readyToContinue = true
@@ -325,8 +349,10 @@ function scene:hide( event )
 		if fadeTween1 then transition.cancel( fadeTween1 ); fadeTween1 = nil; end
 		if fadeTween2 then transition.cancel( fadeTween2 ); fadeTween2 = nil; end
 
+		Runtime:removeEventListener( "touch", onPageTouch )
+
 		composer.setVariable( "paginaAnterior", "P3" )
-		timer.cancel( handsTimer ); handsTimer = nil;
+		if handsTimer then timer.cancel( handsTimer ); handsTimer = nil; end
 		
 	elseif phase == "did" then
 
