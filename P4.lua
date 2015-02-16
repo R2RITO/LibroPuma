@@ -11,9 +11,10 @@ local json = require("json")
 
 
 -- forward declarations and other locals
-local cientifico, pageText, animacionTexto, pageText2, pageTween, fadeTween1, 
-      fadeTween2, markerObj, finger_left, handsTimer, globoDiccionario,
-      textoCarnivoro, siluetaGato, siluetaPerro, siluetaPuma, fondo
+local pageText, animacionTexto, pageTween, fadeTween1, 
+      markerObj, finger_left, handsTimer, globoDiccionario,
+      textoCarnivoro, fondo1, fondo2, escalaPuma, barraBalanza, pumaBalanza,
+      baseBalanza, personasBalanza
 
 
 local continuarAnimacion, onPageSwipe
@@ -26,20 +27,20 @@ local animStep = 1
 local readyToContinue = false
 
 local function inflate(self,event)
-    if (self.inflate) then
-        self.rate = self.rate + 0.005
+    if (self.inflar) then
+        self.cuaninflado = self.cuaninflado + 0.005
     else 
-        self.rate = self.rate - 0.005
+        self.cuaninflado = self.cuaninflado - 0.005
     end 
 
-    if (self.rate >= 1 + self.inf ) then
-        self.inflate = false
-    elseif (self.rate <= 1 - self.inf) then
-        self.inflate =  true
+    if (self.cuaninflado >= 1 + self.maximoinflado ) then  
+        self.inflar = false
+    elseif (self.cuaninflado<= 1 - self.maximoinflado) then
+        self.inflar =  true
     end 
 
-    self.xScale = self.rate 
-    self.yScale = self.rate 
+    self.xScale = self.cuaninflado
+    self.yScale = self.cuaninflado 
 
 end 
 
@@ -111,7 +112,7 @@ local function showNext()
         
         local function completeTween()
             animStep = animStep + 1
-            if animStep > 5 then animStep = 1; end
+            if animStep > 2 then animStep = 1; end
             
             readyToContinue = true
         end
@@ -128,135 +129,42 @@ local function showNext()
         
         if animStep == 1 then
 
-            cientifico.isVisible = true
-            fadeTween1 = transition.to( cientifico, { time=tweenTime, x=display.contentWidth*0.25 ,transition=easing.outExpo } )
+            -- Animacion de inflado
+            ovalo.enterFrame = inflate
+            Runtime:addEventListener( "enterFrame", ovalo )
 
-            -- Crear texto nuevo
-            pageText = crearTexto{texto="!Observa lo grande que es!. Es el mayor "}
-            pageText.isVisible = false
-
-            animacionTexto = crearTexto{texto="carnívoro"}
-            animacionTexto.isVisible = false
-
-            pageText2 = crearTexto{texto=" terrestre de Chile."}
-            pageText2.isVisible = false
-
-            repositionAndFadeIn(pageText, 0.40, 0.25)
-            repositionAndFadeIn(animacionTexto, 0.85, 0.25)
-            repositionAndFadeIn(pageText2, 0.80, 0.35)
-
+            -- Tocar para continuar
+            ovalo:addEventListener( "touch", continuarAnimacion )
 
             -- Parametros para posicionar la imagen del globo y la definicion de la palabra.
             -- De ser necesario, reposicionar el globo en cada palabra.
-            animacionTexto.definicion, animacionTexto.globo = textoCarnivoro, globoDiccionario
-            animacionTexto.factorX, animacionTexto.factorY = 0.85, 0.15
-            animacionTexto.globoActivo = false
-            animacionTexto.touch = alternarDiccionario
-            animacionTexto:addEventListener( "touch", animacionTexto )
-
-            cientifico:addEventListener( "touch", continuarAnimacion)
-            cientifico.enterFrame = inflate
-            Runtime:addEventListener("enterFrame", cientifico)
+            -- animacionTexto.definicion, animacionTexto.globo = textoCarnivoro, globoDiccionario
+            -- animacionTexto.factorX, animacionTexto.factorY = 0.85, 0.15
+            -- animacionTexto.globoActivo = false
+            -- animacionTexto.touch = alternarDiccionario
+            -- animacionTexto:addEventListener( "touch", animacionTexto )
 
             completeTween()
 
 
         elseif animStep == 2 then
 
-            -- Desaparecer texto anterior
-            pageText.alpha = 0
-            animacionTexto.alpha = 0
-            pageText2.alpha = 0
-
             -- Preventivamente desaparecer los elementos del diccionario
             textoCarnivoro.isVisible = false
             globoDiccionario.alpha = 0
 
             -- Remover las animaciones anteriores
-            Runtime:removeEventListener("enterFrame", cientifico)
-            animacionTexto:removeEventListener( "touch", animacionTexto )
-            cientifico:removeEventListener("touch", continuarAnimacion)
+            ovalo.isVisible = false
+            Runtime:removeEventListener("enterFrame", ovalo)
+            ovalo:removeEventListener("touch", continuarAnimacion)
 
-            -- Crear texto nuevo
-            pageText = crearTexto{texto="Tiene una longitud de hasta "}
-            pageText.isVisible = false
-
-            animacionTexto = crearTexto{texto="1.90"}
-            animacionTexto.isVisible = false
-
-            pageText2 = crearTexto{texto=" metros. ¡Impresionante!"}
-            pageText2.isVisible = false
-
-            repositionAndFadeIn(pageText, 0.40, 0.25)
-            repositionAndFadeIn(animacionTexto, 0.85, 0.25)
-            repositionAndFadeIn(pageText2, 0.80, 0.35)
-
-            -- Agregar "receptores" para la nueva animacion
-            animacionTexto:addEventListener( "touch", continuarAnimacion )
+            fadeTween1 = transition.fadeOut( escalaPuma, { time = 300} )
+            fadeTween1 = transition.fadeIn( baseBalanza, { delay = 300} )
+            fadeTween1 = transition.fadeIn( barraBalanza, { delay = 300} )
+            fadeTween1 = transition.fadeIn( pumaBalanza, { delay = 300} )
+            fadeTween1 = transition.fadeIn( personasBalanza, { delay = 300} )
 
             completeTween()
-            
-
-        elseif animStep == 3 then
-            
-            -- Eliminar funciones anteriores
-            animacionTexto:removeEventListener( "touch", continuarAnimacion )
-
-            transition.moveTo( siluetaPuma, {x=display.contentWidth*0.7} )
-            transition.moveTo( siluetaPerro, {x=display.contentWidth*0.7} )
-            transition.moveTo( siluetaGato, {x=display.contentWidth*0.7} )
-
-            -- Agregar "receptores" para continuar
-            cientifico:addEventListener( "touch", continuarAnimacion)
-            cientifico.enterFrame = inflate
-            Runtime:addEventListener("enterFrame", cientifico)
-
-            completeTween()
-
-        elseif animStep == 4 then
-            -- Eliminar funciones anteriores
-            Runtime:removeEventListener("enterFrame", cientifico)
-            cientifico:removeEventListener( "touch", continuarAnimacion )
-            siluetaPuma:removeSelf()
-            siluetaPerro:removeSelf()
-            siluetaGato:removeSelf()
-
-            -- Desaparecer texto anterior
-            pageText.alpha = 0
-            animacionTexto.alpha = 0
-            pageText2.alpha = 0
-
-             -- Crear texto nuevo
-            pageText = crearTexto{texto="Su cola mide más de 80cm y los más grandes alcanzan a pesar "}
-            pageText.isVisible = false
-
-            animacionTexto = crearTexto{texto="55kg."}
-            animacionTexto.isVisible = false
-
-            repositionAndFadeIn(pageText, 0.40, 0.25)
-            repositionAndFadeIn(animacionTexto, 0.85, 0.25)
-
-            -- Agregar "receptores" para la nueva animacion
-            animacionTexto:addEventListener( "touch", continuarAnimacion )
-
-            completeTween()
-
-        elseif animStep == 5 then
-
-            -- Eliminar funciones anteriores
-            animacionTexto:removeEventListener( "touch", continuarAnimacion )
-
-            -- Animar balanza
-            transition.fadeIn( balanza )
-
-            -- Agregar "receptores" para continuar
-            fondo.touch = onPageSwipe
-            --fondo:addEventListener( "touch", fondo )
-
-            -- Animar ayuda para swipe
-            finger_left.isVisible = true
-
-            handsTimer = timer.performWithDelay( 1000, move, -1 )
 
         end
 
@@ -362,11 +270,9 @@ onPageSwipe = function( self, event )
                 if distance > swipeThresh then
                     -- deslizar hacia la derecha, pagina anterior
                     composer.gotoScene( pag, "slideRight", 800 )
-                    pageText.isVisible=false
                 else
                     -- deslizar a la izquierda, pagina siguiente
                     composer.gotoScene( pag, "slideLeft", 800 )
-                    pageText.isVisible=false
                 end
 
             end
@@ -391,15 +297,14 @@ function scene:create( event )
     -- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
     
     -- -- create background image
-    fondo = display.newImageRect( sceneGroup, "Pagina4/Sky.jpg", display.contentWidth, display.contentHeight )
-    fondo.x, fondo.y = display.contentCenterX, display.contentCenterY
+    fondo1 = display.newImageRect( sceneGroup, "Pagina4/fondo1.png", display.contentWidth, display.contentHeight )
+    fondo1.x, fondo1.y = display.contentCenterX, display.contentCenterY
 
-    cientifico = display.newImageRect( sceneGroup, "Pagina4/Scientist.png", display.contentWidth * 0.4, display.contentHeight*0.5)
-    cientifico.x, cientifico.y = display.contentWidth*-0.25, display.contentHeight * 0.6
-    cientifico.isVisible, cientifico.inf, cientifico.inflate, cientifico.rate = false, 0.05, true, 1
+    fondo2 = display.newImageRect( sceneGroup, "Pagina4/fondo2.png", display.contentWidth, display.contentHeight )
+    fondo2.x, fondo2.y = display.contentCenterX, display.contentCenterY
+    fondo2.isVisible = false
 
     -- Sección de diccionario
-
     globoDiccionario = display.newImageRect( sceneGroup, "Pagina4/globoDiccionario.png", display.contentWidth * 0.2, display.contentHeight * 0.2 )
     globoDiccionario.x, globoDiccionario.y = display.contentWidth * 0.85, display.contentHeight * 0.15
     globoDiccionario.alpha = 0
@@ -407,20 +312,31 @@ function scene:create( event )
     textoCarnivoro = crearTexto{ texto="Que se alimenta de carne", ancho=500, tam=30 }
     textoCarnivoro.isVisible = false
 
-    -- Sección de siluetas
-    siluetaPuma = display.newImageRect( sceneGroup, "Pagina4/puma.png", display.contentWidth * 0.4, display.contentHeight * 0.4 )
-    siluetaPuma.x, siluetaPuma.y = display.contentWidth * 1.3, display.contentHeight * 0.7
+    -- Imagen del puma con la regla
+    escalaPuma = display.newImageRect( sceneGroup, "Pagina4/puma_regla.png", display.contentWidth * 0.9, display.contentHeight * 0.6 )
+    escalaPuma.x, escalaPuma.y = display.contentWidth * 0.5, display.contentHeight * 0.7
 
-    siluetaPerro = display.newImageRect( sceneGroup, "Pagina4/perro.png", display.contentWidth * 0.35, display.contentHeight * 0.35 )
-    siluetaPerro.x, siluetaPerro.y = display.contentWidth * 1.3, display.contentHeight * 0.75
+    -- Sección de imágenes de la balanza.
 
-    siluetaGato = display.newImageRect( sceneGroup, "Pagina4/gato.png", display.contentWidth * 0.2, display.contentHeight * 0.2 )
-    siluetaGato.x, siluetaGato.y = display.contentWidth * 1.3, display.contentHeight * 0.8
+    pumaBalanza = display.newImageRect( sceneGroup, "Pagina4/balanza_puma.png", display.contentWidth * 0.15, display.contentHeight * 0.38 )
+    pumaBalanza.x, pumaBalanza.y = display.contentWidth * 0.26, display.contentHeight * 0.72
+    pumaBalanza.alpha = 0
 
-    -- Sección de imágenes de la página.
-    balanza = display.newImageRect( sceneGroup, "Pagina4/balanza.png", display.contentWidth * 0.3, display.contentHeight * 0.3 )
-    balanza.x, balanza.y = display.contentWidth * 0.7, display.contentHeight * 0.8
-    balanza.alpha = 0
+    personasBalanza = display.newImageRect( sceneGroup, "Pagina4/balanza_personas.png", display.contentWidth * 0.15, display.contentHeight * 0.38 )
+    personasBalanza.x, personasBalanza.y = display.contentWidth * 0.64, display.contentHeight * 0.68
+    personasBalanza.alpha = 0
+
+    barraBalanza = display.newImageRect( sceneGroup, "Pagina4/balanza_barra.png", display.contentWidth * 0.4, display.contentHeight * 0.1 )
+    barraBalanza.x, barraBalanza.y = display.contentWidth * 0.45, display.contentHeight * 0.5
+    barraBalanza.alpha = 0
+
+    baseBalanza = display.newImageRect( sceneGroup, "Pagina4/balanza_base.png", display.contentWidth * 0.55, display.contentHeight * 0.6 )
+    baseBalanza.x, baseBalanza.y = display.contentWidth * 0.45, display.contentHeight * 0.7
+    baseBalanza.alpha = 0
+
+    ovalo = display.newImageRect( sceneGroup, "Pagina4/ovalo.png", display.contentWidth * 0.09, display.contentHeight * 0.07 )
+    ovalo.x, ovalo.y = display.contentWidth * 0.81, display.contentHeight * 0.24
+    ovalo.maximoinflado, ovalo.inflar, ovalo.cuaninflado = 0.05, true, 1
 
     finger_left = display.newImageRect( sceneGroup, "swipeIzq.png", 150, 150 )
     finger_left.x, finger_left.y = display.contentWidth * 0.9, display.contentHeight * 0.5

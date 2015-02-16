@@ -11,8 +11,8 @@ local json = require("json")
 
 
 -- forward declarations and other locals
-local cientifico, pageText, pageTween, fadeTween1, fadeTween2, markerObj,
-      fondoPreguntas, marcoJungla, puma, ave, caballo, sonidoAve,
+local finger_left, handsTimer, fadeTween1, fadeTween2, markerObj,
+      fondo, marcoJungla, puma, ave, caballo, sonidoAve,
       sonidoPuma, sonidoCaballo, juegoCompletado, globoExito, globoFallo
 
 local onPageSwipe
@@ -41,6 +41,16 @@ local function desaparecerGlobo( globo )
     globo.isVisible = false
 end
 
+local move = function()
+    local function back()
+        transition.to( finger_left, { alpha = 0 } )
+        finger_left.x=display.contentWidth * 0.9
+    end
+    transition.to( finger_left, { alpha = 1 } )
+    transition.to( finger_left, { x=display.contentWidth * 0.7, time=900, onComplete=back})
+    
+end
+
 local function seleccionIncorrecta( self, event )
 
     if event.phase == "ended" or event.phase == "cancelled" then
@@ -65,20 +75,22 @@ local function seleccionCorrecta( self, event )
             juegoCompletado = true
 
             -- Habilitar deslizamiento a página siguiente
-            --fondoPreguntas.touch = onPageSwipe
-            --fondoPreguntas:addEventListener( "touch", fondoPreguntas )
-              fondoPreguntas.touch = onPageSwipe
-              fondoPreguntas:addEventListener( "touch", fondoPreguntas )
-              fondoPreguntas1.touch = onPageSwipe
-              fondoPreguntas1:addEventListener( "touch", fondoPreguntas1 )
+            --fondo.touch = onPageSwipe
+            --fondo:addEventListener( "touch", fondo )
+              fondo.touch = onPageSwipe
+              fondo:addEventListener( "touch", fondo )
 
             -- Iniciar animacion de swipe.
+            finger_left.isVisible = true
+            handsTimer = timer.performWithDelay( 1000, move, -1 )
 
             -- Iniciar animacion de exito
 
             globoExito.x, globoExito.y = self.x - 50, self.y - 50
             globoExito.isVisible = true
             fadeTween1 = transition.to( globoExito, { y = globoExito.y - 250, onComplete=desaparecerGlobo } )
+
+
 
         end
 
@@ -98,16 +110,7 @@ local function repositionAndFadeIn( texto, factorX, factorY )
     fadeTween1 = transition.to( texto, { time=tweenTime*0.5, alpha=1.0 } )
 end
 
-local function iniciarJuego()
-   
-
-    pageText = crearTexto{texto="Veamos si aprendiste a reconocer a un puma. Toca al puma para continuar el cuento."}
-    pageText.isVisible = false
-    pageText:setFillColor( 0, 0, 0 ) -- color negro
-    repositionAndFadeIn( pageText,0.54,0.10 )
-
-    cientifico.isVisible = true          
-    
+local function iniciarJuego()            
 
     puma:addEventListener( "touch", puma )
     ave:addEventListener( "touch", ave )
@@ -201,11 +204,9 @@ onPageSwipe = function( self, event )
                 if distance > swipeThresh then
                     -- deslizar hacia la derecha, pagina anterior
                     composer.gotoScene( pag, "slideRight", 800 )
-                    pageText.isVisible=false
                 else
                     -- deslizar a la izquierda, pagina siguiente
                     composer.gotoScene( pag, "slideLeft", 800 )
-                    pageText.isVisible=false
                 end
 
             end
@@ -227,56 +228,34 @@ function scene:create( event )
     
     -- -- create background image
 
-    fondoPreguntas = display.newImageRect( sceneGroup, "Portada/capa_1_1.png", display.contentWidth, display.contentHeight)
-    fondoPreguntas.anchorX,fondoPreguntas.anchorY=0,0 --el punto de referencia (0,0) de la imagen es el de la izquierda y arriba
-    fondoPreguntas.x, fondoPreguntas.y = 0, display.contentHeight*0.05
-    fondoPreguntas.isVisible = true
-    
-    --Tal vez sería  recomendable cargar esta imagen como variable local. CARLOS 
-    fondoPreguntas1 = display.newImageRect( sceneGroup, "Portada/capa_1_3.png", display.contentWidth*1.2, display.contentHeight/3)
-    fondoPreguntas1.anchorX,fondoPreguntas1.anchorY=0,1 --el punto de referencia (0,0) de la imagen es el de la izquierda y abajo
-    fondoPreguntas1.x, fondoPreguntas1.y = -display.contentWidth*0.01,display.contentHeight
-    fondoPreguntas1.isVisible = true
+    fondo = display.newImageRect( sceneGroup, "Pagina2/fondo.png", display.contentWidth, display.contentHeight)
+    fondo.x, fondo.y = display.contentCenterX, display.contentCenterY
+    fondo.isVisible = true
 
-    --Tal vez sería  recomendable cargar esta imagen como variable local. CARLOS 
-    backWhite = display.newImageRect( sceneGroup, "Portada/BackgroundWhite.jpg", display.contentWidth, display.contentHeight*0.2)
-    backWhite.anchorX,backWhite.anchorY=0,0 --el punto de referencia (0,0) de la imagen es el de la izquierda y arriba
-    backWhite.x, backWhite.y = 0, 0
-    backWhite.isVisible = true
-
-    --marcoJungla = display.newImageRect( sceneGroup, "Pagina2/JungleFrame.png", display.contentWidth * 1.3, display.contentHeight * 1.3 )
-    --marcoJungla.x, marcoJungla.y = display.contentWidth * 0.5, display.contentHeight * 0.5
-
-    cientifico = display.newImageRect( sceneGroup, "Pagina2/explorador.png", display.contentWidth * 0.15, display.contentHeight*0.6)
-    cientifico.x, cientifico.y = display.contentWidth*0.84, display.contentHeight * 0.63
-    cientifico.isVisible = false
-
-    puma = display.newImageRect( sceneGroup, "Pagina2/cilueta_puma.png", display.contentWidth * 0.3, display.contentHeight * 0.3)
-    puma.x, puma.y = display.contentWidth * 0.18, display.contentHeight * 0.635
+    puma = display.newImageRect( sceneGroup, "Pagina2/silueta_puma.png", display.contentWidth * 0.35, display.contentHeight * 0.35)
+    puma.x, puma.y = display.contentWidth * 0.75, display.contentHeight * 0.7
     puma.sonido = audio.loadSound( "Pagina2/puma.mp3" )
     puma.touch = seleccionCorrecta
 
-    ave = display.newImageRect( sceneGroup, "Pagina2/cilueta_paloma.png", display.contentWidth * 0.12, display.contentHeight * 0.15 )
-    ave.x, ave.y = display.contentWidth * 0.2, display.contentHeight * 0.35
+    ave = display.newImageRect( sceneGroup, "Pagina2/silueta_pajaro.png", display.contentWidth * 0.12, display.contentHeight * 0.15 )
+    ave.x, ave.y = display.contentWidth * 0.75, display.contentHeight * 0.18
     ave.sonido = audio.loadSound( "Pagina2/ave.mp3" )
     ave.touch = seleccionIncorrecta
 
-    caballo = display.newImageRect( sceneGroup, "Pagina2/cilueta_caballo.png", display.contentWidth * 0.2, display.contentHeight * 0.25 )
-    caballo.x, caballo.y = display.contentWidth * 0.65, display.contentHeight * 0.53
+    caballo = display.newImageRect( sceneGroup, "Pagina2/silueta_caballo.png", display.contentWidth * 0.4, display.contentHeight * 0.48 )
+    caballo.x, caballo.y = display.contentWidth * 0.25, display.contentHeight * 0.73
     caballo.sonido = audio.loadSound( "Pagina2/caballo.mp3" )
     caballo.touch = seleccionIncorrecta
 
-    globoExito = display.newImageRect( sceneGroup, "Pagina2/globoExito.png", display.contentWidth* 0.15, display.contentHeight * 0.15 )
+    globoExito = display.newImageRect( sceneGroup, "Pagina2/globoExito.png", display.contentWidth* 0.07, display.contentHeight * 0.1 )
     globoExito.isVisible = false
 
-    globoFallo = display.newImageRect( sceneGroup, "Pagina2/globoFallo.png", display.contentWidth* 0.15, display.contentHeight * 0.15 )
+    globoFallo = display.newImageRect( sceneGroup, "Pagina2/globoFallo.png", display.contentWidth* 0.07, display.contentHeight * 0.1 )
     globoFallo.isVisible = false
 
-    -- create pageText
-    pageText = display.newText( sceneGroup, "", 0, 0, native.systemFontBold, 18 )
-    pageText.x = display.contentWidth * 0.5
-    pageText.y = display.contentHeight * 0.5
-    pageText.isVisible = false
+    finger_left = display.newImageRect( sceneGroup, "swipeIzq.png", 150, 150 )
+    finger_left.x, finger_left.y = display.contentWidth * 0.9, display.contentHeight * 0.43
+    finger_left.isVisible = false
 
     --create marker object
     markerObj = display.newImageRect( sceneGroup, "Marcador.png", 80, 120 )
@@ -328,9 +307,7 @@ function scene:hide( event )
         -- e.g. stop timers, stop animation, unload sounds, etc.)
         
         -- hide objects
-        pageText.isVisible = false
         markerObj.isVisible = false
-        cientifico.isVisible = false
     
         -- remove touch event listener for background
         markerObj:removeEventListener( "touch", activarMarcador )
@@ -340,6 +317,8 @@ function scene:hide( event )
         if pageTween then transition.cancel( pageTween ); pageTween = nil; end
         if fadeTween1 then transition.cancel( fadeTween1 ); fadeTween1 = nil; end
         if fadeTween2 then transition.cancel( fadeTween2 ); fadeTween2 = nil; end
+
+        timer.cancel( handsTimer ); handsTimer = nil;
         
     elseif phase == "did" then
         -- Called when the scene is now off screen

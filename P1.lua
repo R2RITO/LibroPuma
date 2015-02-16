@@ -12,7 +12,8 @@ local json = require("json")
 
 -- forward declarations and other locals
 local   cientifico, pageTween, fadeTween1, fadeTween2, markerObj, retratoPuma,
-        ninos, botonVolver, finger_left, handsTimer, tiempoInicio, square
+        ninos, botonVolver, finger_left, handsTimer, tiempoInicio,
+        cientifico_foto, cientifico_indic
 
 
 local continuarAnimacion, onPageSwipe
@@ -42,15 +43,6 @@ local function inflate(self,event)
     self.yScale = self.cuaninflado 
 
 end 
-
-local function start(value1,value2,value3)
---La indentación del código es una buena práctica para facilitar la lectura de éste. CARLOS
-rate=value1
-max=value2
-drate=value3
-end
-
-start(1,0.05,0.005)
 
 local function crearTexto( args )
 
@@ -140,12 +132,12 @@ local function showNext()
 
             fadeTween1 = transition.dissolve( background2, background3, 500, 0 )
 
-            cientifico2.isVisible = true  
+            cientifico_foto.isVisible = true  
             cientifico.isVisible = false
-            transition.to( cientifico2, { time=tweenTime, x=display.contentWidth*0.25 ,transition=easing.outExpo } )
+            transition.to( cientifico_foto, { time=tweenTime, x=display.contentWidth*0.25 ,transition=easing.outExpo } )
 
             retratoPuma.isVisible = true
-            retratoPuma:toFront( )
+            --retratoPuma:toFront( )
             transition.to( retratoPuma, { time=tweenTime, x=display.contentWidth*0.228 ,transition=easing.outExpo } )
 
             retratoPuma.enterFrame = inflate
@@ -161,8 +153,8 @@ local function showNext()
 
             botonVolver.isVisible=true
 
-            transition.to( retratoPuma, { time=tweenTime*3, width= display.contentWidth, height= display.contentHeight, 
-                                          x=display.contentCenterX, rotation=0, transition=easing.outExpo } )
+            transition.to( retratoPuma, { time=tweenTime*3, width= display.contentWidth*1.1, height= display.contentHeight*1.1, 
+                                          x=display.contentCenterX, y=display.contentCenterY, rotation=0, transition=easing.outExpo } )
             transition.to( botonVolver, { time=tweenTime, delay=1000,x=display.contentWidth*0.9,alpha=1, transition=easing.outExpo } )
 
 
@@ -177,26 +169,19 @@ local function showNext()
             botonVolver:removeEventListener( "touch", continuarAnimacion )
             Runtime:removeEventListener("enterFrame", botonVolver)
 
-            square.isVisible=false
+            fadeTween1 = transition.dissolve( background3, background4, 500, 0 )
+
             botonVolver.isVisible=false
             retratoPuma.isVisible=false
 
-            pageText.alpha = 0
-
-            cientifico.isVisible = true  
-            cientifico2.isVisible = false
-            transition.to( cientifico, { time=tweenTime*1.5, x=display.contentWidth*0.4 ,transition=easing.outExpo } )
-
-
-            pageText = crearTexto{texto="¡Continuemos nuestro viaje!"}
-            pageText:setFillColor( 0, 0, 0 ) -- color negro
-            pageText.isVisible = false
-            repositionAndFadeIn(pageText,0.50,0.10)
+            cientifico_indic.isVisible = true  
+            cientifico_foto.isVisible = false
+            transition.to( cientifico_indic, { time=tweenTime*1.5, x=display.contentWidth*0.35 ,transition=easing.outExpo } )
 
             botonVolver:removeEventListener( "touch", continuarAnimacion )
               
-            background2.touch = onPageSwipe
-            background2:addEventListener( "touch", pasto )
+            background4.touch = onPageSwipe
+            background4:addEventListener( "touch", pasto )
 
             finger_left.isVisible = true
 
@@ -300,11 +285,9 @@ onPageSwipe = function( self, event )
                 if distance > swipeThresh then
                     -- deslizar hacia la derecha, pagina anterior
                     composer.gotoScene( pag, "slideRight", 800 )
-                    pageText.isVisible=false
                 else
                     -- deslizar a la izquierda, pagina siguiente
                     composer.gotoScene( pag, "slideLeft", 800 )
-                    pageText.isVisible=false
                 end
 
             elseif duracion > 800 then
@@ -367,9 +350,13 @@ function scene:create( event )
     cientifico.x, cientifico.y = display.contentWidth * 0.3, display.contentHeight * 0.6
     cientifico.isVisible, cientifico.maximoinflado, cientifico.inflar, cientifico.cuaninflado = false, 0.05, true, 1
 
-    cientifico2 = display.newImageRect( sceneGroup, "Pagina1/explorador_foto.png",   display.contentWidth * 0.4, display.contentHeight*0.6)
-    cientifico2.x, cientifico2.y = display.contentWidth * 0.3, display.contentHeight * 0.6
-    cientifico2.isVisible, cientifico2.maximoinflado, cientifico.inflar, cientifico.cuaninflado = false, 0.05, true, 1
+    cientifico_foto = display.newImageRect( sceneGroup, "Pagina1/explorador_foto.png",   display.contentWidth * 0.4, display.contentHeight*0.6)
+    cientifico_foto.x, cientifico_foto.y = display.contentWidth * 0.3, display.contentHeight * 0.6
+    cientifico_foto.isVisible, cientifico_foto.maximoinflado, cientifico_foto.inflar, cientifico_foto.cuaninflado = false, 0.05, true, 1
+
+    cientifico_indic = display.newImageRect( sceneGroup, "Pagina1/explorador_indicando.png",   display.contentWidth * 0.4, display.contentHeight*0.6)
+    cientifico_indic.x, cientifico_indic.y = display.contentWidth * 0.3, display.contentHeight * 0.6
+    cientifico_indic.isVisible, cientifico_indic.maximoinflado, cientifico_indic.inflar, cientifico_indic.cuaninflado = false, 0.05, true, 1
 
     -- Foto real del puma
     retratoPuma = display.newImageRect( sceneGroup, "Pagina1/pumaReal.jpg", display.contentWidth * 0.03, display.contentHeight * 0.07 )
@@ -384,7 +371,7 @@ function scene:create( event )
     botonVolver.isVisible, botonVolver.maximoinflado, botonVolver.inflar, botonVolver.cuaninflado = false, 0.05, true, 1
 
     ninos = display.newImageRect( sceneGroup, "Pagina1/ninos_lupa.png", display.contentWidth * 0.4, display.contentHeight * 0.4 )
-    ninos.x, ninos.y = display.contentWidth * 0.3, display.contentHeight * 0.7
+    ninos.x, ninos.y = display.contentWidth * 0.6, display.contentHeight * 0.7
     ninos.isVisible, ninos.maximoinflado, ninos.inflar, ninos.cuaninflado = false, 0.05, true, 1
     ninos.alpha = 0
 
@@ -464,8 +451,6 @@ function scene:hide( event )
         
     elseif phase == "did" then
 
-        hojas.x, hojas.y = display.contentWidth * -2, display.contentHeight * 0.7
-        bosque.x, bosque.y = display.contentWidth * -2, display.contentHeight * 0.3
         retratoPuma.alpha = 0
 
         -- Called when the scene is now off screen
