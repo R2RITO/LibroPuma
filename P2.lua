@@ -12,7 +12,7 @@ local json = require("json")
 
 -- forward declarations and other locals
 local finger_left, handsTimer, fadeTween1, fadeTween2, markerObj,
-      fondo, marcoJungla, puma, ave, caballo, sonidoAve,
+      fondo, puma, ave, caballo, sonidoAve,
       sonidoPuma, sonidoCaballo, juegoCompletado, globoExito, globoFallo
 
 local onPageSwipe

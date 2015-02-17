@@ -14,7 +14,7 @@ local json = require("json")
 local pageText, animacionTexto, pageTween, fadeTween1, 
       markerObj, finger_left, handsTimer, globoDiccionario,
       textoCarnivoro, fondo1, fondo2, escalaPuma, barraBalanza, pumaBalanza,
-      baseBalanza, personasBalanza
+      baseBalanza, personasBalanza, ovalo
 
 
 local continuarAnimacion, onPageSwipe

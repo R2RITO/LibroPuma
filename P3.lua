@@ -12,7 +12,7 @@ local json = require("json")
 
 -- forward declarations and other locals
 local   cientifico, finger_left, fadeTween, markerObj, 
-		cientifico, handsTimer, fondo
+		handsTimer, fondo
 
 
 

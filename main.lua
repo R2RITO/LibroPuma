@@ -78,7 +78,8 @@ local function cargarData()
 		composer.setVariable( "paginaMarcador", tabla.paginaMarcador )
 
 		if tabla.tutorialCompletado then
-			composer.setVariable( "tutorialCompletado", tabla.tutorialCompletado)
+			composer.setVariable( "tutorialCompletado", 0 )
+			--composer.setVariable( "tutorialCompletado", tabla.tutorialCompletado)
 		else
 			composer.setVariable( "tutorialCompletado", 0 )
 		end

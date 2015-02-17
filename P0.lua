@@ -59,10 +59,15 @@ local function comenzarCuento( event )
 	local phase = event.phase
 
 	if phase == "ended" or phase == "cancelled" then
-	    local pag_sig = 1
-	    local pag = "P" .. pag_sig
-	    composer.setVariable( "pagina", pag_sig)	
-	    composer.gotoScene( pag, "slideLeft", 800 )	
+
+    	if composer.getVariable( "tutorialCompletado" ) == 0 then
+            composer.gotoScene( "Tutorial", "slideLeft", 800 )
+		else
+		    local pag_sig = 1
+		    local pag = "P" .. pag_sig
+		    composer.setVariable( "pagina", pag_sig)	
+		    composer.gotoScene( pag, "slideLeft", 800 )	
+		end
 	end
 
 	return true
